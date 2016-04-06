@@ -100,10 +100,18 @@ parseCompareData <- function(file_path){
   return(parsed_data)
 }
 
-parseBasicTables <- function(file_path){
+parseBasicTables <- function(file_path, lines_to_skip){
   
   sheet_names <- excel_sheets(file_path)
-  parsedExcelSheets <- lapply(sheet_names, read_excel, path = file_path)
-  names(parsedExcelSheets) <- sheet_names
+  names(lines_to_skip) <- sheet_names 
   
+  parsed_data <- lapply(lines_to_skip, function(skip, path) {
+    all_df <- read_excel(path, sheet = names(skip), col_names = FALSE)
+    metadata <- all_df[1:skip,1] %>% na.omit()
+    df <- all_df[-c(1:skip),]
+    
+    return(df)
+  }, path = file_path)
+  names(parsed_data) <- sheet_names
+  return(parsed_data)
 }
