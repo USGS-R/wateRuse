@@ -85,9 +85,19 @@ parseEnteredElements <- function(file_path){
 parseCompareData <- function(file_path){
   
   sheet_names <- excel_sheets(file_path)
-  parsedExcelSheets <- lapply(sheet_names, read_excel, path = file_path)
-  names(parsedExcelSheets) <- sheet_names
-  
+  parsed_data <- lapply(sheet_names, function(sheet, path, skip){
+    all_df <- read_excel(path, sheet)
+    metadata <- na.omit(names(all_df))
+    col_names_location <- which(complete.cases(all_df))[1] #grab first occurrence of completely filled row, these are real column headers
+    names(all_df) <- all_df[col_names_location, ]
+    df <- all_df %>% 
+      filter(!is.na(select(., 1))) %>% #first column should never be empty (it's county or state)
+      filter(select(., 1) != names(all_df)[1]) #if the first col == column name, get rid of it
+    
+    return(df)
+  }, path = file_path)
+  names(parsed_data) <- sheet_names
+  return(parsed_data)
 }
 
 parseBasicTables <- function(file_path){
