@@ -1,0 +1,23 @@
+Package: AWUDS
+Type: Package
+Title: AWUDS data analysis functions
+Version: 0.0.1
+Date: 2016-04-8
+Authors@R: c( person("First", "Last", role = c("aut", "cre"),
+    email = "user@usgs.gov"))
+Description: Collection of functions to help parse and analyze AWUDS data.
+License: CC0
+Copyright: This software is in the public domain because it contains materials
+    that originally came from the United States Geological Survey, an agency of
+    the United States Department of Interior. For more information, see the
+    official USGS copyright policy at
+    http://www.usgs.gov/visual-id/credit_usgs.html#copyright
+Depends:
+    R (>= 3.0)
+Suggests:
+    testthat
+VignetteBuilder: knitr
+BuildVignettes: true
+BugReports: https://github.com/USGS-R/AWUDS/issues
+URL: https://github.com/USGS-R/AWUDS
+RoxygenNote: 5.0.1
