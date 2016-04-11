@@ -10,6 +10,8 @@
 #' @importFrom readxl excel_sheets
 #' @importFrom dplyr filter
 #' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @rdname parser
 #' 
 #' @export
 #' 
@@ -60,6 +62,7 @@ parseExport <- function(file_path, citations = FALSE){
 }
 
 #' @export
+#' @rdname parser
 #' 
 parseEnteredElements <- function(file_path){
  all_data <- read_excel(path = file_path, sheet = 1)
@@ -87,6 +90,7 @@ parseEnteredElements <- function(file_path){
 }
 
 #' @export
+#' @rdname parser
 #' 
 parseCompareData <- function(file_path){
  sheet_names <- excel_sheets(file_path)
@@ -110,7 +114,7 @@ parseCompareData <- function(file_path){
 
 parseDumpFiles <- function(file_path){
   read.table(file_path, header = TRUE, sep = '\t',
-             quote = NULL, comment = "")
+             quote = NULL, comment.char = "")
 }
 
 removeDuplicateColumns <- function(df){
