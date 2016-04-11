@@ -108,6 +108,11 @@ parseCompareData <- function(file_path){
  return(parsed_data)
 }
 
+parseDumpFiles <- function(file_path){
+  read.table(file_path, header = TRUE, sep = '\t',
+             quote = NULL, comment = "")
+}
+
 removeDuplicateColumns <- function(df){
   duplicate_columns <- which(duplicated(names(df)))
   if(length(duplicate_columns) > 0){
