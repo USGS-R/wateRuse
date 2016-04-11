@@ -15,9 +15,9 @@ Copyright: This software is in the public domain because it contains materials
 Depends:
     R (>= 3.0)
 Suggests:
-    testthat
+    testthat,
+    knitr
 VignetteBuilder: knitr
-BuildVignettes: true
 BugReports: https://github.com/USGS-R/AWUDS/issues
 URL: https://github.com/USGS-R/AWUDS
 RoxygenNote: 5.0.1
