@@ -45,16 +45,15 @@ parseExport <- function(file_path, citations = FALSE){
      df <- all_df
    }
 
-   df <-  all_df %>%
-     removeDuplicateColumns %>% 
-     filter(!is.na(select(., 1))) # remove any rows of all NA values
+   df <- removeDuplicateColumns(df)
+   df <- removeAllNARows(df)
 
    return(df)
  }, path = file_path, citations = citations)
  names(parsed_data) <- sheets_to_parse
  
  if(user){
-   metadata <- read_excel(path, sheet = which(sheet_names == "Dataset list"))
+   metadata <- read_excel(file_path, sheet = which(sheet_names == "Dataset list"))
    attr(parsed_data, 'Datasets') <- na.omit(metadata)
  }
  
@@ -78,13 +77,20 @@ parseEnteredElements <- function(file_path){
  
  # format actual data
  df <- read_excel(path = file_path, sheet = 1, skip = 7)
- df <- df[, -c(15,16)]
- df <- df %>%
-   filter(!is.na(`Data Element`)) %>%
-   rename(`Thermoelectric: Once-Through Cooling` = `Once-Through Cooling`,
-          `Thermoelectric: Closed-Loop Cooling` = `Closed-Loop Cooling`,
-          `Hydroelectric: Instream` = Instream,
-          `Hydroelectric: Offstream` = Offstream)
+ df <- df[, which(!is.na(names(df)))] #removing columns that are all NA
+ df <- removeAllNARows(df)
+ 
+ #rename columns that have an upstream name
+ names(df) <- unlist(lapply(names(df), function(orig_col_name) {
+   renamed_col <- switch(orig_col_name, 
+                         `Once-Through Cooling` = 'Thermoelectric: Once-Through Cooling', 
+                         `Closed-Loop Cooling` = 'Thermoelectric: Closed-Loop Cooling', 
+                         Instream = 'Hydroelectric: Instream', 
+                         Offstream = 'Hydroelectric: Offstream')
+   col_name <- ifelse(!is.null(renamed_col), renamed_col, orig_col_name)
+   return(col_name)
+ }))
+
  attributes(df) <- append(attributes(df), metadata)
  return(df)
 }
@@ -102,9 +108,8 @@ parseCompareData <- function(file_path){
    col_names_location <- which(complete.cases(all_df))[1] 
    names(all_df) <- all_df[col_names_location, ]
    
-   df <- all_df %>%
-     filter(!is.na(select(., 1))) %>% #first column should never be empty (it's county or state)
-     filter(select(., 1) != names(all_df)[1]) #if the first col == column name, get rid of it
+   df <- removeAllNARows(all_df)
+   df <- df[which(df[,1] != names(df)[1]),] # remove duplicated column names that appear throughout data
    
    return(df)
  }, path = file_path)
@@ -123,4 +128,10 @@ removeDuplicateColumns <- function(df){
     df <- df[, -duplicate_columns]
   }
   return(df)
+}
+
+removeAllNARows <- function(df){
+  col1 <- df[[1]]
+  noNA_df <- df[!is.na(col1),]
+  return(noNA_df)
 }
