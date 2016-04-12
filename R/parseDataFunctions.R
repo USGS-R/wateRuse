@@ -8,9 +8,6 @@
 #' 
 #' @importFrom readxl read_excel
 #' @importFrom readxl excel_sheets
-#' @importFrom dplyr filter
-#' @importFrom dplyr rename
-#' @importFrom dplyr select
 #' @rdname parser
 #' 
 #' @export
