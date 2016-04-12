@@ -3,8 +3,5 @@
 export(parseCompareData)
 export(parseEnteredElements)
 export(parseExport)
-importFrom(dplyr,filter)
-importFrom(dplyr,rename)
-importFrom(dplyr,select)
 importFrom(readxl,excel_sheets)
 importFrom(readxl,read_excel)
