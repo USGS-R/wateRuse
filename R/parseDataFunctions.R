@@ -69,13 +69,14 @@ parseExport <- function(file_path, citations = FALSE){
 #' 
 #' @examples 
 #' path <- system.file("extdata", package="AWUDS")
+#' enteredData <- parseEnteredElements(file.path(path,"Entered-Data_2005.xlsx"))
 parseEnteredElements <- function(file_path){
  all_data <- read_excel(path = file_path, sheet = 1)
  
  # format metadata from top of excel file
  population_info <- as.character(as.vector(all_data[2,1:2]))
  metadata_description <- all_data[1:5, 1]
- metadata_description[2,] <- paste(population_info, collapse = " ")
+ metadata_description[2] <- paste(population_info, collapse = " ")
  metadata_aging_counts <- all_data[1:5, c(15,16)]
  names(metadata_aging_counts) <- c('Data Aging', 'Counts')
  metadata <- list(Descriptive = metadata_description,

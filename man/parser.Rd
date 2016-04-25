@@ -25,7 +25,11 @@ path <- system.file("extdata", package="AWUDS")
 exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
 TP <- exportData[["TP"]]
 PO <- exportData[["PO"]]
+
+exportData2010 <- parseExport(file.path(path,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
+LI <- exportData2010[["LI"]]
 path <- system.file("extdata", package="AWUDS")
+enteredData <- parseEnteredElements(file.path(path,"Entered-Data_2005.xlsx"))
 path <- system.file("extdata", package="AWUDS")
 compareData <- parseCompareData(file.path(path, "CompareData.xlsx"))
 }
