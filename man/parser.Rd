@@ -20,4 +20,13 @@ parseCompareData(file_path)
 \description{
 Parses AWUDS excel files into R data frames.
 }
+\examples{
+path <- system.file("extdata", package="AWUDS")
+exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
+TP <- exportData[["TP"]]
+PO <- exportData[["PO"]]
+path <- system.file("extdata", package="AWUDS")
+path <- system.file("extdata", package="AWUDS")
+compareData <- parseCompareData(file.path(path, "CompareData.xlsx"))
+}
 
