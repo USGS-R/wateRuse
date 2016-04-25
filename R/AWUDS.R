@@ -22,3 +22,27 @@
 #' @docType package
 NULL
 
+
+#' Included data
+#' 
+#'\itemize{
+#'  \item{category}{category data.frame}
+#'  \item{county}{county data.frame}
+#'  \item{dataelement}{dataelement data.frame}
+#'  \item{huc8}{huc8 data.frame}
+#'  \item{calculation}{calculation data.frame}
+#'  \item{calculation.formula}{calculation.formula data.frame}
+#'}
+#' @name lookupTables
+#' @docType data
+#' @aliases category county dataelement huc8 calculation calculation.formula
+#' @export category county dataelement huc8 calculation calculation.formula
+#'
+#' @examples 
+#' head(category)
+#' head(county)
+#' head(dataelement)
+#' head(huc8)
+#' head(calculation)
+#' head(calculation.formula)
+NULL

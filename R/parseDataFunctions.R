@@ -12,12 +12,12 @@
 #' @export
 #' 
 #' @examples 
-#' path <- system.file("extdata", package="AWUDS")
-#' exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
+#' folderPath <- system.file("extdata", package="AWUDS")
+#' exportData <- parseExport(file.path(folderPath,"Export_2010_County.xlsx"),citation=TRUE)
 #' TP <- exportData[["TP"]]
 #' PO <- exportData[["PO"]]
 #' 
-#' exportData2010 <- parseExport(file.path(path,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
+#' exportData2010 <- parseExport(file.path(folderPath,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
 #' LI <- exportData2010[["LI"]]
 parseExport <- function(file_path, citations = FALSE){
  sheet_names <- excel_sheets(file_path)
@@ -111,6 +111,7 @@ parseEnteredElements <- function(file_path){
 parseCompareData <- function(file_path){
  sheet_names <- excel_sheets(file_path)
  parsed_data <- lapply(sheet_names, function(sheet, path, skip){
+   # browser()
    all_df <- read_excel(path, sheet)
    metadata <- na.omit(names(all_df))
    
@@ -120,7 +121,7 @@ parseCompareData <- function(file_path){
    
    df <- removeAllNARows(all_df)
    df <- df[which(df[,1] != names(df)[1]),] # remove duplicated column names that appear throughout data
-   
+
    return(df)
  }, path = file_path)
  names(parsed_data) <- sheet_names
