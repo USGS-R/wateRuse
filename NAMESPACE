@@ -3,6 +3,7 @@
 export(calculation)
 export(calculation.formula)
 export(category)
+export(compare.data.elements)
 export(county)
 export(dataelement)
 export(huc8)
