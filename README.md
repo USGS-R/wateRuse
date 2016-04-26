@@ -1,4 +1,4 @@
-`AWUDS`
+`AWUDS2`
 =============
 Parser functions for water use data.
 
