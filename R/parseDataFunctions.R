@@ -12,7 +12,7 @@
 #' @export
 #' 
 #' @examples 
-#' folderPath <- system.file("extdata", package="AWUDS")
+#' folderPath <- system.file("extdata", package="wateRuse")
 #' exportData <- parseExport(file.path(folderPath,"Export_2010_County.xlsx"),citation=TRUE)
 #' TP <- exportData[["TP"]]
 #' PO <- exportData[["PO"]]
@@ -68,7 +68,7 @@ parseExport <- function(file_path, citations = FALSE){
 #' @rdname parser
 #' 
 #' @examples 
-#' path <- system.file("extdata", package="AWUDS")
+#' path <- system.file("extdata", package="wateRuse")
 #' enteredData <- parseEnteredElements(file.path(path,"Entered-Data_2005.xlsx"))
 parseEnteredElements <- function(file_path){
  all_data <- read_excel(path = file_path, sheet = 1)
@@ -106,7 +106,7 @@ parseEnteredElements <- function(file_path){
 #' @rdname parser
 #' 
 #' @examples 
-#' path <- system.file("extdata", package="AWUDS")
+#' path <- system.file("extdata", package="wateRuse")
 #' compareData <- parseCompareData(file.path(path, "CompareData.xlsx"))
 parseCompareData <- function(file_path){
  sheet_names <- excel_sheets(file_path)

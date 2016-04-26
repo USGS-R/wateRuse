@@ -21,16 +21,16 @@ parseCompareData(file_path)
 Parses AWUDS excel files into R data frames.
 }
 \examples{
-path <- system.file("extdata", package="AWUDS")
-exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
+folderPath <- system.file("extdata", package="wateRuse")
+exportData <- parseExport(file.path(folderPath,"Export_2010_County.xlsx"),citation=TRUE)
 TP <- exportData[["TP"]]
 PO <- exportData[["PO"]]
 
-exportData2010 <- parseExport(file.path(path,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
+exportData2010 <- parseExport(file.path(folderPath,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
 LI <- exportData2010[["LI"]]
-path <- system.file("extdata", package="AWUDS")
+path <- system.file("extdata", package="wateRuse")
 enteredData <- parseEnteredElements(file.path(path,"Entered-Data_2005.xlsx"))
-path <- system.file("extdata", package="AWUDS")
+path <- system.file("extdata", package="wateRuse")
 compareData <- parseCompareData(file.path(path, "CompareData.xlsx"))
 }
 

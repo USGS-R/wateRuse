@@ -1,3 +1,3 @@
 library(testthat)
-library(AWUDS)
-test_check("AWUDS")
+library(wateRuse)
+test_check("wateRuse")
