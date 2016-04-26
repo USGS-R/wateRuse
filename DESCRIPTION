@@ -1,6 +1,6 @@
-Package: AWUDS
+Package: wateRuse
 Type: Package
-Title: AWUDS data analysis functions
+Title: wateRuse data analysis functions
 Version: 0.0.1
 Date: 2016-04-8
 Authors@R: c( person("First", "Last", role = c("aut", "cre"),
@@ -20,6 +20,6 @@ Suggests:
     testthat,
     knitr
 VignetteBuilder: knitr
-BugReports: https://github.com/USGS-R/AWUDS/issues
-URL: https://github.com/USGS-R/AWUDS
+BugReports: https://github.com/USGS-R/wateRuse/issues
+URL: https://github.com/USGS-R/wateRuse
 RoxygenNote: 5.0.1

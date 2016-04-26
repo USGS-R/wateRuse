@@ -1,7 +1,7 @@
 context("Parsing Tests")
 
 test_that("Entered Data", {
-  path <- system.file("extdata", package="AWUDS")
+  path <- system.file("extdata", package="wateRuse")
   exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
   
   expect_is(exportData, 'list')
