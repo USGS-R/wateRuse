@@ -1,8 +1,8 @@
-`AWUDS`
+`wateRuse`
 =============
 Parser functions for water use data.
 
- [![travis](https://travis-ci.org/USGS-R/AWUDS.svg?branch=master)](https://travis-ci.org/USGS-R/AWUDS)
+ [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)
 
 ##Disclaimer
 This software is in the public domain because it contains materials that originally came from the U.S. Geological Survey, an agency of the United States Department of Interior. For more information, see the [official USGS copyright policy](http://www.usgs.gov/visual-id/credit_usgs.html#copyright/ "official USGS copyright policy")
