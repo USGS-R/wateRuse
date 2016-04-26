@@ -1,4 +1,3 @@
-
 #' data parse functions
 #'
 #' Parses AWUDS excel files into R data frames.
@@ -12,6 +11,14 @@
 #' 
 #' @export
 #' 
+#' @examples 
+#' folderPath <- system.file("extdata", package="AWUDS")
+#' exportData <- parseExport(file.path(folderPath,"Export_2010_County.xlsx"),citation=TRUE)
+#' TP <- exportData[["TP"]]
+#' PO <- exportData[["PO"]]
+#' 
+#' exportData2010 <- parseExport(file.path(folderPath,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
+#' LI <- exportData2010[["LI"]]
 parseExport <- function(file_path, citations = FALSE){
  sheet_names <- excel_sheets(file_path)
  
@@ -60,13 +67,16 @@ parseExport <- function(file_path, citations = FALSE){
 #' @export
 #' @rdname parser
 #' 
+#' @examples 
+#' path <- system.file("extdata", package="AWUDS")
+#' enteredData <- parseEnteredElements(file.path(path,"Entered-Data_2005.xlsx"))
 parseEnteredElements <- function(file_path){
  all_data <- read_excel(path = file_path, sheet = 1)
  
  # format metadata from top of excel file
  population_info <- as.character(as.vector(all_data[2,1:2]))
  metadata_description <- all_data[1:5, 1]
- metadata_description[2,] <- paste(population_info, collapse = " ")
+ metadata_description[2] <- paste(population_info, collapse = " ")
  metadata_aging_counts <- all_data[1:5, c(15,16)]
  names(metadata_aging_counts) <- c('Data Aging', 'Counts')
  metadata <- list(Descriptive = metadata_description,
@@ -95,9 +105,13 @@ parseEnteredElements <- function(file_path){
 #' @export
 #' @rdname parser
 #' 
+#' @examples 
+#' path <- system.file("extdata", package="AWUDS")
+#' compareData <- parseCompareData(file.path(path, "CompareData.xlsx"))
 parseCompareData <- function(file_path){
  sheet_names <- excel_sheets(file_path)
  parsed_data <- lapply(sheet_names, function(sheet, path, skip){
+   
    all_df <- read_excel(path, sheet)
    metadata <- na.omit(names(all_df))
    
@@ -107,7 +121,7 @@ parseCompareData <- function(file_path){
    
    df <- removeAllNARows(all_df)
    df <- df[which(df[,1] != names(df)[1]),] # remove duplicated column names that appear throughout data
-   
+
    return(df)
  }, path = file_path)
  names(parsed_data) <- sheet_names
