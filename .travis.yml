@@ -4,8 +4,9 @@
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
 
+os: osx
+
 language: objective-c
-sudo: required
 
 env:
    global:
