@@ -6,7 +6,7 @@
 #' @param years vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.
 #' @param w.use is the datafile that includes all areas in all data elements for state
 #' @param areas is a geographical area as defined in your datafile such as county, HUC, or aquifer
-#' @param area.column character
+#' @param area.column character that defines which column to use to specify area
 #' @param y.scale allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.
 #' @param log = TRUE or FALSE allows user to set log scale, default is FALSE
 #'
