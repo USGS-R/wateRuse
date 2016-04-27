@@ -19,6 +19,7 @@ compare_two_years(w.use, data.elements, areas, year.x.y)
 returns scatter plot for user-defined params and subset criteria
 }
 \examples{
+w.use <- wUseSample
 data.elements <- "PS_Popsvr"
 areas <- NA # NA uses all areas
 year.x.y <- c(2005,2010)
