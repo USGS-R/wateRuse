@@ -31,7 +31,7 @@ year1 <- 2005
 year2 <- 2010
 years <- c(year1, year2)
 areas <- c("Kent County","Sussex County")
-data.elements <- "PS-GWPop"
+data.elements <- "PS.GWPop"
 plotObject <- time_series_data(w.use, data.elements, area.column = "COUNTYNAME",areas = areas)
 plotObject <- time_series_data(w.use, data.elements)
 plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))

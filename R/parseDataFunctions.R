@@ -17,6 +17,7 @@
 #' TP <- exportData[["TP"]]
 #' PO <- exportData[["PO"]]
 #' 
+#' folderPath <- system.file("extdata", package="wateRuse")
 #' exportData2010 <- parseExport(file.path(folderPath,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
 #' LI <- exportData2010[["LI"]]
 parseExport <- function(file_path, citations = FALSE){
