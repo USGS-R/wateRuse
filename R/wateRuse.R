@@ -46,3 +46,15 @@ NULL
 #' head(calculation)
 #' head(calculation.formula)
 NULL
+
+#' Example Water Use Data Dump
+#'
+#' Example dump file read in as RData format
+#'
+#' @name wUseSample
+#' @rdname sampleData
+#' @docType data
+#' @keywords water use data
+#' @examples 
+#' head(wUseSample)
+NULL
