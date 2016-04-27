@@ -19,6 +19,8 @@ Imports:
 Suggests:
     testthat,
     knitr
+LazyLoad: yes
+LazyData: yes
 VignetteBuilder: knitr
 BugReports: https://github.com/USGS-R/wateRuse/issues
 URL: https://github.com/USGS-R/wateRuse
