@@ -2,21 +2,35 @@
 % Please edit documentation in R/timeseries.R
 \name{time_series_data}
 \alias{time_series_data}
-\title{time.series.data}
+\title{time_series_data}
 \usage{
-time_series_data(data.element, years = NA)
+time_series_data(w.use, data.elements, years = NA, areas = NA,
+  y.scale = NA, log = FALSE)
 }
 \arguments{
-\item{data.element}{character name of data element within available categories by year for state}
+\item{w.use}{is the datafile that includes all areas in all data elements for state}
 
-\item{years}{vector of integers specifying all years available for state}
+\item{data.elements}{character name of data element within available categories by year for state}
+
+\item{years}{vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.}
+
+\item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
+
+\item{y.scale}{allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.}
+
+\item{log}{= TRUE or FALSE allows user to set log scale, default is FALSE}
 }
 \description{
-time.series.data
+time_series_data
 }
 \examples{
 
+year1 <- 2005
+year2 <- 2010
+years <- c(year1, year2)
+areas <- c("Dane","Milwaukee")
 data.element <- "PS-GWPop"
-time_series_data(data.element)
+w.use <- NA
+time_series_data(w.use, data.element)
 }
 
