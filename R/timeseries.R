@@ -13,13 +13,12 @@
 #' @export
 #' 
 #' @examples 
-#' 
+#' w.use <- wUseSample
 #' year1 <- 2005
 #' year2 <- 2010
 #' years <- c(year1, year2)
 #' areas <- c("Dane","Milwaukee")
 #' data.element <- "PS-GWPop"
-#' w.use <- NA
 #' time_series_data(w.use, data.element)
 time_series_data <- function(w.use, data.elements, years= NA, areas= NA, y.scale=NA, log= FALSE){
   

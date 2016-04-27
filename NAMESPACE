@@ -3,7 +3,7 @@
 export(calculation)
 export(calculation.formula)
 export(category)
-export(compare.data.elements)
+export(compare_data_elements)
 export(compare_two_years)
 export(county)
 export(dataelement)

@@ -12,6 +12,7 @@
 #' @export
 #' 
 #' @examples 
+#' w.use <- wUseSample
 #' data.elements <- "PS_Popsvr"
 #' areas <- NA # NA uses all areas
 #' year.x.y <- c(2005,2010)
