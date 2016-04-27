@@ -16,7 +16,7 @@ get_awuds_data(awuds.data.path = NA)
 Get data from local excel export or dump file.
 }
 \examples{
-awuds.data.path <- system.file("extdata", package="wateRuse")
+awuds.data.path <- system.file("extdata/dump", package="wateRuse")
 awuds.data <- get_awuds_data(awuds.data.path)
 }
 

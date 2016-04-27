@@ -22,7 +22,7 @@
 #' years <- c(year1, year2)
 #' areas <- c("Kent County","Sussex County")
 #' area.column = "COUNTYNAME"
-#' data.elements <- c("PS-GWPop","PS-SWPop")
+#' data.elements <- c("PS.GWPop","PS.SWPop")
 #' plotObject <- time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
 #' plotObject <- time_series_data(w.use, data.elements)
 #' plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
