@@ -14,7 +14,7 @@ time_series_data(w.use, data.elements, years = NA, area.column = NA,
 
 \item{years}{vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.}
 
-\item{area.column}{character}
+\item{area.column}{character that defines which column to use to specify area}
 
 \item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
 
