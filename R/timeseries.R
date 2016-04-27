@@ -18,11 +18,32 @@
 #' year1 <- 2005
 #' year2 <- 2010
 #' years <- c(year1, year2)
-#' areas <- c("Dane","Milwaukee")
-#' data.element <- "PS-GWPop"
-#' time_series_data(w.use, data.element)
+#' areas <- c("Kent County","Sussex County")
+#' data.elements <- "PS-GWPop"
+#' plotObject <- time_series_data(w.use, data.elements, areas = areas)
+#' plotObject <- time_series_data(w.use, data.elements)
+#' plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
+#' plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100), years = c(1990,2005))
 time_series_data <- function(w.use, data.elements, years= NA, areas= NA, y.scale=NA, log= FALSE){
   
-  return(NA)
+  data.elements <- paste0("`",data.elements,"`")
+  
+  if(!all(is.na(areas))){
+    w.use <- w.use[w.use$COUNTYNAME %in% areas,]
+  }
+  
+  ts.object <- ggplot(data = w.use) + 
+    geom_line(aes_string(x = "YEAR", y = data.elements))
+  
+  if(!all(is.na(y.scale))){
+    ts.object <- ts.object + ylim(y.scale)
+  }
+  
+  if(!all(is.na(years))){
+    ts.object <- ts.object + xlim(years)
+  }
+  print(ts.object)
+  
+  return(ts.object)
 }
   

@@ -28,8 +28,11 @@ w.use <- wUseSample
 year1 <- 2005
 year2 <- 2010
 years <- c(year1, year2)
-areas <- c("Dane","Milwaukee")
-data.element <- "PS-GWPop"
-time_series_data(w.use, data.element)
+areas <- c("Kent County","Sussex County")
+data.elements <- "PS-GWPop"
+plotObject <- time_series_data(w.use, data.elements, areas = areas)
+plotObject <- time_series_data(w.use, data.elements)
+plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
+plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100), years = c(1990,2005))
 }
 
