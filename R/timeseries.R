@@ -11,6 +11,7 @@
 #'
 #' 
 #' @export
+#' @import ggplot2
 #' 
 #' @examples 
 #' w.use <- wUseSample
