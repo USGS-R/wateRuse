@@ -16,7 +16,8 @@ Depends:
     R (>= 3.0)
 Imports:
     readxl,
-    ggplot2
+    ggplot2,
+    tidyr
 Suggests:
     testthat,
     knitr
