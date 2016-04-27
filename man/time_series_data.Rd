@@ -4,8 +4,8 @@
 \alias{time_series_data}
 \title{time_series_data}
 \usage{
-time_series_data(w.use, data.elements, years = NA, areas = NA,
-  y.scale = NA, log = FALSE)
+time_series_data(w.use, data.elements, years = NA, area.column = NA,
+  areas = NA, y.scale = NA, log = FALSE)
 }
 \arguments{
 \item{w.use}{is the datafile that includes all areas in all data elements for state}
@@ -13,6 +13,8 @@ time_series_data(w.use, data.elements, years = NA, areas = NA,
 \item{data.elements}{character name of data element within available categories by year for state}
 
 \item{years}{vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.}
+
+\item{area.column}{character}
 
 \item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
 
@@ -30,7 +32,7 @@ year2 <- 2010
 years <- c(year1, year2)
 areas <- c("Kent County","Sussex County")
 data.elements <- "PS-GWPop"
-plotObject <- time_series_data(w.use, data.elements, areas = areas)
+plotObject <- time_series_data(w.use, data.elements, area.column = "COUNTYNAME",areas = areas)
 plotObject <- time_series_data(w.use, data.elements)
 plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
 plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100), years = c(1990,2005))
