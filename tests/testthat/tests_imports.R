@@ -13,3 +13,10 @@ test_that("Compare Data", {
 
   
 })
+
+test_that("Excel Data Gets Normalized", {
+  path <- system.file("extdata", package="wateRuse")
+  awuds <- get_awuds_data(path)
+  expect_equal(nrow(awuds),21)
+  expect_equal(ncol(awuds),98)
+})
