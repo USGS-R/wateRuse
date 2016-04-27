@@ -42,7 +42,7 @@ get_awuds_data <- function(awuds.data.path = NA) {
       }
     } else {
       awuds_data<-read.delim(file.path(awuds.data.path, dump_file_to_open), na.strings="--", colClasses="character")
-      awuds_data <- as.data.frame(lapply(awuds_data, function(x) {gsub("na", "NaN", x)}))
+      awuds_data <- as.data.frame(lapply(awuds_data, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
       for ( dataCol in names(awuds_data)[9:length(names(awuds_data))]) { # Convert all data elements to numeric
         awuds_data[[dataCol]]<-as.numeric(awuds_data[[dataCol]])
       }
