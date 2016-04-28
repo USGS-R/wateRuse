@@ -3,11 +3,17 @@ library(dplyr)
 library(DT)
 library(wateRuse)
 
-w.use <- wUseSample
+w.use.start <- wUseSample
 
 shinyServer(function(input, output, session) {
   
+  w.use <- reactive({
+    w.use <- w.use.start
+  })
+  
   output$plotTwo <- renderPlot({
+    w.use <- w.use()
+    
     data.elements <- input$data.elements
     areas <- input$area
     if(areas == "All"){
@@ -20,6 +26,8 @@ shinyServer(function(input, output, session) {
   })
   
   output$plotTime <- renderPlot({
+    w.use <- w.use()
+    
     data.elements <- input$data.elements
     areas <- input$area
     if(areas == "All"){
