@@ -6,6 +6,7 @@
 #' @param data.elements chr, vector of data elements to be plotted (1 plot per element) 
 #' @param areas chr, codes indicating HUCs, counties, states, aquifers, etc. 
 #' @param year.x.y int, 2-element vector specifying the two years to be plotted
+#' @param area.column character that defines which column to use to specify area
 #' 
 #' 
 #' 

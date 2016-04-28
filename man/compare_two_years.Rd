@@ -15,6 +15,8 @@ compare_two_years(w.use, data.elements, year.x.y, areas = NA,
 \item{year.x.y}{int, 2-element vector specifying the two years to be plotted}
 
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
+
+\item{area.column}{character that defines which column to use to specify area}
 }
 \description{
 returns scatter plot for user-defined params and subset criteria
