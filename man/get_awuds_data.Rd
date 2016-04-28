@@ -4,10 +4,12 @@
 \alias{get_awuds_data}
 \title{get_awuds_data}
 \usage{
-get_awuds_data(awuds.data.path = NA)
+get_awuds_data(awuds.data.path = NA, awuds.data.files = NA)
 }
 \arguments{
-\item{awuds.data.path}{character, path to files}
+\item{awuds.data.path}{character, path to files to try to load.}
+
+\item{awuds.data.files}{character, a vector of files to try to load.}
 }
 \value{
 \code{data.frame} containing AWUDS data elements
@@ -18,5 +20,17 @@ Get data from local excel export or dump file.
 \examples{
 awuds.data.path <- system.file("extdata/dump", package="wateRuse")
 awuds.data <- get_awuds_data(awuds.data.path)
+
+awuds.data.path <- system.file("extdata/excel", package="wateRuse")
+awuds.data <- get_awuds_data(awuds.data.path)
+
+fileList <- c(system.file("extdata/excel/Export_2005_County.xlsx", package="wateRuse"),
+system.file("extdata/excel/Export_2010_County.xlsx", package="wateRuse"),
+system.file("extdata/excel/Export_2015_County.xlsx", package="wateRuse"))
+awuds.data <- get_awuds_data(awuds.data.files=fileList)
+
+file <- c(system.file("extdata/dump/exampleAWUDSdump.txt", package="wateRuse"))
+awuds.data <- get_awuds_data(awuds.data.files=file)
+
 }
 
