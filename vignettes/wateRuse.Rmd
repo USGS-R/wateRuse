@@ -1,11 +1,11 @@
 ---
-title: "wateRise"
+title: "wateRuse"
 author: "Molly, Cheryl, etc..."
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   rmarkdown::html_vignette:
-    fig_height: 7
-    fig_width: 7
+    fig_height: 5
+    fig_width: 5
     toc: yes
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,7 +15,31 @@ vignette: >
 
 # Introduction
 
-  
+The `wateRuse` package includes basic data loading, quality assurance / quality control (QA/QC), plotting, and mapping functions for USGS water use data. The package is designed to standarize and streamline USGS state and regional water use (WU) specialists' workflows. 
+
+Water Science Center WU specialists can import current working AWUDS area files for their state as an export file (.xlsx format) and national data files (.csv format) which includes historical approved datasets. `wateRuse` can be used to merge the working export and national data files. The merged file is the basis for subsequent QA/QC. 
+
+Regional water use specialists can import a national dump file that will include working and approved data. 
+
+Users can display data based on time series or areas. Time series plots are for annual water use values for multiple years. Areas may include counties, HUC-08, aquifer, and state values. Users can compare different data elements by area and year and produce scatter plots, bar charts, line plots, and maps. 
+
+
+
+## Importing data
+
+
+## Data analysis tools
+This package provides basic data visualization tools enable a user to graphically display water use data for different types of water uses by different areas. 
+
+### Compare two years
+The `compare_two_years` function enables the user to examine data for different data elements or areas between two years. This plot can be produced as a scatterplot. A comparison between two years for a single data element can be graphed for an entire collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region). `areas` can be counties, HUC8s or aquifers. 
+
+Users can also request multiple data elements, which results in one plot per data element. When areas are subsetted for a data element, a single graph is produced. 
+
+
+FAQ: My compare two years plot doesn't have any data plotted, what's wrong? Answer: There may be data missing for the years selected. 
+
+
 ```{r message=FALSE}
 library(wateRuse)
 w.use <- wUseSample
@@ -26,6 +50,14 @@ compare_two_years(w.use, "PS.TOPop", year.x.y)
 
 
 ```
+
+
+### Ranked data element tables
+In RStudio, users can sort data elements by loading data and using the RStudio viewer to sort by data element values.
+
+### Time series plots
+
+
   
 ```{r message=FALSE}
 areas <- c("Kent County","Sussex County")
