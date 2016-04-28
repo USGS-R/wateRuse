@@ -32,3 +32,9 @@ Compare Data for 2 Datasets - New Jersey - County, 2005 vs 2010.xlsx
 This is an example of a report you can generate in AWUDS that you can use to compare your data between 2 different years' worth of compilations.
 
 
+
+dump/exampleAWUDSdump.txt
+
+This is an example of a file that contains multiple datasets for multiple states for multiple categories of water use.
+
+This file is modified from a dataset retrieved from the U.S. Geological Survey Aggregated Water Use Database (AWUDS) on April 27, 2016, and may have been revised since this date. The data are approved and contains county-level data for Hawaii and Delaware. The file contains data for multiple years, and all USGS categories of water use data.
