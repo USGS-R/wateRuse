@@ -53,7 +53,7 @@ sidebar <- dashboardSidebar(
               choices = data.elements,
               selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs %in% c('plotTwoTab','rankData')",
+    condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'rankData'",
       selectInput("year_x", label = "Year x:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[1], multiple = FALSE),
@@ -63,8 +63,9 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
-    checkboxInput("legendOn", label = "Include Legend"),
-    checkboxInput("log", label = "Log Scale")
+      checkboxInput("legendOn", label = "Include Legend"),
+      checkboxInput("log", label = "Log Scale"),
+      checkboxInput("points", label = "Points")
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
