@@ -89,16 +89,16 @@ shinyServer(function(input, output, session) {
     rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
                                              pageLength = nrow(w.use)))
-    # rankData <- formatStyle(rankData, names(df)[maxEARS[i]],
-    #                            background = styleColorBar(range(statCol[,names(statCol)[maxEARS[i]]],na.rm = TRUE), 'goldenrod'),
-    #                            backgroundSize = '100% 90%',
-    #                            backgroundRepeat = 'no-repeat',
-    #                            backgroundPosition = 'center' )
-    # rankData <- formatStyle(rankData, names(statCol)[freqCol[i]],
-    #                            background = styleColorBar(range(statCol[,names(statCol)[freqCol[i]]],na.rm = TRUE), 'wheat'),
-    #                            backgroundSize = '100% 90%',
-    #                            backgroundRepeat = 'no-repeat',
-    #                            backgroundPosition = 'center')
+    rankData <- formatStyle(rankData, year.x.y[1],
+                               background = styleColorBar(range(df[[year.x.y[1]]],na.rm = TRUE), 'goldenrod'),
+                               backgroundSize = '100% 90%',
+                               backgroundRepeat = 'no-repeat',
+                               backgroundPosition = 'center' )
+    rankData <- formatStyle(rankData, year.x.y[2],
+                            background = styleColorBar(range(df[[year.x.y[2]]],na.rm = TRUE), 'wheat'),
+                            backgroundSize = '100% 90%',
+                            backgroundRepeat = 'no-repeat',
+                            backgroundPosition = 'center' )
     rankData
   })
  
