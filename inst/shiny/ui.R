@@ -48,7 +48,16 @@ sidebar <- dashboardSidebar(
   ),
   selectInput("data.elements", label = "Data Elements", 
               choices = data.elements,
-              selected = data.elements[1], multiple = FALSE)
+              selected = data.elements[1], multiple = FALSE),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTwoTab'",
+      selectInput("year_x", label = "Year x:", width = 100,
+                choices = unique(wUseSample$YEAR),
+                selected = unique(wUseSample$YEAR)[1], multiple = FALSE),
+      selectInput("year_y", label = "Year y:", width = 100,
+                choices = unique(wUseSample$YEAR),
+                selected = unique(wUseSample$YEAR)[2], multiple = FALSE)
+  )
 
 )
 

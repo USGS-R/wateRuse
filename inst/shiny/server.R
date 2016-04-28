@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
     }
     
     area.column <- input$area.column
-    year.x.y <- c(2005,2010)
+    year.x.y <- c(input$year_x,input$year_y)
     compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
   })
   
@@ -40,13 +40,13 @@ shinyServer(function(input, output, session) {
     }
     
     area.column <- input$area.column
-    year.x.y <- c(2005,2010)
+    year.x.y <- c(input$year_x,input$year_y)
     
     outText <- paste0(
       'data.elements <- "',data.elements, '"\n',
       "areas <- ",areas, "\n",
       'area.column <- "', area.column, '"\n',
-      "year.x.y <- c(2005,2010)\n",
+      "year.x.y <- ",year.x.y,"\n",
       "compare_two_years(w.use, data.elements, year.x.y, areas, area.column)"
       
     )
