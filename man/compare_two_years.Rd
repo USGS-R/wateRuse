@@ -4,16 +4,19 @@
 \alias{compare_two_years}
 \title{xyPlot}
 \usage{
-compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
+compare_two_years(w.use, data.elements, year.x.y, areas = NA,
+  area.column = NA)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
 
 \item{data.elements}{chr, vector of data elements to be plotted (1 plot per element)}
 
+\item{year.x.y}{int, 2-element vector specifying the two years to be plotted}
+
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
 
-\item{year.x.y}{int, 2-element vector specifying the two years to be plotted}
+\item{area.column}{character that defines which column to use to specify area}
 }
 \description{
 returns scatter plot for user-defined params and subset criteria
@@ -24,6 +27,8 @@ data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "10" # NA uses all areas
 area.column <- "STATECODE"
 year.x.y <- c(2005,2010)
-compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
+compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
+compare_two_years(w.use, data.elements, year.x.y)
+compare_two_years(w.use, "PS.TOPop", year.x.y)
 }
 
