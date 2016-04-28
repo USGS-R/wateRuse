@@ -1,8 +1,8 @@
-library(leaflet)
 library(dplyr)
 library(DT)
 library(wateRuse)
 library(ggplot2)
+library(tidyr)
 
 w.use.start <- wUseSample
 
@@ -10,6 +10,7 @@ shinyServer(function(input, output, session) {
   
   w.use <- reactive({
     w.use <- w.use.start
+    
   })
   
   areasOptions <- reactive({
@@ -71,7 +72,32 @@ shinyServer(function(input, output, session) {
     
     w.use <- w.use()
     data.elements <- input$data.elements
+    areas <- input$area
     area.column <- input$area.column
+    w.use <- subset_wuse(w.use, data.elements,areas, area.column)
+
+    year.x.y <- c(input$year_x, input$year_y)
+    
+    w.use.sub <-  w.use[w.use$YEAR %in% year.x.y,] 
+    
+    x <- gather_(w.use.sub, "Key", "Value", data.elements)
+    
+    for(i in data.elements){
+      df <- data.frame(
+        x = x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]],
+        y = x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]])
+      
+      df$Key <- i
+      
+      if(i == data.elements[1]){
+        df_full <- df
+      } else {
+        df_full <- rbind(df_full, df)
+      }
+    }
+    names(df_full) <- c(year.x.y[1], year.x.y[2], data.elements)
+    df_full <- df_full[,c(3,1,2)]
+    
     # rankData <- DT::datatable(statCol, extensions = 'Buttons', 
     #                            rownames = FALSE,
     #                            options = list(#dom = 'ft',
@@ -114,10 +140,8 @@ shinyServer(function(input, output, session) {
     #                            backgroundPosition = 'center') 
     #   
     # }
-    
-    w.use <- w.use[,c("YEAR",area.column,data.elements)]
-      
-    rankData <- DT::datatable(w.use, rownames = FALSE,
+
+    rankData <- DT::datatable(df_full, rownames = FALSE,
                               options = list(scrollX = TRUE,
                                              pageLength = nrow(w.use)))
     rankData
