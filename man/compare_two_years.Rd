@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_two_years.R
 \name{compare_two_years}
 \alias{compare_two_years}
-\title{xyPlot}
+\title{compare_two_years}
 \usage{
 compare_two_years(w.use, data.elements, year.x.y, areas = NA,
   area.column = NA)
@@ -19,7 +19,8 @@ compare_two_years(w.use, data.elements, year.x.y, areas = NA,
 \item{area.column}{character that defines which column to use to specify area}
 }
 \description{
-returns scatter plot for user-defined params and subset criteria
+Returns scatter plot for 2 years for data elements of interest.
+Option to narrow down data geographically
 }
 \examples{
 w.use <- wUseSample
