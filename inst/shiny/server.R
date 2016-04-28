@@ -66,8 +66,9 @@ shinyServer(function(input, output, session) {
     area.column <- input$area.column
     legend <- input$legendOn
     log <- input$log
-
-    time_series_data(w.use, data.elements, area.column = area.column, 
+    points <- input$points
+    
+    time_series_data(w.use, data.elements, area.column = area.column, plot.points = points,
                      areas = areas, legend = legend, log = log)
   })
   
@@ -84,54 +85,20 @@ shinyServer(function(input, output, session) {
     w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
     
     df <- spread_(w.use.sub, "YEAR", data.elements)
-    
-    
-    # rankData <- DT::datatable(statCol, extensions = 'Buttons', 
-    #                            rownames = FALSE,
-    #                            options = list(#dom = 'ft',
-    #                              dom = 'Bfrtip',
-    #                              buttons =
-    #                                list('colvis', list(
-    #                                  extend = 'collection',
-    #                                  buttons = list(list(extend='csv',
-    #                                                      filename = 'hitStats'),
-    #                                                 list(extend='excel',
-    #                                                      filename = 'hitStats'),
-    #                                                 list(extend='pdf',
-    #                                                      filename= 'hitStats')),
-    #                                  text = 'Download'
-    #                                )
-    #                                ),
-    #                              scrollX = TRUE,
-    #                              pageLength = nrow(statCol),
-    #                              order=list(list(colToSort,'desc'))))
-    # 
-    # rankData <- formatRound(tableSumm, names(statCol)[-ignoreIndex], 2) 
-    # 
-    # for(i in 1:length(maxEARS)){
-    #   tableSumm <- formatStyle(tableSumm, 
-    #                            names(statCol)[maxEARS[i]], 
-    #                            backgroundColor = colors[i])
-    #   tableSumm <- formatStyle(tableSumm, 
-    #                            names(statCol)[freqCol[i]], 
-    #                            backgroundColor = colors[i])
-    #   
-    #   tableSumm <- formatStyle(tableSumm, names(statCol)[maxEARS[i]], 
-    #                            background = styleColorBar(range(statCol[,names(statCol)[maxEARS[i]]],na.rm = TRUE), 'goldenrod'),
-    #                            backgroundSize = '100% 90%',
-    #                            backgroundRepeat = 'no-repeat',
-    #                            backgroundPosition = 'center' ) 
-    #   tableSumm <- formatStyle(tableSumm, names(statCol)[freqCol[i]], 
-    #                            background = styleColorBar(range(statCol[,names(statCol)[freqCol[i]]],na.rm = TRUE), 'wheat'),
-    #                            backgroundSize = '100% 90%',
-    #                            backgroundRepeat = 'no-repeat',
-    #                            backgroundPosition = 'center') 
-    #   
-    # }
 
     rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
                                              pageLength = nrow(w.use)))
+    # rankData <- formatStyle(rankData, names(df)[maxEARS[i]],
+    #                            background = styleColorBar(range(statCol[,names(statCol)[maxEARS[i]]],na.rm = TRUE), 'goldenrod'),
+    #                            backgroundSize = '100% 90%',
+    #                            backgroundRepeat = 'no-repeat',
+    #                            backgroundPosition = 'center' )
+    # rankData <- formatStyle(rankData, names(statCol)[freqCol[i]],
+    #                            background = styleColorBar(range(statCol[,names(statCol)[freqCol[i]]],na.rm = TRUE), 'wheat'),
+    #                            backgroundSize = '100% 90%',
+    #                            backgroundRepeat = 'no-repeat',
+    #                            backgroundPosition = 'center')
     rankData
   })
  
