@@ -7,6 +7,9 @@
 \description{
 Example dump file read in as RData format.
 }
+\details{
+This file is modified from a dataset retrieved from the U.S. Geological Survey Aggregated Water Use Database (AWUDS) on April 27, 2016, and may have been revised since this date. The data are approved and contains county-level data for Hawaii and Delaware. The file contains data for multiple years, and all USGS categories of water use data.
+}
 \examples{
 head(wUseSample)
 }
