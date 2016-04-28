@@ -53,7 +53,7 @@ sidebar <- dashboardSidebar(
               choices = data.elements,
               selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoTab'",
+    condition = "input.mainTabs %in% c('plotTwoTab','rankData')",
       selectInput("year_x", label = "Year x:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[1], multiple = FALSE),
