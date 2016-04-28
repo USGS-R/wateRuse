@@ -3,9 +3,9 @@
 \docType{data}
 \name{wUseSample}
 \alias{wUseSample}
-\title{Example Water Use Data Dump}
+\title{Example Water Use Data}
 \description{
-Example dump file read in as RData format
+Example dump file read in as RData format.
 }
 \examples{
 head(wUseSample)

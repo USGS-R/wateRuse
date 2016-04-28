@@ -50,9 +50,10 @@ get_awuds_data <- function(awuds.data.path = NA) {
   } else {
     stop('Must provide the folder where AWUDS Excel export files or dump file(s) are stored.')
   }
-  #   col_year <- grep("Year", names(awuds_data))
-  #   awuds_data <- awuds_data[, c(col_idx, (1:ncol(df))[-col_idx])]
-  #   names(df)
+  # Still need to reorder the collumns to be in canonical order.
+  # col_year <- grep("Year", names(awuds_data))
+  # awuds_data <- awuds_data[, c(col_idx, (1:ncol(df))[-col_idx])]
+  # names(awuds_data)
   return(awuds_data)
 }
 
