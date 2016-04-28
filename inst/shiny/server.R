@@ -44,7 +44,7 @@ shinyServer(function(input, output, session) {
     
     area.column <- input$area.column
     year.x.y <- c(input$year_x,input$year_y)
-    plotTwo <- compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
+    plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
     
     # ggsave("plotTwo.png",plotTwo)
     
@@ -75,29 +75,12 @@ shinyServer(function(input, output, session) {
     areas <- input$area
     area.column <- input$area.column
     
-    w.use <- subset_wuse(w.use, data.elements,areas, area.column)
+    w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
 
-    year.x.y <- c(input$year_x, input$year_y)
+    w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
     
-    w.use.sub <-  w.use[w.use$YEAR %in% year.x.y,] 
+    df <- spread_(w.use.sub, "YEAR", data.elements)
     
-    x <- gather_(w.use.sub, "Key", "Value", data.elements)
-    
-    for(i in data.elements){
-      df <- data.frame(
-        x = x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]],
-        y = x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]])
-      
-      df$Key <- i
-      
-      if(i == data.elements[1]){
-        df_full <- df
-      } else {
-        df_full <- rbind(df_full, df)
-      }
-    }
-    names(df_full) <- c(year.x.y[1], year.x.y[2], data.elements)
-    df_full <- df_full[,c(3,1,2)]
     
     # rankData <- DT::datatable(statCol, extensions = 'Buttons', 
     #                            rownames = FALSE,
@@ -142,7 +125,7 @@ shinyServer(function(input, output, session) {
     #   
     # }
 
-    rankData <- DT::datatable(df_full, rownames = FALSE,
+    rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
                                              pageLength = nrow(w.use)))
     rankData

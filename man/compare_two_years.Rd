@@ -4,8 +4,7 @@
 \alias{compare_two_years}
 \title{compare_two_years}
 \usage{
-compare_two_years(w.use, data.elements, year.x.y, areas = NA,
-  area.column = NA)
+compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -14,9 +13,9 @@ compare_two_years(w.use, data.elements, year.x.y, areas = NA,
 
 \item{year.x.y}{int, 2-element vector specifying the two years to be plotted}
 
-\item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
-
 \item{area.column}{character that defines which column to use to specify area}
+
+\item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
 }
 \description{
 Returns scatter plot for 2 years for data elements of interest.
@@ -28,8 +27,8 @@ data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "10" # NA uses all areas
 area.column <- "STATECODE"
 year.x.y <- c(2005,2010)
-compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
-compare_two_years(w.use, data.elements, year.x.y)
-compare_two_years(w.use, "PS.TOPop", year.x.y)
+compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
+compare_two_years(w.use, data.elements, year.x.y, area.column)
+compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
 }
 
