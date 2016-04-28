@@ -37,7 +37,7 @@ shinyServer(function(input, output, session) {
     
     areasOptions <- areasOptions()
     
-    if(all(areas  %in% areasOptions)){
+    if(all(areasOptions %in% areas)){
       areas <- NA
     }
     
@@ -58,9 +58,9 @@ shinyServer(function(input, output, session) {
     
     areasOptions <- areasOptions()
     
-    if(all(areas  %in% areasOptions)){
+    if(all(areasOptions %in% areas)){
       areas <- NA
-    }
+    } 
     
     area.column <- input$area.column
 
@@ -84,8 +84,10 @@ shinyServer(function(input, output, session) {
     
     areasOptions <- areasOptions()
     
-    if(all(areas  %in% areasOptions)){
+    if(all(areasOptions %in% areas)){
       areas <- NA
+    } else {
+      areas <- paste0('c("',paste(areas, collapse = '","'),'")')
     }
     
     area.column <- input$area.column
@@ -93,9 +95,9 @@ shinyServer(function(input, output, session) {
     
     outText <- paste0(
       'data.elements <- "',data.elements, '"\n',
-      "areas <- ",areas, "\n",
+      "areas <- ", areas, "\n",
       'area.column <- "', area.column, '"\n',
-      "year.x.y <- ",year.x.y,"\n",
+      "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
       "compare_two_years(w.use, data.elements, year.x.y, areas, area.column)"
       
     )
@@ -111,8 +113,10 @@ shinyServer(function(input, output, session) {
     
     areasOptions <- areasOptions()
     
-    if(all(areas  %in% areasOptions)){
+    if(all(areasOptions %in% areas)){
       areas <- NA
+    } else {
+      areas <- paste0('c("',paste(areas, collapse = '","'),'")')
     }
     
     area.column <- input$area.column
