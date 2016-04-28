@@ -47,14 +47,32 @@ NULL
 #' head(calculation.formula)
 NULL
 
-#' Example Water Use Data Dump
+#' Example Water Use Data
 #'
-#' Example dump file read in as RData format
+#' Example dump file read in as RData format.
 #'
 #' @name wUseSample
-#' @rdname sampleData
+#' @rdname wUseSample
 #' @docType data
 #' @keywords water use data
 #' @examples 
 #' head(wUseSample)
+NULL
+
+#' County Polygons for use in mapping water use data.
+#'
+#' County polygons from: Siczewicz, Peter. U.S. Historical Counties (Generalized .001 deg). Dataset. 
+#' Emily Kelley, digital comp. Atlas of Historical County Boundaries, ed. by John H. Long. 
+#' Chicago: The Newberry Library, 2011. Available online from http://publications.newberry.org/ahcbp
+#'
+#' @name histCounties
+#' @rdname histCounties
+#' @docType data
+#' @keywords county polygons
+#' @import sp
+#' @examples 
+#' names(histCounties@data)
+#' \dontrun{
+#' plot(histCounties[which(histCounties@data$STATE_TERR == "New Jersey"),])
+#' }
 NULL
