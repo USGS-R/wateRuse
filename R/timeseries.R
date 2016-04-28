@@ -9,6 +9,8 @@
 #' @param area.column character that defines which column to use to specify area
 #' @param y.scale allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.
 #' @param log = TRUE or FALSE allows user to set log scale, default is FALSE
+#' @param plot.points is a logical function to show counties as points or clustered bar graph
+#' @param legend is a logical function to include list of counties in a legend if manageable, default is TRUE
 #'
 #' 
 #' @export
@@ -22,35 +24,46 @@
 #' years <- c(year1, year2)
 #' areas <- c("Kent County","Sussex County")
 #' area.column = "COUNTYNAME"
-#' data.elements <- c("PS.GWPop","PS.SWPop")
-#' plotObject <- time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
-#' plotObject <- time_series_data(w.use, data.elements)
-#' plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
-#' plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100), years = c(1990,2005))
-time_series_data <- function(w.use, data.elements, years= NA, area.column = NA, areas= NA, y.scale=NA, log= FALSE){
-  
-  # data.elements <- paste0("`",data.elements,"`")
-  
+#' data.elements <- c("PS.GWPop","TP.TotPop")
+#' time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
+#' time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas)
+#' time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas, legend=FALSE)
+#' time_series_data(w.use, data.elements, area.column)
+#' time_series_data(w.use, data.elements, area.column, y.scale = c(0,100))
+#' time_series_data(w.use, data.elements, area.column, y.scale = c(0,100), years = c(1990,2005))
+time_series_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
+                             years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
+
   if(!all(is.na(areas))){
     w.use <- w.use[w.use[[area.column]] %in% areas,]
   }
   
-  df <- w.use[,c("YEAR",data.elements)]
+  df <- w.use[,c("YEAR",area.column,data.elements)]
   
-  df <- gather_(df, "dataElement", "value", data.elements)
+  df <- gather_(df, "dataElement", "value", c(data.elements))
   
-  ts.object <- ggplot(data = df) + 
-    geom_line(aes_string(x = "YEAR", y = "value")) +
-    facet_grid(dataElement ~ .)
+  ts.object <- ggplot(data = df) 
+  
+  if(plot.points){
+    ts.object <- ts.object + geom_point(aes_string(x = "YEAR", y = "value", color = area.column), show.legend = legend)
+  } else {
+    ts.object <- ts.object + geom_bar(aes_string(x = "YEAR", y = "value", 
+                                                 fill = area.column), 
+                                      position = "dodge",stat="identity",show.legend = legend)
+  }
+ 
+  ts.object <- ts.object + facet_grid(dataElement ~ .) +
+    ylab("") 
   
   if(!all(is.na(y.scale))){
-    ts.object <- ts.object + ylab("")+ ylim(y.scale)
+    ts.object <- ts.object + ylim(y.scale)
   }
   
   if(!all(is.na(years))){
     ts.object <- ts.object + xlim(years)
   }
-  print(ts.object)
+  
+  ts.object
   
   return(ts.object)
 }

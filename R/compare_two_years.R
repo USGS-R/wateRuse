@@ -25,12 +25,7 @@
 #' compare_two_years(w.use, "PS.TOPop", year.x.y)
 compare_two_years <- function(w.use, data.elements, year.x.y, areas=NA, area.column=NA){ 
 
-  # subset w.use on basis of areas and select the data element of interest
-  if (all(is.na(areas))){
-    w.use.sub <- w.use[,c("YEAR",data.elements)]
-  }else{
-    w.use.sub <-  w.use[w.use[,area.column] %in% areas, c("YEAR",data.elements)]
-  }
+  w.use.sub <- subset_wuse(w.use, data.elements, areas, area.column)
   
   w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
   
