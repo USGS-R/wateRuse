@@ -88,7 +88,8 @@ shinyServer(function(input, output, session) {
 
     rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
-                                             pageLength = nrow(w.use)))
+                                             pageLength = nrow(w.use),
+                                             order=list(list(2,'desc'))))
     rankData <- formatStyle(rankData, year.x.y[1],
                                background = styleColorBar(range(df[[year.x.y[1]]],na.rm = TRUE), 'goldenrod'),
                                backgroundSize = '100% 90%',
