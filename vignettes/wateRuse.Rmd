@@ -15,28 +15,32 @@ vignette: >
 
 # Introduction
 
-The `wateRuse` package includes basic data loading, quality assurance / quality control (QA/QC), plotting, and mapping functions for USGS water use data. The package is designed to standarize and streamline USGS state and regional water use (WU) specialists' workflows. 
+The `wateRuse` package includes basic water-use data loading, plotting, and mapping functions that can be used to illustrate data, or perform QA/QC analysis on water-use data during compilation efforts.  The package is designed to standarize and streamline USGS Water Science Center (WSC) and regional water use (WU) specialists' workflows. 
 
-Water Science Center WU specialists can import current working AWUDS area files for their state as an export file (.xlsx format) and national data files (.csv format) which includes historical approved datasets. `wateRuse` can be used to merge the working export and national data files. The merged file is the basis for subsequent QA/QC. 
+WSC WU specialists can use current working AWUDS area files for their state (export file in .xlsx format) and national data files (.csv format), which includes historical approved datasets. `wateRuse` can be used to merge the working export and national approved data files. The merged file is the basis for subsequent plotting and analysis. 
 
 Regional water use specialists can import a national dump file that will include working and approved data. 
 
-Users can display data based on time series or areas. Time series plots are for annual water use values for multiple years. Areas may include counties, HUC-08, aquifer, and state values. Users can compare different data elements by area and year and produce scatter plots, bar charts, line plots, and maps. 
+Users can display data based on time (year) or areas (county, HUC8, aquifer, state). Time series plots use annual water-use values for a data element and  multiple years. A data element would represent the amount of water that is withdrawn from a specific source (groundwater, surface water) for a given area (ie county).  Users can compare different data elements by area and year and produce scatter plots, bar charts, line graphs, and choropleth maps. 
 
 
 
 ## Importing data
+A WSC user will navigate to a directory with a national best available dataset that contains all approved data that is viewable by all water-use users.  In addition to this, a WSC user will execute an AWUDS export function to produce an excel file (using default AWUDS naming convention).   These data files will be merged into one.  
 
+A Regional user will navigate to a directory with all national data, including best available and current working data for all States.  
+
+The ability to see data, whether national approved or state working data, will depend on the user type.  WSC users will always see their own working unapproved data.  Regional users will see a national dataset with approved and working data for review purposes. 
 
 ## Data analysis tools
-This package provides basic data visualization tools enable a user to graphically display water use data for different types of water uses by different areas. 
+This package provides basic data visualization tools that provide graphical displays of water-use data for different types of water uses by area and years. 
 
 ### Compare two years
-The `compare_two_years` function enables the user to examine data for different data elements or areas between two years. This plot can be produced as a scatterplot. A comparison between two years for a single data element can be graphed for an entire collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region). `areas` can be counties, HUC8s or aquifers. 
+The `compare_two_years` function enables the user to examine data for different data elements (one data element per plot) by  area (county, HUC8, aquifer) for two years. This plot is produced as a scatterplot. A comparison between two years for a single data element is graphed for an entire collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region). 
 
-Users can also request multiple data elements, which results in one plot per data element. When areas are subsetted for a data element, a single graph is produced. 
+Users can request this plot for multiple data elements, which results in one plot per data element but as a stacked group of plots. When areas are subsetted for a data element, a single graph is produced for only the subsetted areas. 
 
-
+users should be aware of what data elements exist for different years. For example, if a data element exists in one year but not both of the selected years, the plot will not be produced.
 FAQ: My compare two years plot doesn't have any data plotted, what's wrong? Answer: There may be data missing for the years selected. 
 
 
@@ -50,13 +54,22 @@ compare_two_years(w.use, "PS.TOPop", year.x.y,area.column)
 
 
 ```
+### Compare two elements (ROB ADD TEXT AND SCRIPT MATERIAL BELOW)
+
+This function will also plot two data elements for the same year or multiple years.  The user is able to illustrate the relationship between two elements in one scatterplot, for example, the number of irrigated acres and total irrigated withdrawals for a state for a given year.  Multiple years on one plot are not able.  Multiple stacked plots are possible for the same pairs of data elements for multiple years. 
+
+```
+
+
+
+```
 
 
 ### Ranked data element tables
-In RStudio, users can sort data elements by loading data and using the RStudio viewer to sort by data element values.
+Users can rank data elements using the shiny application.  Once data is loaded, users can selected areas, years and data element types to display tables of values, which can be displayed in various ranking forms by clicking on the column name. 
 
-### Time series plots
-
+### Time series plots (JEN and GARY ADD TEXT AND SCRIPTS)
+A time series plot shows water use for a data element for all areas of a subset of areas over time.  A user has the option to  illustration this using a bar graph or line graph, or point plot.  A selection of all areas or a subset of areas is also possible.  Only one data element per plot is possible but plots can be clustered to show multiple data elements in groups. 
 
   
 ```{r message=FALSE}
