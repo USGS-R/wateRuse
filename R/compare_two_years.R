@@ -1,6 +1,7 @@
-#' xyPlot
+#' compare_two_years
 #'
-#' returns scatter plot for user-defined params and subset criteria
+#' Returns scatter plot for 2 years for data elements of interest.
+#' Option to narrow down data geographically
 #' 
 #' @param w.use dataframe, the water use data 
 #' @param data.elements chr, vector of data elements to be plotted (1 plot per element) 
@@ -8,13 +9,10 @@
 #' @param year.x.y int, 2-element vector specifying the two years to be plotted
 #' @param area.column character that defines which column to use to specify area
 #' 
-#' 
-#' 
 #' @export
 #' 
 #' @import ggplot2 
 #' @importFrom tidyr gather_
-#' 
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -50,17 +48,17 @@ compare_two_years <- function(w.use, data.elements, year.x.y, areas=NA, area.col
     } else {
       df_full <- rbind(df_full, df)
     }
-  }
+  }# i
   
   compare.plot <- ggplot(data = df_full) +
    geom_point(aes_string(x = "x", y = "y")) +
     geom_line(aes_string(x = "x", y = "x"),col="red") +
-    facet_grid(Key ~ .) +
-    xlab("") +
-    ylab("")
+    facet_wrap(~ Key, ncol = 1) +
+    xlab(year.x.y[1]) +
+    ylab(year.x.y[2])
   
   compare.plot
   
   return(compare.plot)
   
-}
+}# compare_two_years
