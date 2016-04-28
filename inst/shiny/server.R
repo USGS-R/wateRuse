@@ -74,6 +74,7 @@ shinyServer(function(input, output, session) {
     data.elements <- input$data.elements
     areas <- input$area
     area.column <- input$area.column
+    year.x.y <-  c(input$year_x,input$year_y)
     
     w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
 
