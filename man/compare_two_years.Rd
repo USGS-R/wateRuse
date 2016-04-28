@@ -4,7 +4,7 @@
 \alias{compare_two_years}
 \title{xyPlot}
 \usage{
-compare_two_years(w.use, data.elements, areas, year.x.y)
+compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -20,9 +20,10 @@ returns scatter plot for user-defined params and subset criteria
 }
 \examples{
 w.use <- wUseSample
-data.elements <- "PS_Popsvr"
-areas <- NA # NA uses all areas
+data.elements <- c("PS.TOPop", "PS.SWPop")
+areas <- "10" # NA uses all areas
+area.column <- "STATECODE"
 year.x.y <- c(2005,2010)
-compare_two_years(w.use, data.elements, areas, year.x.y)
+compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
 }
 

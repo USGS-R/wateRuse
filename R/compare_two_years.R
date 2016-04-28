@@ -11,23 +11,51 @@
 #' 
 #' @export
 #' 
+#' @import ggplot2 
+#' @importFrom tidyr gather_
+#' 
+#' 
 #' @examples 
 #' w.use <- wUseSample
-#' data.elements <- "PS_Popsvr"
-#' areas <- NA # NA uses all areas
+#' data.elements <- c("PS.TOPop", "PS.SWPop")
+#' areas <- "10" # NA uses all areas
+#' area.column <- "STATECODE"
 #' year.x.y <- c(2005,2010)
-#' compare_two_years(w.use, data.elements, areas, year.x.y)
-compare_two_years <- function(w.use, data.elements, areas, year.x.y){ 
+#' compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
+compare_two_years <- function(w.use, data.elements, areas, area.column, year.x.y){ 
 
-  # subset w.use based on areas and select the data element of interest
-  # w.use.sub <- subset(w.use, w.use$area==areas, select=data.elements)
+  # subset w.use on basis of areas and select the data element of interest
+  if (all(is.na(areas))){
+    w.use.sub <- w.use[,c("YEAR",data.elements)]
+  }else{
+    w.use.sub <-  w.use[w.use[,area.column] %in% areas, c("YEAR",data.elements)]
+  }
   
-  # x.arg <- subset(w.use.sub, w.use.sub$year==year.x.y[1])
-  # y.arg <- subset(w.use.sub, w.use.sub$year==year.x.y[2])
+  w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
   
-  # xy_Plot <- ggplot(data = w.use.sub) +
-  # geom_point(aes(x = x.arg, y = y.arg))
+  x <- gather_(w.use.sub, "Key", "Value", data.elements)
   
-  return(NA)
+  for(i in data.elements){
+    df <- data.frame(
+      x = x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]],
+      y = x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]])
+    
+    df$Key <- i
+    
+    if(i == data.elements[1]){
+      df_full <- df
+    } else {
+      df_full <- rbind(df_full, df)
+    }
+  }# i
+  
+  compare.plot <- ggplot(data = df_full) +
+   geom_point(aes_string(x = "x", y = "y")) +
+    geom_line(aes_string(x = "x", y = "x"),col="red") +
+    facet_grid(Key ~ .)
+  
+  compare.plot
+  
+  return(compare.plot)
   
 }
