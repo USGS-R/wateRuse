@@ -64,8 +64,11 @@ shinyServer(function(input, output, session) {
     } 
     
     area.column <- input$area.column
+    legend <- input$legendOn
+    log <- input$log
 
-    time_series_data(w.use, data.elements, area.column = area.column, areas = areas)
+    time_series_data(w.use, data.elements, area.column = area.column, 
+                     areas = areas, legend = legend, log = log)
   })
   
   output$rankData <- DT::renderDataTable({
@@ -185,12 +188,17 @@ shinyServer(function(input, output, session) {
     }
     
     area.column <- input$area.column
+    legend <- input$legendOn
+    log <- input$log
     
     outText <- paste0(
       'data.elements <- "',data.elements, '"\n',
       "areas <- ",areas, "\n",
       'area.column <- "', area.column, '"\n',
-      "time_series_data(w.use, data.elements, area.column = area.column, areas = areas)"
+      'legend <- ',legend,"\n",
+      'log <- ',log,"\n",
+      "time_series_data(w.use, data.elements, area.column = area.column,\n",
+      "areas = areas,log=log, legend=legend)"
       
     )
     
