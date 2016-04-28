@@ -21,8 +21,10 @@
 #' areas <- "10" # NA uses all areas
 #' area.column <- "STATECODE"
 #' year.x.y <- c(2005,2010)
-#' compare_two_years(w.use, data.elements, areas, area.column, year.x.y)
-compare_two_years <- function(w.use, data.elements, areas, area.column, year.x.y){ 
+#' compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
+#' compare_two_years(w.use, data.elements, year.x.y)
+#' compare_two_years(w.use, "PS.TOPop", year.x.y)
+compare_two_years <- function(w.use, data.elements, year.x.y, areas=NA, area.column=NA){ 
 
   # subset w.use on basis of areas and select the data element of interest
   if (all(is.na(areas))){
@@ -47,12 +49,14 @@ compare_two_years <- function(w.use, data.elements, areas, area.column, year.x.y
     } else {
       df_full <- rbind(df_full, df)
     }
-  }# i
+  }
   
   compare.plot <- ggplot(data = df_full) +
    geom_point(aes_string(x = "x", y = "y")) +
     geom_line(aes_string(x = "x", y = "x"),col="red") +
-    facet_grid(Key ~ .)
+    facet_grid(Key ~ .) +
+    xlab("") +
+    ylab("")
   
   compare.plot
   

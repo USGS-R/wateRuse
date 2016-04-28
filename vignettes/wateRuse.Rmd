@@ -1,0 +1,43 @@
+---
+title: "wateRise"
+author: "Molly, Cheryl, etc..."
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmarkdown::html_vignette:
+    fig_height: 7
+    fig_width: 7
+    toc: yes
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{wateRuse Introduction}
+  \usepackage[utf8]{inputenc}
+---
+
+# Introduction
+
+  
+```{r message=FALSE}
+library(wateRuse)
+w.use <- wUseSample
+areas <- "10" # NA uses all areas
+area.column <- "STATECODE"
+year.x.y <- c(2005,2010)
+compare_two_years(w.use, "PS.TOPop", year.x.y)
+
+
+```
+  
+```{r message=FALSE}
+areas <- c("Kent County","Sussex County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","PS.SWPop")
+time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
+
+```
+  
+ 
+
+# Disclaimer
+Software created by USGS employees along with contractors and grantees (unless specific stipulations are made in a contract or grant award) are to be released as Public Domain and free of copyright or license. Contributions of software components such as specific algorithms to existing software licensed through a third party are encouraged, but those contributions should be annotated as freely available in the Public Domain wherever possible. If USGS software uses existing licensed components, those licenses must be adhered to and redistributed.
+
+Although this software has been used by the U.S. Geological Survey (USGS), no warranty, expressed or implied, is made by the USGS or the U.S. Government as to accuracy and functionality, nor shall the fact of distribution constitute any such warranty, and no responsibility is assumed by the USGS in connection therewith.
