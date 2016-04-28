@@ -4,23 +4,27 @@
 \alias{time_series_data}
 \title{time_series_data}
 \usage{
-time_series_data(w.use, data.elements, years = NA, area.column = NA,
-  areas = NA, y.scale = NA, log = FALSE)
+time_series_data(w.use, data.elements, area.column, plot.points = TRUE,
+  years = NA, areas = NA, y.scale = NA, log = FALSE, legend = TRUE)
 }
 \arguments{
 \item{w.use}{is the datafile that includes all areas in all data elements for state}
 
 \item{data.elements}{character name of data element within available categories by year for state}
 
-\item{years}{vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.}
-
 \item{area.column}{character that defines which column to use to specify area}
+
+\item{plot.points}{is a logical function to show counties as points or clustered bar graph}
+
+\item{years}{vector of integers specifying all years available for state. Defaults to NA which shows all years in dataset.}
 
 \item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
 
 \item{y.scale}{allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.}
 
 \item{log}{= TRUE or FALSE allows user to set log scale, default is FALSE}
+
+\item{legend}{is a logical function to include list of counties in a legend if manageable, default is TRUE}
 }
 \description{
 time_series_data
@@ -32,10 +36,12 @@ year2 <- 2010
 years <- c(year1, year2)
 areas <- c("Kent County","Sussex County")
 area.column = "COUNTYNAME"
-data.elements <- c("PS.GWPop","PS.SWPop")
-plotObject <- time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
-plotObject <- time_series_data(w.use, data.elements)
-plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100))
-plotObject <- time_series_data(w.use, data.elements, y.scale = c(0,100), years = c(1990,2005))
+data.elements <- c("PS.GWPop","TP.TotPop")
+time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
+time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas)
+time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas, legend=FALSE)
+time_series_data(w.use, data.elements, area.column)
+time_series_data(w.use, data.elements, area.column, y.scale = c(0,100))
+time_series_data(w.use, data.elements, area.column, y.scale = c(0,100), years = c(1990,2005))
 }
 
