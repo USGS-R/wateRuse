@@ -70,7 +70,8 @@ shinyServer(function(input, output, session) {
   output$rankData <- DT::renderDataTable({
     
     w.use <- w.use()
-    
+    data.elements <- input$data.elements
+    area.column <- input$area.column
     # rankData <- DT::datatable(statCol, extensions = 'Buttons', 
     #                            rownames = FALSE,
     #                            options = list(#dom = 'ft',
@@ -113,8 +114,12 @@ shinyServer(function(input, output, session) {
     #                            backgroundPosition = 'center') 
     #   
     # }
-    # 
-    rankData <- DT::datatable(w.use)
+    
+    w.use <- w.use[,c("YEAR",area.column,data.elements)]
+      
+    rankData <- DT::datatable(w.use, rownames = FALSE,
+                              options = list(scrollX = TRUE,
+                                             pageLength = nrow(w.use)))
     rankData
   })
  

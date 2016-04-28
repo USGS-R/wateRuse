@@ -13,7 +13,7 @@ body <- dashboardBody(
               value = "plotTwoTab",
               h4("R Code:"),
               verbatimTextOutput("plotTwoCode"),
-              plotOutput("plotTwo"),
+              plotOutput("plotTwo",width = "400px", height = "400px"),
               downloadButton('downloadPlotTwo', 'Download Plot')
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
