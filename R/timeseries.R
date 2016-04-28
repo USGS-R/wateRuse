@@ -44,7 +44,7 @@ time_series_data <- function(w.use, data.elements, years= NA, area.column = NA, 
     facet_grid(dataElement ~ .)
   
   if(!all(is.na(y.scale))){
-    ts.object <- ts.object + ylim(y.scale)
+    ts.object <- ts.object + ylab("")+ ylim(y.scale)
   }
   
   if(!all(is.na(years))){
