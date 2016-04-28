@@ -21,7 +21,7 @@ WSC WU specialists can use current working AWUDS area files for their state (exp
 
 Regional water use specialists can import a national dump file that will include working and approved data. 
 
-Users can display data based on time (year) or areas (county, HUC8, aquifer, state). Time series plots use annual water-use values for a data element and  multiple years. A data element would represent the amount of water that is withdrawn from a specific source (groundwater, surface water) for a given area (ie county).  Users can compare different data elements by area and year and produce scatter plots, bar charts, line graphs, and choropleth maps. 
+Users can display water-use data for various data elements based on time (year) or areas (county, HUC8, aquifer, state). Time series plots us water-use values for a data element and  multiple years. A data element would represent the amount of water that is used from a specific source (groundwater, surface water) for a given area (ie county) and purpose (public supply).  Users can compare different data elements by area and year and produce scatter plots, bar charts, line graphs, and choropleth maps. 
 
 
 
@@ -54,7 +54,9 @@ compare_two_years(w.use, "PS.TOPop", year.x.y,area.column)
 
 
 ```
-### Compare two elements (ROB ADD TEXT AND SCRIPT MATERIAL BELOW)
+
+
+### Compare two elements 
 
 This function will also plot two data elements for the same year or multiple years.  The user is able to illustrate the relationship between two elements in one scatterplot, for example, the number of irrigated acres and total irrigated withdrawals for a state for a given year.  Multiple years on one plot are not able.  Multiple stacked plots are possible for the same pairs of data elements for multiple years. 
 
@@ -68,7 +70,7 @@ This function will also plot two data elements for the same year or multiple yea
 ### Ranked data element tables
 Users can rank data elements using the shiny application.  Once data is loaded, users can selected areas, years and data element types to display tables of values, which can be displayed in various ranking forms by clicking on the column name. 
 
-### Time series plots (JEN and GARY ADD TEXT AND SCRIPTS)
+### Time series plots 
 A time series plot shows water use for a data element for all areas of a subset of areas over time.  A user has the option to  illustration this using a bar graph or line graph, or point plot.  A selection of all areas or a subset of areas is also possible.  Only one data element per plot is possible but plots can be clustered to show multiple data elements in groups. 
 
   
