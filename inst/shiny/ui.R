@@ -7,22 +7,26 @@ areas <- unique(wUseSample[,8])
 header <- dashboardHeader(title = "Explore Water Use Data")
 
 body <- dashboardBody(
-    fileInput("data", "Load data"),
+   fileInput("data", "Load data"),
    tabsetPanel(selected = "plotTwoTab",id = "mainTabs",
-               tabPanel(title = tagList("Compare Two Years",shiny::icon("bar-chart")),
-                        value = "plotTwoTab",
-                        h4("R Code:"),
-                        verbatimTextOutput("plotTwoCode"),
-                        plotOutput("plotTwo"),
-                        downloadButton('downloadPlotTwo', 'Download Plot')
-               ),
-               tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
-                        value = "plotTimeTab",
-                        h4("R Code:"),
-                        verbatimTextOutput("plotTimeCode"),
-                        plotOutput("plotTime"),
-                        downloadButton('downloadPlotTime', 'Download Plot')
-               )
+     tabPanel(title = tagList("Compare Two Years",shiny::icon("bar-chart")),
+              value = "plotTwoTab",
+              h4("R Code:"),
+              verbatimTextOutput("plotTwoCode"),
+              plotOutput("plotTwo"),
+              downloadButton('downloadPlotTwo', 'Download Plot')
+     ),
+     tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
+              value = "plotTimeTab",
+              h4("R Code:"),
+              verbatimTextOutput("plotTimeCode"),
+              plotOutput("plotTime"),
+              downloadButton('downloadPlotTime', 'Download Plot')
+     ),
+     tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
+              value="rankData",
+              DT::dataTableOutput('rankData')
+     )
    ),
   fluidRow(
     column(1, HTML('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="300" height="75"><path id="USGS" d="m234.95 15.44v85.037c0 17.938-10.132 36.871-40.691 36.871-27.569 0-40.859-14.281-40.859-36.871v-85.04h25.08v83.377c0 14.783 6.311 20.593 15.447 20.593 10.959 0 15.943-7.307 15.943-20.593v-83.377h25.08m40.79 121.91c-31.058 0-36.871-18.27-35.542-39.03h25.078c0 11.462 0.5 21.092 14.282 21.092 8.472 0 12.62-5.482 12.62-13.618 0-21.592-50.486-22.922-50.486-58.631 0-18.769 8.968-33.715 39.525-33.715 24.42 0 36.543 10.963 34.883 36.043h-24.419c0-8.974-1.492-18.106-11.627-18.106-8.136 0-12.953 4.486-12.953 12.787 0 22.757 50.493 20.763 50.493 58.465 0 31.06-22.75 34.72-41.85 34.72m168.6 0c-31.06 0-36.871-18.27-35.539-39.03h25.075c0 11.462 0.502 21.092 14.285 21.092 8.475 0 12.625-5.482 12.625-13.618 0-21.592-50.494-22.922-50.494-58.631 0-18.769 8.969-33.715 39.531-33.715 24.412 0 36.536 10.963 34.875 36.043h-24.412c0-8.974-1.494-18.106-11.625-18.106-8.144 0-12.955 4.486-12.955 12.787 0 22.757 50.486 20.763 50.486 58.465 0 31.06-22.75 34.72-41.85 34.72m-79.89-46.684h14.76v26.461l-1.229 0.454c-3.816 1.332-8.301 2.327-12.453 2.327-14.287 0-17.943-6.645-17.943-44.177 0-23.256 0-44.348 15.615-44.348 12.146 0 14.711 8.198 14.933 18.107h24.981c0.198-23.271-14.789-36.043-38.42-36.043-41.021 0-42.52 30.724-42.52 60.954 0 45.507 4.938 63.167 47.12 63.167 9.784 0 25.36-2.211 32.554-4.18 0.436-0.115 1.212-0.596 1.212-1.216v-59.598h-38.612v18.09" style="fill:rgb(40%,40%,40%); fill-opacity: 0.3" transform="scale(0.5)"/>
@@ -42,9 +46,8 @@ sidebar <- dashboardSidebar(
               choices = area.columns,
               selected = area.columns[5], multiple = FALSE),
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
-    checkboxGroupInput("area", "Choose Area(s):",
-                       c("All",areas),
-                       selected=c("All"))
+           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
+                              selected=areas)
   ),
   selectInput("data.elements", label = "Data Elements", 
               choices = data.elements,
@@ -57,7 +60,9 @@ sidebar <- dashboardSidebar(
       selectInput("year_y", label = "Year y:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[2], multiple = FALSE)
-  )
+  ),
+  menuItem("Source code", icon = icon("file-code-o"), 
+           href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
 
 )
 
