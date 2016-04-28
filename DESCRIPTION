@@ -18,7 +18,10 @@ Imports:
     readxl,
     ggplot2,
     tidyr,
-    sp
+    sp,
+    shiny,
+    shinydashboard,
+    DT
 Suggests:
     testthat,
     knitr

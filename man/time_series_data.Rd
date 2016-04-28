@@ -38,10 +38,13 @@ areas <- c("Kent County","Sussex County")
 area.column = "COUNTYNAME"
 data.elements <- c("PS.GWPop","TP.TotPop")
 time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
-time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas)
-time_series_data(w.use, data.elements, plot.points = FALSE,area.column = area.column,areas = areas, legend=FALSE)
+time_series_data(w.use, data.elements, plot.points = FALSE,
+       area.column = area.column,areas = areas)
+time_series_data(w.use, data.elements, plot.points = FALSE,
+       area.column = area.column,areas = areas, legend=FALSE)
 time_series_data(w.use, data.elements, area.column)
 time_series_data(w.use, data.elements, area.column, y.scale = c(0,100))
-time_series_data(w.use, data.elements, area.column, y.scale = c(0,100), years = c(1990,2005))
+time_series_data(w.use, data.elements, area.column, 
+       y.scale = c(0,100), years = c(1990,2005))
 }
 

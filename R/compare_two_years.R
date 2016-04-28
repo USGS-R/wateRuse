@@ -20,12 +20,12 @@
 #' areas <- "10" # NA uses all areas
 #' area.column <- "STATECODE"
 #' year.x.y <- c(2005,2010)
-#' compare_two_years(w.use, data.elements, year.x.y, areas, area.column)
-#' compare_two_years(w.use, data.elements, year.x.y)
-#' compare_two_years(w.use, "PS.TOPop", year.x.y)
-compare_two_years <- function(w.use, data.elements, year.x.y, areas=NA, area.column=NA){ 
+#' compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
+#' compare_two_years(w.use, data.elements, year.x.y, area.column)
+#' compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
+compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA){ 
 
-  w.use.sub <- subset_wuse(w.use, data.elements, areas, area.column)
+  w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
   w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
   

@@ -4,16 +4,16 @@
 \alias{subset_wuse}
 \title{subset_wuse}
 \usage{
-subset_wuse(w.use, data.elements, areas = NA, area.column = NA)
+subset_wuse(w.use, data.elements, area.column, areas = NA)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
 
 \item{data.elements}{chr, vector of data elements to be plotted (1 plot per element)}
 
-\item{areas}{chr, codes for state-county ('NA' uses all areas)}
-
 \item{area.column}{character that defines which column to use to specify area}
+
+\item{areas}{chr, codes for state-county ('NA' uses all areas)}
 }
 \value{
 w.use.sub dataframe, a subset of water use data from user specifications
@@ -27,6 +27,6 @@ data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "10" # NA uses all areas
 area.column <- "STATECODE"
 
-w.wuse.sub <- subset_wuse(w.use, data.elements,areas, area.column)
+w.wuse.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 }
 
