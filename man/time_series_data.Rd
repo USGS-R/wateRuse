@@ -8,7 +8,7 @@ time_series_data(w.use, data.elements, area.column, plot.points = TRUE,
   years = NA, areas = NA, y.scale = NA, log = FALSE, legend = TRUE)
 }
 \arguments{
-\item{w.use}{is the datafile that includes all areas in all data elements for state}
+\item{w.use}{is a subset of the datafile wUseSample that includes all areas in all data elements for state}
 
 \item{data.elements}{character name of data element within available categories by year for state}
 
@@ -30,20 +30,21 @@ time_series_data(w.use, data.elements, area.column, plot.points = TRUE,
 time_series_data
 }
 \examples{
-w.use <- wUseSample
-year1 <- 2005
-year2 <- 2010
-years <- c(year1, year2)
+df <- wUseSample
 areas <- c("Kent County","Sussex County")
 area.column = "COUNTYNAME"
 data.elements <- c("PS.GWPop","TP.TotPop")
+w.use <- subset_wuse(df, data.elements,area.column,areas)
+year1 <- 2005
+year2 <- 2010
+years <- c(year1, year2)
 time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
 time_series_data(w.use, data.elements, plot.points = FALSE,
        area.column = area.column,areas = areas)
 time_series_data(w.use, data.elements, plot.points = FALSE,
        area.column = area.column,areas = areas, legend=FALSE)
 time_series_data(w.use, data.elements, area.column)
-time_series_data(w.use, data.elements, area.column, y.scale = c(0,100))
+time_series_data(w.use, data.elements, area.column, y.scale = c(0,1000))
 time_series_data(w.use, data.elements, area.column, 
        y.scale = c(0,100), years = c(1990,2005))
 }
