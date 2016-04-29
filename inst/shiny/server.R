@@ -6,6 +6,7 @@ library(tidyr)
 library(RColorBrewer)
 
 w.use.start <- wUseSample
+options(shiny.maxRequestSize=50*1024^2) 
 
 shinyServer(function(input, output, session) {
   
