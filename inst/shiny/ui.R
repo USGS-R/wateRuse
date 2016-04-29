@@ -2,12 +2,12 @@ library(shinydashboard)
 library(wateRuse)
 
 data.elements <- names(wUseSample)[12:length(names(wUseSample))]
-area.columns <- names(wUseSample)[4:8]
-areas <- unique(wUseSample[,8])
+area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
+areas <- unique(wUseSample$COUNTYNAME)
 header <- dashboardHeader(title = "Explore Water Use Data")
 
 body <- dashboardBody(
-    fileInput("data", "Load files",multiple = TRUE),
+   fileInput("data", "Load files",multiple = TRUE),
    tabsetPanel(selected = "plotTwoTab",id = "mainTabs",
      tabPanel(title = tagList("Compare Two Years",shiny::icon("bar-chart")),
               value = "plotTwoTab",
@@ -50,7 +50,7 @@ body <- dashboardBody(
 sidebar <- dashboardSidebar(
   selectInput("area.column", label = "Area Column", 
               choices = area.columns,
-              selected = area.columns[5], multiple = FALSE),
+              selected = area.columns[2], multiple = FALSE),
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
@@ -62,10 +62,10 @@ sidebar <- dashboardSidebar(
     condition = "input.mainTabs == 'plotTwoTab'",
       selectInput("year_x", label = "Year x:", width = 100,
                 choices = unique(wUseSample$YEAR),
-                selected = unique(wUseSample$YEAR)[1], multiple = FALSE),
+                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE),
       selectInput("year_y", label = "Year y:", width = 100,
                 choices = unique(wUseSample$YEAR),
-                selected = unique(wUseSample$YEAR)[2], multiple = FALSE)
+                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoElem'",

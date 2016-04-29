@@ -14,9 +14,11 @@ shinyServer(function(input, output, session) {
     
     if(!is.null(input$data)){
       
-      path <- file.path(input$data$datapath,input$data$name)
-      file.rename()  #rename 0/1/etc to file names without commas in the get_awuds_data function
-      w.use <- get_awuds_data(awuds.data.files = path)
+      path <- file.path(input$data$datapath)
+      newPath <- paste0(input$data$datapath,"_",input$data$name)
+      newPath <- gsub(", ","_",newPath)
+      file.rename(from = path, to = newPath)
+      w.use <- get_awuds_data(awuds.data.files = newPath)
     }
 
     w.use
@@ -37,6 +39,32 @@ shinyServer(function(input, output, session) {
     updateCheckboxGroupInput(session, "area", 
                              choices = choices, 
                              selected = choices)
+  })
+  
+  observe({
+
+    w.use <- w.use()
+    choices <- names(w.use)[names(w.use) %in% c("STATECOUNTYCODE","COUNTYNAME",
+                                                "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")]
+    
+    updateSelectInput(session, "area.column", 
+                             choices = choices, 
+                             selected = choices[1])
+  })
+  
+  observe({
+    
+    w.use <- w.use()
+    yRange <- unique(w.use$YEAR)
+    
+    updateSelectInput(session, "year_x", 
+                      choices = yRange, 
+                      selected = yRange[length(yRange)-1])
+    
+    updateSelectInput(session, "year_y", 
+                      choices = yRange, 
+                      selected = yRange[length(yRange)])
+    
   })
   
   output$plotTwo <- renderPlot({
