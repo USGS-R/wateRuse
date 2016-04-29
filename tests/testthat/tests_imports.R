@@ -33,7 +33,7 @@ test_that("Excel Data Gets Normalized When Given List of Files", {
              system.file("extdata/excel/Export_2010_County.xlsx", package="wateRuse"),
              system.file("extdata/excel/Export_2015_County.xlsx", package="wateRuse"))
   awuds <- get_awuds_data(awuds.data.files=fileList)
-  expect_equal(nrow(awuds),21)
+  expect_equal(nrow(awuds),63)
   expect_equal(ncol(awuds),98)
 })
 
