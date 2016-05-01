@@ -19,13 +19,17 @@ test_that("Excel Data Gets Normalized", {
   awuds <- get_awuds_data(path)
   expect_equal(nrow(awuds),63)
   expect_equal(ncol(awuds),98)
+  expect_is(object = awuds$Area,class="character")
+  expect_is(object = awuds$AQ.CUsFr, class="numeric")
 })
 
 test_that("Dump Data Gets Normalized", {
   path <- system.file("extdata/dump", package="wateRuse")
-  awudsdump <- get_awuds_data(path)
-  expect_equal(nrow(awudsdump),48)
-  expect_equal(ncol(awudsdump),286)
+  awuds <- get_awuds_data(path)
+  expect_equal(nrow(awuds),48)
+  expect_equal(ncol(awuds),286)
+  expect_is(object = awuds$STATECOUNTYCODE,class="character")
+  expect_is(object = awuds$TP.TotPop, class="numeric")
 })
 
 test_that("Excel Data Gets Normalized When Given List of Files", {
@@ -35,6 +39,8 @@ test_that("Excel Data Gets Normalized When Given List of Files", {
   awuds <- get_awuds_data(awuds.data.files=fileList)
   expect_equal(nrow(awuds),63)
   expect_equal(ncol(awuds),98)
+  expect_is(object = awuds$Area,class="character")
+  expect_is(object = awuds$AQ.CUsFr, class="numeric")
 })
 
 test_that("Dump Data gets read in when given as a direct file", {
@@ -42,5 +48,7 @@ test_that("Dump Data gets read in when given as a direct file", {
   awuds <- get_awuds_data(awuds.data.files=file)
   expect_equal(nrow(awuds),48)
   expect_equal(ncol(awuds),286)
+  expect_is(object = awuds$STATECOUNTYCODE,class="character")
+  expect_is(object = awuds$TP.TotPop, class="numeric")
 })
 
