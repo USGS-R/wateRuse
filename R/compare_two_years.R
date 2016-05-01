@@ -56,8 +56,6 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     }
   }# i
   
-  
-  
   compare.plot <- ggplot(data = df_full) +
    geom_point(aes_string(x = "x", y = "y")) +
     geom_line(aes_string(x = "x", y = "x"),col="red") +
