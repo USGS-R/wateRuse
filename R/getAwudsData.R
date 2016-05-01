@@ -28,6 +28,7 @@
 get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
 
   if ( !is.na(awuds.data.path) ) {
+    if ( !dir.exists(awuds.data.path) ) stop('Did not recieve a valid path.')
     files_to_scan <- list.files(path=awuds.data.path,full.names = TRUE)
   } else if ( is.vector(awuds.data.files) ) {
     awuds.data.files.new <- gsub(", ","_", awuds.data.files)
