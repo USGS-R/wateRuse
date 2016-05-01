@@ -3,14 +3,26 @@ library(DT)
 library(wateRuse)
 library(ggplot2)
 library(tidyr)
+library(RColorBrewer)
 
 w.use.start <- wUseSample
+options(shiny.maxRequestSize=50*1024^2) 
 
 shinyServer(function(input, output, session) {
   
   w.use <- reactive({
     w.use <- w.use.start
     
+    if(!is.null(input$data)){
+      
+      path <- file.path(input$data$datapath)
+      newPath <- paste0(input$data$datapath,"_",input$data$name)
+      newPath <- gsub(", ","_",newPath)
+      file.rename(from = path, to = newPath)
+      w.use <- get_awuds_data(awuds.data.files = newPath)
+    }
+
+    w.use
   })
   
   areasOptions <- reactive({
@@ -28,6 +40,32 @@ shinyServer(function(input, output, session) {
     updateCheckboxGroupInput(session, "area", 
                              choices = choices, 
                              selected = choices)
+  })
+  
+  observe({
+
+    w.use <- w.use()
+    choices <- names(w.use)[names(w.use) %in% c("STATECOUNTYCODE","COUNTYNAME",
+                                                "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")]
+    
+    updateSelectInput(session, "area.column", 
+                             choices = choices, 
+                             selected = choices[1])
+  })
+  
+  observe({
+    
+    w.use <- w.use()
+    yRange <- unique(w.use$YEAR)
+    
+    updateSelectInput(session, "year_x", 
+                      choices = yRange, 
+                      selected = yRange[length(yRange)-1])
+    
+    updateSelectInput(session, "year_y", 
+                      choices = yRange, 
+                      selected = yRange[length(yRange)])
+    
   })
   
   output$plotTwo <- renderPlot({
@@ -49,6 +87,28 @@ shinyServer(function(input, output, session) {
     # ggsave("plotTwo.png",plotTwo)
     
     print(plotTwo)
+  })
+  
+  output$plotTwoElement <- renderPlot({
+    w.use <- w.use()
+    
+    data.elements <- c(input$data.elements.min,input$data.elements.max)
+    
+    areas <- input$area
+    
+    areasOptions <- areasOptions()
+    
+    if(all(areasOptions %in% areas)){
+      areas <- NA
+    }
+    
+    area.column <- input$area.column
+    year.x.y <- c(input$year_x,input$year_y)
+    plotTwoElement <- compare_two_elements(w.use, data.elements, year.x.y, area.column, areas)
+    
+    # ggsave("plotTwo.png",plotTwo)
+    
+    print(plotTwoElement)
   })
   
   output$plotTime <- renderPlot({
@@ -78,28 +138,26 @@ shinyServer(function(input, output, session) {
     data.elements <- input$data.elements
     areas <- input$area
     area.column <- input$area.column
-    year.x.y <-  c(input$year_x,input$year_y)
-    
+    yearRange <- unique(w.use$YEAR)
     w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
-
-    w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
     
     df <- spread_(w.use.sub, "YEAR", data.elements)
 
     rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
-                                             pageLength = nrow(w.use),
+                                             pageLength = nrow(df),
                                              order=list(list(2,'desc'))))
-    rankData <- formatStyle(rankData, year.x.y[1],
-                               background = styleColorBar(range(df[[year.x.y[1]]],na.rm = TRUE), 'goldenrod'),
-                               backgroundSize = '100% 90%',
-                               backgroundRepeat = 'no-repeat',
-                               backgroundPosition = 'center' )
-    rankData <- formatStyle(rankData, year.x.y[2],
-                            background = styleColorBar(range(df[[year.x.y[2]]],na.rm = TRUE), 'wheat'),
-                            backgroundSize = '100% 90%',
-                            backgroundRepeat = 'no-repeat',
-                            backgroundPosition = 'center' )
+    
+    colors <- brewer.pal(length(yearRange),"Blues")
+    names(colors) <- yearRange
+    for(i in yearRange){
+      rankData <- formatStyle(rankData, as.character(i),
+                              background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
+                              backgroundSize = '100% 90%',
+                              backgroundRepeat = 'no-repeat',
+                              backgroundPosition = 'center' )
+    }
+
     rankData
   })
  
