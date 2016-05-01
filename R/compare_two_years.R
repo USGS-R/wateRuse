@@ -32,9 +32,20 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
   x <- gather_(w.use.sub, "Key", "Value", data.elements)
   
   for(i in data.elements){
+    
+    df_x<-x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]]
+    df_y<-x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]]
+    
+    if(!length(df_x)==length(df_y)) { # I found this issue with Alaska between 2005 and 2010.
+      stop('Different number of counties from one compilation year to the other not supported yet.')}
+    
+    if(all(is.na(df_x))) stop('No Data Available for First Year Selected')
+    
+    if(all(is.na(df_y))) stop('No Data Available for Second Year Selected')
+    
     df <- data.frame(
-      x = x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]],
-      y = x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]])
+      x = df_x,
+      y = df_y)
     
     df$Key <- i
     
@@ -44,6 +55,8 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
       df_full <- rbind(df_full, df)
     }
   }# i
+  
+  
   
   compare.plot <- ggplot(data = df_full) +
    geom_point(aes_string(x = "x", y = "y")) +
