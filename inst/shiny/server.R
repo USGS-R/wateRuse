@@ -39,14 +39,14 @@ shinyServer(function(input, output, session) {
     
     updateCheckboxGroupInput(session, "area", 
                              choices = choices, 
-                             selected = choices)
+                             selected = choices[1])
   })
   
   observe({
 
     w.use <- w.use()
     choices <- names(w.use)[names(w.use) %in% c("STATECOUNTYCODE","COUNTYNAME",
-                                                "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")]
+                                                "HUCCODE","Area","USSTATEHUCCODE","HUCNAME","USSTATEALPHACODE")]
     
     updateSelectInput(session, "area.column", 
                              choices = choices, 
@@ -192,7 +192,7 @@ shinyServer(function(input, output, session) {
       "areas <- ", areas, "\n",
       'area.column <- "', area.column, '"\n',
       "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
-      "compare_two_years(w.use, data.elements, year.x.y, areas, area.column)"
+      "compare_two_years(w.use, data.elements, year.x.y, area.column, areas)"
       
     )
     
