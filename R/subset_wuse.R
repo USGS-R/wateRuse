@@ -17,13 +17,13 @@
 #' areas <- "10" # NA uses all areas
 #' area.column <- "STATECODE"
 #' 
-#' w.wuse.sub <- subset_wuse(w.use, data.elements,area.column,areas)
+#' w.use.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 subset_wuse <- function(w.use, data.elements, area.column, areas=NA) {
   # subset w.use on basis of areas and select the data elements of interest
   if (all(is.na(areas))){
-    w.use.sub <- w.use[,c("YEAR",area.column,data.elements)]
+    w.use.sub <- w.use[,c("YEAR","STATECOUNTYCODE",area.column,data.elements)]
   }else{
-    w.use.sub <-  w.use[w.use[[area.column]] %in% areas, c("YEAR",area.column,data.elements)]
+    w.use.sub <-  w.use[w.use[[area.column]] %in% areas, c("YEAR","STATECOUNTYCODE",area.column,data.elements)]
   }
   return(w.use.sub)
 } 
