@@ -9,7 +9,7 @@ test_that("Entered Data", {
   
   expect_equal(ncol(w.use.sub), 5)
   expect_equal(nrow(w.use.sub), 18)
-  cklist <- c("YEAR",area.column,"PS.TOPop","PS.SWPop")
+  cklist <- c("YEAR","STATECOUNTYCODE",area.column,"PS.TOPop","PS.SWPop")
   expect_equal(names(w.use.sub),cklist)
 })
 
