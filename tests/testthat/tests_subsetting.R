@@ -7,9 +7,9 @@ test_that("Entered Data", {
   area.column <- "STATECODE"
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
-  expect_equal(ncol(w.use.sub), 5)
+  expect_equal(ncol(w.use.sub), 4)
   expect_equal(nrow(w.use.sub), 18)
-  cklist <- c("YEAR","STATECOUNTYCODE",area.column,"PS.TOPop","PS.SWPop")
+  cklist <- c("YEAR",area.column,"PS.TOPop","PS.SWPop")
   expect_equal(names(w.use.sub),cklist)
 })
 
