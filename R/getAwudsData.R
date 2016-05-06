@@ -48,6 +48,11 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
     stop('Must provide the folder where AWUDS Excel export files or dump file(s) are stored.')
   }
   
+  area.names <- c("STATECOUNTYCODE","COUNTYNAME",
+                  "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+  other.names <- c("STUDY","STATECODE","COUNTYCODE",
+                   "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
+  
   for ( check_file in files_to_scan ) {
     if ( grepl('Export.*[1,2][0,9][0-9][0-5].*.xlsx', check_file) ) {
       if ( !exists('files_to_open')) files_to_open <- c()
@@ -92,9 +97,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
 
   } else {
     if(length(dump_file_to_open) > 1){
-      idCols <- c("STUDY","DATASETNAME","BESTAVAILABLE","USSTATEALPHACODE",
-                  "STATECODE","COUNTYCODE","STATECOUNTYCODE","COUNTYNAME","YEAR",
-                  "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+      idCols <- c(area.names,other.names)
 
       totalRows <- 0
       rowVector <- rep(NA, length(dump_file_to_open))
@@ -122,7 +125,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
     } else {
       awuds_data<-fread(dump_file_to_open, na.strings="--", colClasses="character")
       awuds_data <- as.data.frame(lapply(awuds_data, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
-      for ( dataCol in names(awuds_data)[9:length(names(awuds_data))]) { # Convert all data elements to numeric
+      for ( dataCol in names(awuds_data)[!(names(awuds_data) %in% c(area.names,other.names))]) { # Convert all data elements to numeric
         awuds_data[[dataCol]]<-as.numeric(awuds_data[[dataCol]])
       }
     }
