@@ -5,6 +5,7 @@
 #' Only works with one state, data element, and year as currently written
 #'
 #' 
+#' @param w.use dataframe, the water use data 
 #' @param data.elements chr, data element to be plotted
 #' @param norm.element chr, data element to be used for normalizing data.elements
 #' @param year int, the year of interest to be mapped (defines historical basis for counties)
@@ -14,8 +15,9 @@
 #' @export
 #' 
 #' @import ggplot2
-#' @import rgeos
 #' @import maptools
+#' @import mapproj
+#' @import rgeos
 #' @import scales
 #' 
 #' @examples 
@@ -25,15 +27,15 @@
 #' year <- 2010 
 #' areas <- "Delaware" 
 #' area.column <- "STATE_TERR"
-#' ch.plot <- choropleth_plot(data.elements, norm.element, year, areas, area.column)
+#' ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
 #' ch.plot
 #' norm.element <- NA
-#' ch.plot <- choropleth_plot(data.elements, norm.element, year, areas, area.column)
+#' ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
 #' ch.plot
-choropleth_plot <- function(data.elements, norm.element=NA, year, areas, area.column){
+choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm.element=NA){
   
   # get counties
-  hc.sub <- subset_county_polygons(areas, area.column, year)
+  hc.sub <- subset_county_polygons(area.column, year, areas)
   hc.subf<-fortify(hc.sub,region = "FIPS")
   hc.sub@data$id<-hc.sub@data$FIPS
   hc.subf<-merge(hc.subf,hc.sub@data, by="id", all.x=TRUE)
@@ -69,13 +71,13 @@ choropleth_plot <- function(data.elements, norm.element=NA, year, areas, area.co
   
   
   ch.plot <- ggplot() + geom_polygon(data = hc.subf, 
-                 aes(x = long, y = lat, group=group, fill= hc.subf[,p.elem]), 
+                 aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 
                  coord_map() + 
                  scale_fill_distiller(name=p.elem, palette = "YlGn", breaks = pretty_breaks(n = 5))
   
-  ch.plot
+  print(ch.plot)
 
   return(ch.plot)
   
-}# choropleth_plot
+}

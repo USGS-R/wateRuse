@@ -9,6 +9,7 @@
 \alias{dataelement}
 \alias{huc8}
 \alias{lookupTables}
+\alias{stateCd}
 \title{Included data}
 \description{
 \itemize{

@@ -43,7 +43,17 @@ compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, a
     } else {
       df_full <- rbind(df_full, df)
     }
-  }# i
+  }
+  
+  if(all(is.na(df_full$x))){
+    df_full$x <- 0
+    message("No data reported for:",data.elements.x.y[1])
+  }
+  
+  if(all(is.na(df_full$y))){
+    df_full$y <- 0
+    message("No data reported for:",data.elements.x.y[2])
+  }
   
   compare.plot <- ggplot(data = df_full) +
     geom_point(aes_string(x = "x", y = "y")) +

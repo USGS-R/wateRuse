@@ -4,18 +4,21 @@
 \alias{choropleth_plot}
 \title{choropleth_plot}
 \usage{
-choropleth_plot(data.elements, norm.element = NA, year, areas, area.column)
+choropleth_plot(w.use, data.elements, year, areas, area.column,
+  norm.element = NA)
 }
 \arguments{
-\item{data.elements}{chr, data element to be plotted}
+\item{w.use}{dataframe, the water use data}
 
-\item{norm.element}{chr, data element to be used for normalizing data.elements}
+\item{data.elements}{chr, data element to be plotted}
 
 \item{year}{int, the year of interest to be mapped (defines historical basis for counties)}
 
 \item{areas}{chr, vector of codes indicating HUCs, counties, states, regions, aquifers, etc.}
 
 \item{area.column}{chr, defines which column to use to specify area}
+
+\item{norm.element}{chr, data element to be used for normalizing data.elements}
 }
 \description{
 Returns choropleth plot of data element of interest for year of interest
@@ -29,10 +32,10 @@ norm.element <- "PS.TOPop"
 year <- 2010 
 areas <- "Delaware" 
 area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(data.elements, norm.element, year, areas, area.column)
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
 ch.plot
 norm.element <- NA
-ch.plot <- choropleth_plot(data.elements, norm.element, year, areas, area.column)
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
 ch.plot
 }
 

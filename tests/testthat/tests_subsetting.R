@@ -17,7 +17,7 @@ test_that("Subset polygon data", {
   areas <- "Maine"
   area.column <- "STATE_TERR"
   year <- 2010 # 16 counties in Maine present day
-  hc.sub <- subset_county_polygons(areas, area.column, year)
+  hc.sub <- subset_county_polygons(area.column, year, areas)
 
   expect_equal(ncol(hc.sub), 17)
   expect_equal(nrow(hc.sub), 16)
@@ -25,7 +25,7 @@ test_that("Subset polygon data", {
   expect_equal(length(unq.names), 16)
 
   year <- 1850 # 13 counties in Maine in 1850
-  hc.sub <- subset_county_polygons(areas, area.column, year)
+  hc.sub <- subset_county_polygons(area.column, year, areas)
   
   expect_equal(ncol(hc.sub), 17)
   expect_equal(nrow(hc.sub), 13)

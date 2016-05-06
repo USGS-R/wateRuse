@@ -4,14 +4,14 @@
 \alias{subset_county_polygons}
 \title{subset_county_polygons}
 \usage{
-subset_county_polygons(areas = NA, area.column, year)
+subset_county_polygons(area.column, year, areas = NA)
 }
 \arguments{
-\item{areas}{chr, vector of codes indicating HUCs, counties, states, regions, aquifers, etc.}
-
 \item{area.column}{chr, defines which column to use to specify area}
 
 \item{year}{int, the year of interest to be mapped (defines historical basis for counties)}
+
+\item{areas}{chr, vector of codes indicating HUCs, counties, states, regions, aquifers, etc.}
 }
 \value{
 hc.sub dataframe, a subset of county polygon data
@@ -25,16 +25,16 @@ Dataset is subset on basis of area of interest
 areas <- "Delaware" # 3 counties present day
 area.column <- "STATE_TERR"
 year <- 2010 
-hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub <- subset_county_polygons(area.column, year, areas)
 hc.sub$NAME
 
 areas <- "Maine" # 16 counties present day
 area.column <- "STATE_TERR"
 year <- 2010 
-hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub <- subset_county_polygons(area.column, year, areas)
 hc.sub$NAME
 year <- 1850 # Maine had 13 counties in 1850; Delaware 3
-hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub <- subset_county_polygons(area.column, year, areas)
 hc.sub$NAME
 }
 

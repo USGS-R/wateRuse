@@ -16,20 +16,18 @@
 #' areas <- "Delaware" # 3 counties present day
 #' area.column <- "STATE_TERR"
 #' year <- 2010 
-#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub <- subset_county_polygons(area.column, year, areas)
 #' hc.sub$NAME
 #' 
 #' areas <- "Maine" # 16 counties present day
 #' area.column <- "STATE_TERR"
 #' year <- 2010 
-#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub <- subset_county_polygons(area.column, year, areas)
 #' hc.sub$NAME
 #' year <- 1850 # Maine had 13 counties in 1850; Delaware 3
-#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub <- subset_county_polygons(area.column, year, areas)
 #' hc.sub$NAME
-
-
-subset_county_polygons <- function(areas=NA, area.column, year){
+subset_county_polygons <- function(area.column, year, areas=NA){
   
   test.date <- as.Date(paste0(year,"-12-31"))# year of interest converted to date
   now.date <-format(Sys.Date(), "%Y-%m-%d")

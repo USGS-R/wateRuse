@@ -9,6 +9,11 @@
 #' @export
 #' @importFrom tidyr gather_
 #' @importFrom tidyr spread_
+#' @importFrom data.table rbindlist
+#' @importFrom data.table fread
+#' @importFrom data.table setDT
+#' @importFrom data.table setDF
+#' @importFrom data.table dcast
 #' 
 #' @examples 
 #' awuds.data.path <- system.file("extdata/dump", package="wateRuse")
@@ -43,11 +48,16 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
     stop('Must provide the folder where AWUDS Excel export files or dump file(s) are stored.')
   }
   
+  area.names <- c("STATECOUNTYCODE","COUNTYNAME",
+                  "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+  other.names <- c("STUDY","STATECODE","COUNTYCODE",
+                   "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
+  
   for ( check_file in files_to_scan ) {
     if ( grepl('Export.*[1,2][0,9][0-9][0-5].*.xlsx', check_file) ) {
       if ( !exists('files_to_open')) files_to_open <- c()
       files_to_open <- c(files_to_open, file.path(check_file))
-    } else if ( grepl('.*dump.txt',check_file) ) {
+    } else if ( grepl('.*.txt',check_file) ) {
       if ( exists('dump_file_to_open') ) {
         stop('Found more than one dump file at the path given, only one is supported.')
       }
@@ -81,36 +91,41 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       }
     }
     
-    awuds_data <- spread_(awuds_data, "data.element","value")
+    awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(names(awuds_data)[!(names(awuds_data) %in% c("data.element","value"))],collapse = "+"),"~ data.element")), value.var = "value")
+    awuds_data <- setDF(awuds_data)
+    # awuds_data <- spread_(awuds_data, "data.element","value")
 
   } else {
     if(length(dump_file_to_open) > 1){
-      idCols <- c("STUDY","DATASETNAME","BESTAVAILABLE","USSTATEALPHACODE",
-                  "STATECODE","COUNTYCODE","STATECOUNTYCODE","COUNTYNAME","YEAR",
-                  "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+      idCols <- c(area.names,other.names)
+
+      totalRows <- 0
+      rowVector <- rep(NA, length(dump_file_to_open))
+      
+      awuds_data <- list()
+      colNames <- c()
       
       for(i in dump_file_to_open){
-        subData <- read.delim(file.path(tempFolder, i), na.strings="--", colClasses="character")
+        subData <- fread(file.path(tempFolder,i), na.strings="--", colClasses="character")
         subData <- as.data.frame(lapply(subData, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
         subData[!(names(subData) %in% idCols)] <- lapply(subData[!(names(subData) %in% idCols)], function(x) as.numeric(x))
         subData <- gather_(subData, "data.element","value", names(subData)[!(names(subData) %in% idCols)])
         
-        if(!exists('awuds_data') ){
-          awuds_data <- subData
-        } else {
-          if(any(!(names(awuds_data) %in% names(subData)))){
-            subData[names(awuds_data)[!(names(awuds_data) %in% names(subData))]] <- as.numeric(NA)
-          }
-          awuds_data <- rbind(awuds_data, subData)
-        }
+        colNames <- c(colNames, names(subData)[!(names(subData) %in% colNames)])
+
+        awuds_data <- rbindlist(list(awuds_data, subData), fill=TRUE)
+
       }
+      idColNames <- names(awuds_data)[(names(awuds_data) %in% idCols)]
       
-      awuds_data <- spread_(awuds_data, "data.element","value")
+      awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(idColNames,collapse = "+"),"~ data.element")), value.var = "value")
+      awuds_data <- setDF(awuds_data)
+      # awuds_data <- spread_(awuds_data, "data.element","value")
       
     } else {
-      awuds_data<-read.delim(dump_file_to_open, na.strings="--", colClasses="character")
+      awuds_data<-fread(dump_file_to_open, na.strings="--", colClasses="character")
       awuds_data <- as.data.frame(lapply(awuds_data, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
-      for ( dataCol in names(awuds_data)[9:length(names(awuds_data))]) { # Convert all data elements to numeric
+      for ( dataCol in names(awuds_data)[!(names(awuds_data) %in% c(area.names,other.names))]) { # Convert all data elements to numeric
         awuds_data[[dataCol]]<-as.numeric(awuds_data[[dataCol]])
       }
     }

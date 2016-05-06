@@ -26,8 +26,6 @@
 #' year1 <- 2005
 #' year2 <- 2010
 #' years <- c(year1, year2)
-
-
 #' time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
 #' time_series_data(w.use, data.elements, plot.points = FALSE,
 #'        area.column = area.column,areas = areas)

@@ -13,7 +13,8 @@ Copyright: This software is in the public domain because it contains materials
     official USGS copyright policy at
     http://www.usgs.gov/visual-id/credit_usgs.html#copyright
 Depends:
-    R (>= 3.0)
+    R (>= 3.0),
+    maptools
 Imports:
     readxl,
     ggplot2,
@@ -23,14 +24,15 @@ Imports:
     shinydashboard,
     DT,
     RColorBrewer,
+    data.table,
+    mapproj,
     rgeos,
-    maptools,
     scales
 Suggests:
     testthat,
     knitr
-LazyLoad: yes
-LazyData: yes
+LazyLoad: true
+LazyData: true
 VignetteBuilder: knitr
 BugReports: https://github.com/USGS-R/wateRuse/issues
 URL: https://github.com/USGS-R/wateRuse
