@@ -52,7 +52,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
     if ( grepl('Export.*[1,2][0,9][0-9][0-5].*.xlsx', check_file) ) {
       if ( !exists('files_to_open')) files_to_open <- c()
       files_to_open <- c(files_to_open, file.path(check_file))
-    } else if ( grepl('.*dump.txt',check_file) ) {
+    } else if ( grepl('.*.txt',check_file) ) {
       if ( exists('dump_file_to_open') ) {
         stop('Found more than one dump file at the path given, only one is supported.')
       }
@@ -120,7 +120,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       # awuds_data <- spread_(awuds_data, "data.element","value")
       
     } else {
-      awuds_data<-read.delim(dump_file_to_open, na.strings="--", colClasses="character")
+      awuds_data<-fread(dump_file_to_open, na.strings="--", colClasses="character")
       awuds_data <- as.data.frame(lapply(awuds_data, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
       for ( dataCol in names(awuds_data)[9:length(names(awuds_data))]) { # Convert all data elements to numeric
         awuds_data[[dataCol]]<-as.numeric(awuds_data[[dataCol]])

@@ -3,7 +3,7 @@ library(wateRuse)
 
 data.elements <- names(wUseSample)[12:length(names(wUseSample))]
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
-areas <- unique(wUseSample$COUNTYNAME)
+areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
 states <- unique(wUseSample$USSTATEALPHACODE)
 
@@ -74,7 +74,7 @@ sidebar <- dashboardSidebar(
     condition = "input.mainTabs == 'map'",
     selectInput("stateToMap", label = "Map State", 
                 choices = stateCd$STATE_NAME,
-                selected = "Deleware", multiple = FALSE),
+                selected = stateCd$STATE_NAME[8], multiple = FALSE),
     selectInput("yearToMap", label = "Year",
                 choices =  unique(wUseSample$YEAR),
                 selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))])

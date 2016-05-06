@@ -39,6 +39,12 @@ shinyServer(function(input, output, session) {
     
     w.use <- subset_wuse(w.use, df[["data.elements"]], df[["area.column"]], areas = df[["area"]])
     
+    w.use.data <- w.use[,!(names(w.use) %in% c(area.names,other.names))]
+    w.use.data <- w.use.data[,colSums(is.na(w.use.data))<nrow(w.use.data)]
+    
+    df[["data.elements"]] <- names(w.use.data)
+    df[["data.element"]] <- names(w.use.data)[order(colSums(w.use.data),decreasing=TRUE)[1]]
+    
     w.use
     
   })
