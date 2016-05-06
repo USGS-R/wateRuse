@@ -200,38 +200,36 @@ shinyServer(function(input, output, session) {
     time_series_data(w.use, data.elements, area.column, plot.points = points,
                      areas = areas.pt, legend = legend, log = log, years= NA)
   })
-  # 
-  # output$rankData <- DT::renderDataTable({
-  # 
-  #   w.use <- w.use()
-  #   data.elements <- input$data.elements
-  #   areas.rd <- df[["areas"]]#input$area
-  #   area.column <- input$area.column
-  #   yearRange <- unique(w.use$YEAR)
-  #   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
-  # 
-  #   # if(!length(unique(w.use.sub$YEAR))==length(w.use.sub$YEAR)) {
-  #   #   stop("Recieved multiple areas for the same year, this is not currently supported. Maybe you selected a whole state? Please select a list of unique areas.")}
-  #   #
-  #   df <- spread_(w.use.sub, "YEAR", data.elements)
-  # 
-  #   rankData <- DT::datatable(df, rownames = FALSE,
-  #                             options = list(scrollX = TRUE,
-  #                                            pageLength = nrow(df),
-  #                                            order=list(list(2,'desc'))))
-  # 
-  #   colors <- brewer.pal(length(yearRange),"Blues")
-  #   names(colors) <- yearRange
-  #   for(i in yearRange){
-  #     rankData <- formatStyle(rankData, as.character(i),
-  #                             background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
-  #                             backgroundSize = '100% 90%',
-  #                             backgroundRepeat = 'no-repeat',
-  #                             backgroundPosition = 'center' )
-  #   }
-  # 
-  #   rankData
-  # })
+
+  output$rankData <- DT::renderDataTable({
+
+    w.use <- w.use()
+    data.elements <- input$data.elements
+    areas.rd <- df[["areas"]]#input$area
+    area.column <- df[["area.column"]]
+    yearRange <- unique(w.use$YEAR)
+    w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
+
+    df <- spread_(w.use.sub, "YEAR", data.elements)
+    df <- df[,colSums(is.na(df))<nrow(df)]
+
+    rankData <- DT::datatable(df, rownames = FALSE,
+                              options = list(scrollX = TRUE,
+                                             pageLength = nrow(df),
+                                             order=list(list(2,'desc'))))
+    yearRange <- names(df)[-1]
+    colors <- brewer.pal(length(yearRange),"Blues")
+    names(colors) <- yearRange
+    for(i in yearRange){
+      rankData <- formatStyle(rankData, as.character(i),
+                              background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
+                              backgroundSize = '100% 90%',
+                              backgroundRepeat = 'no-repeat',
+                              backgroundPosition = 'center' )
+    }
+
+    rankData
+  })
   # 
   # output$downloadPlotTwo <- downloadHandler(
   # 
