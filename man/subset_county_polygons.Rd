@@ -13,17 +13,28 @@ subset_county_polygons(areas = NA, area.column, year)
 
 \item{year}{int, the year of interest to be mapped (defines historical basis for counties)}
 }
+\value{
+hc.sub dataframe, a subset of county polygon data
+}
 \description{
 Returns county polygons from: Siczewicz, Peter. U.S. Historical Counties 
 (Generalized .001 deg) on the basis of year of interest
 Dataset is subset on basis of area of interest
 }
 \examples{
-areas <- "Delaware" # should yield 3 counties
-areas <- "Maine"# should yield 16 counties
-areas <- "New Hampshire"# should yield 10 counties
+areas <- "Delaware" # 3 counties present day
 area.column <- "STATE_TERR"
-year <- 2010
-subset_county_polygons(areas, area.column, year)
+year <- 2010 
+hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub$NAME
+
+areas <- "Maine" # 16 counties present day
+area.column <- "STATE_TERR"
+year <- 2010 
+hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub$NAME
+year <- 1850 # Maine had 13 counties in 1850; Delaware 3
+hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub$NAME
 }
 

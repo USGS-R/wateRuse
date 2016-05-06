@@ -23,7 +23,10 @@ Imports:
     shinydashboard,
     DT,
     RColorBrewer,
-    data.table
+    data.table,
+    rgeos,
+    maptools,
+    scales
 Suggests:
     testthat,
     knitr

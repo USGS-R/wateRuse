@@ -27,6 +27,6 @@ data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "10" # NA uses all areas
 area.column <- "STATECODE"
 
-w.wuse.sub <- subset_wuse(w.use, data.elements,area.column,areas)
+w.use.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 }
 
