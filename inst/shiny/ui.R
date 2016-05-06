@@ -5,6 +5,7 @@ data.elements <- names(wUseSample)[12:length(names(wUseSample))]
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$COUNTYNAME)
 header <- dashboardHeader(title = "Explore Water Use Data")
+states <- unique(wUseSample$USSTATEALPHACODE)
 
 body <- dashboardBody(
    fileInput("data", "Load files",multiple = TRUE),
@@ -48,6 +49,10 @@ body <- dashboardBody(
     )
 
 sidebar <- dashboardSidebar(
+  menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
+           checkboxGroupInput("state", label = "Choose State(s):",choices = states,
+                              selected=states[1])
+  ),  
   selectInput("area.column", label = "Area Column", 
               choices = area.columns,
               selected = area.columns[2], multiple = FALSE),
@@ -78,7 +83,7 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
-      checkboxInput("legendOn", label = "Include Legend"),
+      checkboxInput("legendOn", label = "Include Legend", value = TRUE),
       checkboxInput("log", label = "Log Scale"),
       checkboxInput("points", label = "Points")
   ),

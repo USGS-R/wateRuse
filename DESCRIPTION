@@ -22,7 +22,8 @@ Imports:
     shiny,
     shinydashboard,
     DT,
-    RColorBrewer
+    RColorBrewer,
+    data.table
 Suggests:
     testthat,
     knitr

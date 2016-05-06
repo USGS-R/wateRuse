@@ -9,6 +9,8 @@
 #' @export
 #' @importFrom tidyr gather_
 #' @importFrom tidyr spread_
+#' @importFrom data.table rbindlist
+#' @importFrom data.table fread
 #' 
 #' @examples 
 #' awuds.data.path <- system.file("extdata/dump", package="wateRuse")
@@ -88,23 +90,29 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       idCols <- c("STUDY","DATASETNAME","BESTAVAILABLE","USSTATEALPHACODE",
                   "STATECODE","COUNTYCODE","STATECOUNTYCODE","COUNTYNAME","YEAR",
                   "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+
+      totalRows <- 0
+      rowVector <- rep(NA, length(dump_file_to_open))
+      
+      awuds_data <- list()
+      colNames <- c()
       
       for(i in dump_file_to_open){
-        subData <- read.delim(file.path(tempFolder, i), na.strings="--", colClasses="character")
+        subData <- fread(file.path(tempFolder,i), na.strings="--", colClasses="character")
         subData <- as.data.frame(lapply(subData, function(x) {gsub("na", "NaN", x)}), stringsAsFactors=FALSE)
         subData[!(names(subData) %in% idCols)] <- lapply(subData[!(names(subData) %in% idCols)], function(x) as.numeric(x))
         subData <- gather_(subData, "data.element","value", names(subData)[!(names(subData) %in% idCols)])
         
-        if(!exists('awuds_data') ){
-          awuds_data <- subData
-        } else {
-          if(any(!(names(awuds_data) %in% names(subData)))){
-            subData[names(awuds_data)[!(names(awuds_data) %in% names(subData))]] <- as.numeric(NA)
-          }
-          awuds_data <- rbind(awuds_data, subData)
-        }
+        colNames <- c(colNames, names(subData)[!(names(subData) %in% colNames)])
+
+        # if(any(!(colNames %in% names(subData)))){
+        #   subData[colNames[!(colNames %in% names(subData))]] <- as.numeric(NA)
+        # }
+        
+        awuds_data <- rbindlist(list(awuds_data, subData), fill = TRUE)
+
       }
-      
+
       awuds_data <- spread_(awuds_data, "data.element","value")
       
     } else {
