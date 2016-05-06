@@ -69,7 +69,7 @@ NULL
 #'
 #' @name histCounties
 #' @rdname histCounties
-#' @docType data
+#' @export
 #' @keywords county polygons
 #' @import sp
 #' @examples 

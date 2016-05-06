@@ -25,13 +25,14 @@ Imports:
     DT,
     RColorBrewer,
     data.table,
+    mapproj,
     rgeos,
     scales
 Suggests:
     testthat,
     knitr
-LazyLoad: yes
-LazyData: yes
+LazyLoad: true
+LazyData: true
 VignetteBuilder: knitr
 BugReports: https://github.com/USGS-R/wateRuse/issues
 URL: https://github.com/USGS-R/wateRuse

@@ -15,8 +15,9 @@
 #' @export
 #' 
 #' @import ggplot2
-#' @import rgeos
 #' @import maptools
+#' @import mapproj
+#' @import rgeos
 #' @import scales
 #' 
 #' @examples 

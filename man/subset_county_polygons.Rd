@@ -25,7 +25,7 @@ Dataset is subset on basis of area of interest
 areas <- "Delaware" # 3 counties present day
 area.column <- "STATE_TERR"
 year <- 2010 
-hc.sub <- subset_county_polygons(areas, area.column, year)
+hc.sub <- subset_county_polygons(area.column, year, areas)
 hc.sub$NAME
 
 areas <- "Maine" # 16 counties present day
