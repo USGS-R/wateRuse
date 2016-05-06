@@ -60,9 +60,11 @@ sidebar <- dashboardSidebar(
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
   ),
-  selectInput("data.elements", label = "Data Elements", 
-              choices = data.elements,
-              selected = data.elements[1], multiple = FALSE),
+  conditionalPanel(
+    condition = "input.mainTabs != 'plotTwoElem'",
+      selectInput("data.elements", label = "Data Elements", 
+                  choices = data.elements,
+                  selected = data.elements[1], multiple = FALSE)),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
       selectInput("year_x", label = "Year x:", width = 100,
