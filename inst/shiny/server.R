@@ -176,27 +176,30 @@ shinyServer(function(input, output, session) {
 
     print(plotTwoElement)
   })
-  # 
-  # output$plotTime <- renderPlot({
-  #   w.use <- w.use()
-  # 
-  #   data.elements <- input$data.elements
-  #   areas.pt <- df[["areas"]] #input$area
-  # 
-  #   areasOptions <- areasOptions()
-  # 
-  #   if(all(areasOptions %in% areas.pt)){
-  #     areas.pt <- NA
-  #   }
-  # 
-  #   area.column <- input$area.column
-  #   legend <- input$legendOn
-  #   log <- input$log
-  #   points <- input$points
-  # 
-  #   time_series_data(w.use, data.elements, area.column, plot.points = points,
-  #                    areas = areas.pt, legend = legend, log = log)
-  # })
+
+  output$plotTime <- renderPlot({
+    w.use <- w.use()
+
+    data.elements <- input$data.elements
+    areas.pt <- df[["areas"]] #input$area
+
+    areasOptions <- df[["areas"]]
+
+    if(all(areasOptions %in% areas.pt)){
+      areas.pt <- NA
+    }
+
+    area.column <-  df[["area.column"]]
+    legend <- input$legendOn
+    log <- input$log
+    points <- input$points
+
+    w.use <- subset_wuse(w.use, data.elements, area.column, areas.pt)
+    w.use <- w.use[!is.na(w.use[data.elements]),]
+    
+    time_series_data(w.use, data.elements, area.column, plot.points = points,
+                     areas = areas.pt, legend = legend, log = log, years= NA)
+  })
   # 
   # output$rankData <- DT::renderDataTable({
   # 
