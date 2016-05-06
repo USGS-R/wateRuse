@@ -7,6 +7,10 @@ library(RColorBrewer)
 
 w.use.start <- wUseSample
 options(shiny.maxRequestSize=50*1024^2) 
+area.names <- c("STATECOUNTYCODE","COUNTYNAME",
+                    "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+other.names <- c("STUDY","STATECODE","COUNTYCODE",
+                 "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
 
 shinyServer(function(input, output, session) {
   
@@ -33,6 +37,8 @@ shinyServer(function(input, output, session) {
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
+    w.use <- subset_wuse(w.use, df[["data.elements"]], df[["area.column"]], areas = df[["area"]])
+    
     w.use
     
   })
@@ -42,7 +48,11 @@ shinyServer(function(input, output, session) {
                        areas = unique(w.use.start[["COUNTYNAME"]]),
                        area = unique(w.use.start[["COUNTYNAME"]]),
                        states = unique(w.use.start[["USSTATEALPHACODE"]]),
-                       state = unique(w.use.start[["USSTATEALPHACODE"]])[1])
+                       state = unique(w.use.start[["USSTATEALPHACODE"]])[1],
+                       data.elements = names(w.use.start)[!(names(w.use.start) %in%
+                                                              c(area.names, other.names))],
+                       data.element = names(w.use.start)[!(names(w.use.start) %in%
+                                                              c(area.names, other.names))][1])
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -52,9 +62,8 @@ shinyServer(function(input, output, session) {
     } else {
       choices <- "All Available"
     }
-
-    choice.area <- names(w.use)[names(w.use) %in% c("STATECOUNTYCODE","COUNTYNAME",
-                                                "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")]
+    
+    choice.area <- names(w.use)[names(w.use) %in% area.names]
     
     choice.area <- choice.area[order(choice.area)]
     
@@ -64,6 +73,8 @@ shinyServer(function(input, output, session) {
     df[["area.columns"]] <- choice.area
     df[["area"]] <- unique(w.use[[choice.area[1]]])
     df[["areas"]] <- unique(w.use[[choice.area[1]]])
+    df[["data.elements"]] <- names(w.use)[!(names(w.use) %in% c(choice.area,other.names))]
+    df[["data.element"]] <- names(w.use)[!(names(w.use) %in% c(choice.area,other.names))][1]
     
   })
   
@@ -71,6 +82,12 @@ shinyServer(function(input, output, session) {
     
     df[["area"]] <- input$area
     
+  })
+  
+  observeEvent(input$data.elements,  {
+
+    df[["data.element"]] <- input$data.elements
+
   })
   
   observeEvent(input$area.column,  {
@@ -111,6 +128,13 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
+    
+    updateSelectInput(session, "data.elements", 
+                      choices = df[["data.elements"]], 
+                      selected = df[["data.element"]])
+  })
+  
+  observe({
 
     choices <- df[["states"]]
     
@@ -122,7 +146,7 @@ shinyServer(function(input, output, session) {
   observe({
 
     w.use <- w.use()
-    data.elements <- input$data.elements
+    data.elements <- df[["data.element"]]
     areas.yr <- df[["areas"]]
     area.column <- df[["area.column"]]
 
@@ -143,7 +167,7 @@ shinyServer(function(input, output, session) {
   output$plotTwo <- renderPlot({
     w.use <- w.use()
 
-    data.elements <- input$data.elements
+    data.elements <- df[["data.element"]]
     areas.p2 <- df[["area"]]#input$area
 
     if(all(df[["areas"]] %in% areas.p2)){
@@ -204,13 +228,14 @@ shinyServer(function(input, output, session) {
   output$rankData <- DT::renderDataTable({
 
     w.use <- w.use()
-    data.elements <- input$data.elements
+    data.elements <- df[["data.element"]]
     areas.rd <- df[["areas"]]#input$area
     area.column <- df[["area.column"]]
     yearRange <- unique(w.use$YEAR)
     w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
 
     df <- spread_(w.use.sub, "YEAR", data.elements)
+
     df <- df[,colSums(is.na(df))<nrow(df)]
 
     rankData <- DT::datatable(df, rownames = FALSE,
@@ -218,8 +243,8 @@ shinyServer(function(input, output, session) {
                                              pageLength = nrow(df),
                                              order=list(list(2,'desc'))))
     yearRange <- names(df)[-1]
-    colors <- brewer.pal(length(yearRange),"Blues")
-    names(colors) <- yearRange
+    colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
+    names(colors)[1:length(yearRange)] <- yearRange
     for(i in yearRange){
       rankData <- formatStyle(rankData, as.character(i),
                               background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
@@ -230,76 +255,82 @@ shinyServer(function(input, output, session) {
 
     rankData
   })
-  # 
-  # output$downloadPlotTwo <- downloadHandler(
-  # 
-  #   filename = function() {
-  #     "plotTwo.png"
-  #   },
-  #   content = function(file) {
-  #     file.copy("plotTwo.png", file)
-  #   }
-  # )
-  # 
-  # output$plotTwoCode <- renderPrint({
-  # 
-  #   data.elements <- input$data.elements
-  #   areas.ptC <- df[["areas"]]#input$area
-  # 
-  #   areasOptions <- areasOptions()
-  # 
-  #   if(all(areasOptions %in% areas.ptC)){
-  #     areas.ptC <- NA
-  #   } else {
-  #     areas.ptC <- paste0('c("',paste(areas.ptC, collapse = '","'),'")')
-  #   }
-  # 
-  #   area.column <- input$area.column
-  #   year.x.y <- c(input$year_x,input$year_y)
-  # 
-  #   outText <- paste0(
-  #     'data.elements <- "',data.elements, '"\n',
-  #     "areas <- ", areas.ptC, "\n",
-  #     'area.column <- "', area.column, '"\n',
-  #     "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
-  #     "compare_two_years(w.use, data.elements, year.x.y, area.column, areas)"
-  # 
-  #   )
-  # 
-  #   HTML(outText)
-  # 
-  # })
-  # 
-  # output$plotTimeCode <- renderPrint({
-  # 
-  #   data.elements <- input$data.elements
-  #   areas.pTC <- df[["areas"]]#input$area
-  # 
-  #   areasOptions <- areasOptions()
-  # 
-  #   if(all(areasOptions %in% areas.pTC)){
-  #     areas.pTC <- NA
-  #   } else {
-  #     areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
-  #   }
-  # 
-  #   area.column <- input$area.column
-  #   legend <- input$legendOn
-  #   log <- input$log
-  # 
-  #   outText <- paste0(
-  #     'data.elements <- "',data.elements, '"\n',
-  #     "areas <- ",areas.pTC, "\n",
-  #     'area.column <- "', area.column, '"\n',
-  #     'legend <- ',legend,"\n",
-  #     'log <- ',log,"\n",
-  #     "time_series_data(w.use, data.elements, area.column = area.column,\n",
-  #     "areas = areas,log=log, legend=legend)"
-  # 
-  #   )
-  # 
-  #   HTML(outText)
-  # 
-  # })
+  
+  
+  output$mapData <- renderPlot({
+    w.use <- w.use()
+
+    if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
+      if(!("STATECOUNTYCODE" %in% names(w.use))){
+        w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
+      }
+      
+      choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
+                      area.column = "STATE_TERR", area = input$stateToMap)
+      
+    }
+
+  })
+  
+  output$plotTwoCode <- renderPrint({
+
+    data.elements <- input$data.elements
+    areas.ptC <- df[["area"]]
+
+    areasOptions <- df[["areas"]]
+
+    if(all(areasOptions %in% areas.ptC)){
+      areas.ptC <- NA
+    } else {
+      areas.ptC <- paste0('c("',paste(areas.ptC, collapse = '","'),'")')
+    }
+
+    area.column <- df[["area.column"]]
+    year.x.y <- c(input$year_x,input$year_y)
+
+    outText <- paste0(
+      'data.elements <- "',data.elements, '"\n',
+      "areas <- ", areas.ptC, "\n",
+      'area.column <- "', area.column, '"\n',
+      "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
+      "compare_two_years(w.use, data.elements, year.x.y, area.column, areas)"
+
+    )
+
+    HTML(outText)
+
+  })
+
+  output$plotTimeCode <- renderPrint({
+
+    data.elements <- input$data.elements
+    areas.pTC <- df[["area"]]
+
+    areasOptions <-  df[["areas"]]
+
+    if(all(areasOptions %in% areas.pTC)){
+      areas.pTC <- NA
+    } else {
+      areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
+    }
+
+    area.column <- df[["area.column"]]
+    legend <- input$legendOn
+    log <- input$log
+
+    outText <- paste0(
+      'data.elements <- "',data.elements, '"\n',
+      "areas <- ",areas.pTC, "\n",
+      'area.column <- "', area.column, '"\n',
+      'legend <- ',legend,"\n",
+      'log <- ',log,"\n",
+      "time_series_data(w.use, data.elements, area.column = area.column,\n",
+      "areas = areas,log=log, legend=legend)"
+
+    )
+
+    HTML(outText)
+
+  })
   
 })

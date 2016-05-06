@@ -33,6 +33,11 @@ body <- dashboardBody(
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
               DT::dataTableOutput('rankData')
+     ),
+     tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
+              value="map",
+              h3("Currently only works with county data"),
+              plotOutput('mapData')
      )
    ),
   fluidRow(
@@ -55,7 +60,7 @@ sidebar <- dashboardSidebar(
   ),  
   selectInput("area.column", label = "Area Column", 
               choices = area.columns,
-              selected = area.columns[2], multiple = FALSE),
+              selected = area.columns[1], multiple = FALSE),
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
@@ -65,6 +70,15 @@ sidebar <- dashboardSidebar(
       selectInput("data.elements", label = "Data Elements", 
                   choices = data.elements,
                   selected = data.elements[1], multiple = FALSE)),
+  conditionalPanel(
+    condition = "input.mainTabs == 'map'",
+    selectInput("stateToMap", label = "Map State", 
+                choices = stateCd$STATE_NAME,
+                selected = "Deleware", multiple = FALSE),
+    selectInput("yearToMap", label = "Year",
+                choices =  unique(wUseSample$YEAR),
+                selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))])
+    ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
       selectInput("year_x", label = "Year x:", width = 100,

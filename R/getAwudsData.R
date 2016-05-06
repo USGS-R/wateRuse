@@ -12,6 +12,7 @@
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fread
 #' @importFrom data.table setDT
+#' @importFrom data.table setDF
 #' @importFrom data.table dcast
 #' 
 #' @examples 
@@ -85,7 +86,9 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       }
     }
     
-    awuds_data <- spread_(awuds_data, "data.element","value")
+    awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(names(awuds_data)[!(names(awuds_data) %in% c("data.element","value"))],collapse = "+"),"~ data.element")), value.var = "value")
+    awuds_data <- setDF(awuds_data)
+    # awuds_data <- spread_(awuds_data, "data.element","value")
 
   } else {
     if(length(dump_file_to_open) > 1){
@@ -113,6 +116,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       idColNames <- names(awuds_data)[(names(awuds_data) %in% idCols)]
       
       awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(idColNames,collapse = "+"),"~ data.element")), value.var = "value")
+      awuds_data <- setDF(awuds_data)
       # awuds_data <- spread_(awuds_data, "data.element","value")
       
     } else {

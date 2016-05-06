@@ -35,8 +35,8 @@ NULL
 #'}
 #' @name lookupTables
 #' @docType data
-#' @aliases category county dataelement huc8 calculation calculation.formula
-#' @export category county dataelement huc8 calculation calculation.formula
+#' @aliases category county dataelement huc8 calculation calculation.formula stateCd
+#' @export category county dataelement huc8 calculation calculation.formula stateCd
 #'
 #' @examples 
 #' head(category)
