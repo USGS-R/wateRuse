@@ -10,15 +10,23 @@
 #' 
 #' @export
 #' 
-#' @importFrom tidyr gather_
+#' @return hc.sub dataframe, a subset of county polygon data 
 #' 
 #' @examples 
-#' areas <- "Delaware" # should yield 3 counties
-#' areas <- "Maine"# should yield 16 counties
-#' areas <- "New Hampshire"# should yield 10 counties
+#' areas <- "Delaware" # 3 counties present day
 #' area.column <- "STATE_TERR"
-#' year <- 2010
-#' subset_county_polygons(areas, area.column, year)
+#' year <- 2010 
+#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub$NAME
+#' 
+#' areas <- "Maine" # 16 counties present day
+#' area.column <- "STATE_TERR"
+#' year <- 2010 
+#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub$NAME
+#' year <- 1850 # Maine had 13 counties in 1850; Delaware 3
+#' hc.sub <- subset_county_polygons(areas, area.column, year)
+#' hc.sub$NAME
 
 
 subset_county_polygons <- function(areas=NA, area.column, year){
@@ -26,14 +34,14 @@ subset_county_polygons <- function(areas=NA, area.column, year){
   test.date <- as.Date(paste0(year,"-12-31"))# year of interest converted to date
   now.date <-format(Sys.Date(), "%Y-%m-%d")
   # select area of interest
-  hc_sub <- histCounties[which(histCounties@data[,area.column] == areas),]
+  hc.sub <- histCounties[which(histCounties@data[,area.column] == areas),]
   
   # substitute todays date for the last date of the histCounties dataset (2000-12-31)
-  hc_sub$END_DATE[hc_sub$END_DATE==max(hc_sub$END_DATE)] <- now.date
+  hc.sub$END_DATE[hc.sub$END_DATE==max(hc.sub$END_DATE)] <- now.date
   # assuming the counties defined in 2000-12-31 are the same now, use todays 
   # date to make sure the selection for contemporaneous counties works  
-  hc_sub <- hc_sub[hc_sub$END_DATE >= test.date & hc_sub$START_DATE <= test.date,]# for year of interest, get the counties 
+  hc.sub <- hc.sub[hc.sub$END_DATE >= test.date & hc.sub$START_DATE <= test.date,]# for year of interest, get the counties 
 
-  return(hc_sub)
+  return(hc.sub)
   
 }# subset_county_polygons

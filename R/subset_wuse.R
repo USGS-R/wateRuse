@@ -17,7 +17,7 @@
 #' areas <- "10" # NA uses all areas
 #' area.column <- "STATECODE"
 #' 
-#' w.wuse.sub <- subset_wuse(w.use, data.elements,area.column,areas)
+#' w.use.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 subset_wuse <- function(w.use, data.elements, area.column, areas=NA) {
   # subset w.use on basis of areas and select the data elements of interest
   if (all(is.na(areas))){
