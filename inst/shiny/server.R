@@ -123,7 +123,7 @@ shinyServer(function(input, output, session) {
 
     w.use <- w.use()
     data.elements <- input$data.elements
-    areas.yr <- df[["areas"]]#input$area
+    areas.yr <- df[["areas"]]
     area.column <- df[["area.column"]]
 
     w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.yr)

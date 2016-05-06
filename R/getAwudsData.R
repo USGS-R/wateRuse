@@ -11,6 +11,8 @@
 #' @importFrom tidyr spread_
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fread
+#' @importFrom data.table setDT
+#' @importFrom data.table dcast
 #' 
 #' @examples 
 #' awuds.data.path <- system.file("extdata/dump", package="wateRuse")
@@ -105,15 +107,13 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
         
         colNames <- c(colNames, names(subData)[!(names(subData) %in% colNames)])
 
-        # if(any(!(colNames %in% names(subData)))){
-        #   subData[colNames[!(colNames %in% names(subData))]] <- as.numeric(NA)
-        # }
-        
-        awuds_data <- rbindlist(list(awuds_data, subData), fill = TRUE)
+        awuds_data <- rbindlist(list(awuds_data, subData), fill=TRUE)
 
       }
-
-      awuds_data <- spread_(awuds_data, "data.element","value")
+      idColNames <- names(awuds_data)[(names(awuds_data) %in% idCols)]
+      
+      awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(idColNames,collapse = "+"),"~ data.element")), value.var = "value")
+      # awuds_data <- spread_(awuds_data, "data.element","value")
       
     } else {
       awuds_data<-read.delim(dump_file_to_open, na.strings="--", colClasses="character")
