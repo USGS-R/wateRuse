@@ -1,7 +1,11 @@
 library(shinydashboard)
 library(wateRuse)
 
-data.elements <- names(wUseSample)[12:length(names(wUseSample))]
+# data.elements <- names(wUseSample)[12:length(names(wUseSample))]
+data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
+data.elements <- data.element.names
+names(data.elements) <- dataelement$NAME
+
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
@@ -82,7 +86,10 @@ sidebar <- dashboardSidebar(
                 selected = stateCd$STATE_NAME[8], multiple = FALSE),
     selectInput("yearToMap", label = "Year",
                 choices =  unique(wUseSample$YEAR),
-                selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))])
+                selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))]),
+    selectInput("norm.element", label = "Normalize Data Elements", 
+                choices = c("None",data.elements),
+                selected = "None", multiple = FALSE)
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",

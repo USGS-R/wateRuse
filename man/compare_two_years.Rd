@@ -4,7 +4,8 @@
 \alias{compare_two_years}
 \title{compare_two_years}
 \usage{
-compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA)
+compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA,
+  legend = FALSE)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -16,6 +17,8 @@ compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA)
 \item{area.column}{character that defines which column to use to specify area}
 
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
+
+\item{legend}{is a logical function to include list of counties in a legend if manageable, default is FALSE}
 }
 \description{
 Returns scatter plot for 2 years for data elements of interest.

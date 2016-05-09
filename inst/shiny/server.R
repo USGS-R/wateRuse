@@ -12,6 +12,10 @@ area.names <- c("STATECOUNTYCODE","COUNTYNAME",
 other.names <- c("STUDY","STATECODE","COUNTYCODE",
                  "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
 
+data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
+data.elements <- dataelement$NAME
+names(data.elements) <- data.element.names
+
 shinyServer(function(input, output, session) {
   
   w.use_full <- reactive({
@@ -26,6 +30,8 @@ shinyServer(function(input, output, session) {
       w.use <- get_awuds_data(awuds.data.files = newPath)
     }
 
+    w.use <- caluculate_values(w.use)
+    
     w.use
   })
   
@@ -42,7 +48,7 @@ shinyServer(function(input, output, session) {
     w.use.data <- w.use[,!(names(w.use) %in% c(area.names,other.names))]
     w.use.data <- w.use.data[,colSums(is.na(w.use.data))<nrow(w.use.data)]
     
-    df[["data.elements"]] <- names(w.use.data)
+    df[["data.elements"]] <- names(w.use.data) 
     df[["data.element"]] <- names(w.use.data)[order(colSums(w.use.data),decreasing=TRUE)[1]]
     
     w.use
@@ -151,19 +157,19 @@ shinyServer(function(input, output, session) {
                              selected = df[["area.column"]])
   })
   
-  observe({
-    updateSelectInput(session, "data.elements", 
-                      choices = df[["data.elements"]], 
-                      selected = df[["data.element"]])
-    
-    updateSelectInput(session, "data.elements.min", 
-                      choices = df[["data.elements"]], 
-                      selected = df[["data.elements"]][1])
-    
-    updateSelectInput(session, "data.elements.max", 
-                      choices = df[["data.elements"]], 
-                      selected = df[["data.elements"]][2])
-  })
+  # observe({
+  #   updateSelectInput(session, "data.elements", 
+  #                     choices = df[["data.elements"]], 
+  #                     selected = df[["data.element"]])
+  #   
+  #   updateSelectInput(session, "data.elements.min", 
+  #                     choices = df[["data.elements"]], 
+  #                     selected = df[["data.elements"]][1])
+  #   
+  #   updateSelectInput(session, "data.elements.max", 
+  #                     choices = df[["data.elements"]], 
+  #                     selected = df[["data.elements"]][2])
+  # })
   
   observe({
     choices <- df[["states"]]
@@ -395,6 +401,12 @@ shinyServer(function(input, output, session) {
   mapData <- reactive({
     
     w.use <- w.use()
+    
+    norm.element <- input$norm.element
+    
+    if(norm.element == "None"){
+      norm.element <- NA
+    }
 
     if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
       if(!("STATECOUNTYCODE" %in% names(w.use))){
@@ -402,7 +414,7 @@ shinyServer(function(input, output, session) {
       }
 
       mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
-                      area.column = "STATE_TERR", area = input$stateToMap)
+                      area.column = "STATE_TERR", area = input$stateToMap, norm.element = norm.element)
 
     } else {
       mapData <- ggplot(data = mtcars) +
