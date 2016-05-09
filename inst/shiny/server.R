@@ -93,9 +93,6 @@ shinyServer(function(input, output, session) {
     df[["data.elements"]] <- names(w.use.data)
     df[["data.element"]] <- names(w.use.data)[order(colSums(w.use.data),decreasing=TRUE)[1]]
 
-    # df[["data.elements"]] <- names(w.use)[!(names(w.use) %in% c(choice.area,other.names))]
-    # df[["data.element"]] <- names(w.use)[!(names(w.use) %in% c(choice.area,other.names))][1]
-    
   })
   
   observeEvent(input$area,  {
@@ -138,6 +135,17 @@ shinyServer(function(input, output, session) {
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["area"]])
+  })
+  
+  observe({
+    
+    if(df[["state"]] %in% stateCd$STUSAB){
+      
+      state <- stateCd$STATE_NAME[which(df[["state"]] == stateCd$STUSAB)[1]]
+      
+      updateCheckboxGroupInput(session, "stateToMap", selected = state)
+    }
+    
   })
   
   observe({
@@ -242,7 +250,7 @@ shinyServer(function(input, output, session) {
     time_series_data(w.use, data.elements, area.column, plot.points = points,
                      areas = areas.pt, legend = legend, log = log, years= NA)
   })
-
+  
   output$rankData <- DT::renderDataTable({
 
     w.use <- w.use()
