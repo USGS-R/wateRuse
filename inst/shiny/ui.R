@@ -1,7 +1,11 @@
 library(shinydashboard)
 library(wateRuse)
 
-data.elements <- names(wUseSample)[12:length(names(wUseSample))]
+# data.elements <- names(wUseSample)[12:length(names(wUseSample))]
+data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
+data.elements <- data.element.names
+names(data.elements) <- dataelement$NAME
+
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
