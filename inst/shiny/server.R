@@ -401,6 +401,12 @@ shinyServer(function(input, output, session) {
   mapData <- reactive({
     
     w.use <- w.use()
+    
+    norm.element <- input$norm.element
+    
+    if(norm.element == "None"){
+      norm.element <- NA
+    }
 
     if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
       if(!("STATECOUNTYCODE" %in% names(w.use))){
@@ -408,7 +414,7 @@ shinyServer(function(input, output, session) {
       }
 
       mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
-                      area.column = "STATE_TERR", area = input$stateToMap)
+                      area.column = "STATE_TERR", area = input$stateToMap, norm.element = norm.element)
 
     } else {
       mapData <- ggplot(data = mtcars) +

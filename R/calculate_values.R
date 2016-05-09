@@ -16,7 +16,7 @@ caluculate_values <- function(w.use){
   calculation.formula$CALCULATION <- gsub("-",".",calculation.formula$CALCULATION)
   calculation.formula$EXPANDEDFORMULA <- gsub("-",".",calculation.formula$EXPANDEDFORMULA)
   
-  make.index <- which(!(gsub("-",".",calculation.formula$CALCULATION) %in% names(wUseSample)))
+  make.index <- which(!(gsub("-",".",calculation.formula$CALCULATION) %in% names(w.use)))
   
   columns.to.make <- calculation.formula$CALCULATION[make.index]
   formulas.to.use <- calculation.formula$EXPANDEDFORMULA[make.index]
