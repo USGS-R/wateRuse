@@ -336,11 +336,12 @@ shinyServer(function(input, output, session) {
         if(min(dist, rm.na=TRUE) < 5){
           txt <- data[[df[["area.column"]]]][which.min(dist)]
         }
-      } else {
-        dist=sqrt((hover$x-data$YEAR)^2)
-        if(min(dist, rm.na=TRUE) < 5){
-          txt <- data[[df[["area.column"]]]][which.min(dist)]
-        }
+      # } else {
+      #   dist=sqrt((hover$x-data$YEAR)^2)
+      #   levels()
+      #   if(min(dist, rm.na=TRUE) < 5){
+      #     txt <- data[[df[["area.column"]]]][which.min(dist)]
+      #   }
       }
       
     }
