@@ -8,6 +8,7 @@
 #' @param areas chr, codes indicating HUCs, counties, states, aquifers, etc. 
 #' @param year.x.y int, 2-element vector specifying the two years to be plotted
 #' @param area.column character that defines which column to use to specify area
+#' @param legend is a logical function to include list of counties in a legend if manageable, default is FALSE
 #' 
 #' @export
 #' 
@@ -23,7 +24,7 @@
 #' compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 #' compare_two_years(w.use, data.elements, year.x.y, area.column)
 #' compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
-compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA){ 
+compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, legend = FALSE){ 
 
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
@@ -35,6 +36,7 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     
     df_x<-x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]]
     df_y<-x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]]
+    df_site <- x[x$YEAR == year.x.y[2] & x$Key == i,][[area.column]]
     
     if(!length(df_x)==length(df_y)) { # I found this issue with Alaska between 2005 and 2010.
       stop('Different number of counties from one compilation year to the other not supported yet.')}
@@ -45,7 +47,9 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     
     df <- data.frame(
       x = df_x,
-      y = df_y)
+      y = df_y,
+      site = df_site,
+      stringsAsFactors = FALSE)
     
     df$Key <- i
     
@@ -57,7 +61,8 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
   }# i
   
   compare.plot <- ggplot(data = df_full) +
-   geom_point(aes_string(x = "x", y = "y")) +
+   geom_point(aes_string(x = "x", y = "y", color = "site"), 
+              show.legend = legend, size = 3) +
     geom_line(aes_string(x = "x", y = "x"),col="red") +
     facet_wrap(~ Key, ncol = 1) +
     xlab(year.x.y[1]) +

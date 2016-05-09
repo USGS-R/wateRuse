@@ -4,7 +4,8 @@
 \alias{compare_two_elements}
 \title{compare_two_elements}
 \usage{
-compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA)
+compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA,
+  legend = FALSE)
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -16,6 +17,8 @@ compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA)
 \item{area.column}{chr, defines which column to use to specify area}
 
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
+
+\item{legend}{is a logical function to include list of counties in a legend if manageable, default is FALSE}
 }
 \description{
 Returns scatter plot for 2 data elements for years of interest.

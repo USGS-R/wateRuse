@@ -67,6 +67,10 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
     ts.object <- ts.object + xlim(years)
   }
   
+  if(log){
+    ts.object <- ts.object + scale_y_log10()
+  }
+  
   ts.object
   
   return(ts.object)

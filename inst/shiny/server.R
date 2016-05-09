@@ -96,25 +96,19 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$area,  {
-    
     df[["area"]] <- input$area
-    
   })
   
   observeEvent(input$data.elements,  {
-
     df[["data.element"]] <- input$data.elements
-
   })
   
   observeEvent(input$area.column,  {
-    
     df[["area.column"]] <- input$area.column
     w.use <- w.use()
     
     df[["areas"]] <- unique(w.use[[input$area.column]])
     df[["area"]] <- unique(w.use[[input$area.column]])
-    
   })
 
   observeEvent(input$state, ignoreNULL = TRUE, {
@@ -131,32 +125,27 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["area"]])
   })
   
   observe({
-    
     if(df[["state"]] %in% stateCd$STUSAB){
       
       state <- stateCd$STATE_NAME[which(df[["state"]] == stateCd$STUSAB)[1]]
       
       updateCheckboxGroupInput(session, "stateToMap", selected = state)
     }
-    
   })
   
   observe({
-
     updateSelectInput(session, "area.column", 
                              choices = df[["area.columns"]], 
                              selected = df[["area.column"]])
   })
   
   observe({
-    
     updateSelectInput(session, "data.elements", 
                       choices = df[["data.elements"]], 
                       selected = df[["data.element"]])
@@ -167,12 +156,10 @@ shinyServer(function(input, output, session) {
     
     updateSelectInput(session, "data.elements.max", 
                       choices = df[["data.elements"]], 
-                      selected = df[["data.elements"]][2])    
-    
+                      selected = df[["data.elements"]][2])
   })
   
   observe({
-
     choices <- df[["states"]]
     
     updateCheckboxGroupInput(session, "state",
@@ -181,7 +168,6 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-
     w.use <- w.use()
     data.elements <- df[["data.element"]]
     areas.yr <- df[["areas"]]
@@ -198,11 +184,10 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "year_y",
                       choices = yRange,
                       selected = yRange[length(yRange)])
-
   })
 
   output$plotTwo <- renderPlot({
-    print(plotTwo())
+    plotTwo()
   })
   
   plotTwo <- reactive({
@@ -215,11 +200,34 @@ shinyServer(function(input, output, session) {
     if(all(df[["areas"]] %in% areas.p2)){
       areas.p2 <- NA
     }
-
+    legend <- input$legendOn
+    
     area.column <- df[["area.column"]]
     year.x.y <- c(input$year_x,input$year_y)
-    plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2)
+    plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2, legend=legend)
 
+    plotTwo
+  })
+  
+  output$hover_plotTwo <- renderPrint({
+    if(!is.null(input$hover_plotTwo)){
+      hover=input$hover_plotTwo
+      plotTwo <- plotTwo()
+      data <- plotTwo$data
+      dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
+      cat("Site:\n")
+      if(min(dist) < 3)
+        data$site[which.min(dist)]
+
+    }
+  })
+  
+  output$hover_info <- renderPrint({
+    if(!is.null(input$plot_hover)){
+
+      cat("Area:\n")
+      str(input$plot_hover)
+    }
   })
   
   output$downloadPlotTwo <- downloadHandler(
@@ -230,7 +238,7 @@ shinyServer(function(input, output, session) {
   )
 
   output$plotTwoElement <- renderPlot({
-    print(plotTwoElement())
+    plotTwoElement()
   })
   
   plotTwoElement <- reactive({
@@ -244,10 +252,11 @@ shinyServer(function(input, output, session) {
     if(all(df[["areas"]] %in% areas.p2e)){
       areas.p2e <- NA
     }
-
+    legend <- input$legendOn
     area.column <- df[["area.column"]]
     year.x.y <- c(input$year_x,input$year_y)
-    plotTwoElement <- compare_two_elements(w.use, data.elements, year.x.y, area.column, areas.p2e)
+    plotTwoElement <- compare_two_elements(w.use, data.elements, year.x.y, 
+                                           area.column, areas.p2e, legend=legend)
 
     plotTwoElement
     
@@ -261,7 +270,7 @@ shinyServer(function(input, output, session) {
   )
   
   output$plotTime <- renderPlot({
-    print(tsPlot())
+    tsPlot()
     
   })
   
@@ -331,7 +340,7 @@ shinyServer(function(input, output, session) {
 
 
   output$mapData <- renderPlot({
-    print(mapData())
+    mapData()
   })
   
   mapData <- reactive({

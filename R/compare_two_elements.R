@@ -8,6 +8,7 @@
 #' @param areas chr, codes indicating HUCs, counties, states, aquifers, etc. 
 #' @param years int, vector specifying the years to be plotted (1 plot per year)
 #' @param area.column chr, defines which column to use to specify area
+#' @param legend is a logical function to include list of counties in a legend if manageable, default is FALSE
 #' 
 #' @export
 #' 
@@ -23,7 +24,7 @@
 #' compare_two_elements(w.use, data.elements.x.y, years, area.column, areas)
 #' compare_two_elements(w.use, data.elements.x.y, years, area.column)
 #' compare_two_elements(w.use, data.elements.x.y, "2010", area.column)
-compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, areas=NA){ 
+compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, areas=NA, legend= FALSE){ 
   
   w.use.sub <- subset_wuse(w.use, data.elements.x.y, area.column, areas)
   
@@ -34,7 +35,9 @@ compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, a
   for(i in years){
     df <- data.frame(
       x = x[x$Element == data.elements.x.y[1] & x$YEAR == i,][["Value"]],
-      y = x[x$Element == data.elements.x.y[2] & x$YEAR == i,][["Value"]])
+      y = x[x$Element == data.elements.x.y[2] & x$YEAR == i,][["Value"]],
+      site = x[x$Element == data.elements.x.y[2] & x$YEAR == i,][[area.column]],
+      stringsAsFactors = FALSE)
     
     df$YEAR <- i
     
@@ -56,7 +59,8 @@ compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, a
   }
   
   compare.plot <- ggplot(data = df_full) +
-    geom_point(aes_string(x = "x", y = "y")) +
+    geom_point(aes_string(x = "x", y = "y", color = "site"), 
+               show.legend = legend, size = 3) +
     facet_wrap(~ YEAR, ncol = 1) +
     xlab(data.elements.x.y[1]) +
     ylab(data.elements.x.y[2])

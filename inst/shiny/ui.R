@@ -14,7 +14,8 @@ body <- dashboardBody(
               value = "plotTwoTab",
               h4("R Code:"),
               verbatimTextOutput("plotTwoCode"),
-              plotOutput("plotTwo",width = "400px", height = "400px"),
+              verbatimTextOutput("hover_plotTwo"),
+              plotOutput("plotTwo", width = 400, height = 400,hover = hoverOpts(id = "hover_plotTwo")),#"400px", height = "400px",
               downloadButton('downloadPlotTwo', 'Download Plot')
      ),
      tabPanel(title = tagList("Compare Two Elements",shiny::icon("bar-chart")),
@@ -28,7 +29,8 @@ body <- dashboardBody(
               value = "plotTimeTab",
               h4("R Code:"),
               verbatimTextOutput("plotTimeCode"),
-              plotOutput("plotTime"),
+              verbatimTextOutput("hover_info"),
+              plotOutput("plotTime",hover = hoverOpts(id = "plot_hover")),
               downloadButton('downloadPlotTime', 'Download Plot')
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
@@ -101,9 +103,12 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
-      checkboxInput("legendOn", label = "Include Legend", value = TRUE),
       checkboxInput("log", label = "Log Scale"),
       checkboxInput("points", label = "Points")
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
