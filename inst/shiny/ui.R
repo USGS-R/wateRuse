@@ -21,7 +21,8 @@ body <- dashboardBody(
               value = "plotTwoElem",
               h4("R Code:"),
               verbatimTextOutput("plotTwoElementCode"),
-              plotOutput("plotTwoElement",width = "400px", height = "400px")
+              plotOutput("plotTwoElement",width = "400px", height = "400px"),
+              downloadButton('downloadPlotTwoElem', 'Download Plot')
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
@@ -37,7 +38,8 @@ body <- dashboardBody(
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
               h3("Currently only works with county data"),
-              plotOutput('mapData')
+              plotOutput('mapData'),
+              downloadButton('downloadMap', 'Download Plot')
      )
    ),
   fluidRow(
