@@ -160,6 +160,15 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "data.elements", 
                       choices = df[["data.elements"]], 
                       selected = df[["data.element"]])
+    
+    updateSelectInput(session, "data.elements.min", 
+                      choices = df[["data.elements"]], 
+                      selected = df[["data.elements"]][1])
+    
+    updateSelectInput(session, "data.elements.max", 
+                      choices = df[["data.elements"]], 
+                      selected = df[["data.elements"]][2])    
+    
   })
   
   observe({
@@ -193,6 +202,11 @@ shinyServer(function(input, output, session) {
   })
 
   output$plotTwo <- renderPlot({
+    print(plotTwo())
+  })
+  
+  plotTwo <- reactive({
+    
     w.use <- w.use()
 
     data.elements <- df[["data.element"]]
@@ -206,10 +220,21 @@ shinyServer(function(input, output, session) {
     year.x.y <- c(input$year_x,input$year_y)
     plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2)
 
-    print(plotTwo)
   })
+  
+  output$downloadPlotTwo <- downloadHandler(
+    filename = function() { "plotTwo.png" },
+    content = function(file) {
+      ggsave(file, plot = plotTwo(), device = "png")
+    }
+  )
 
   output$plotTwoElement <- renderPlot({
+    print(plotTwoElement())
+  })
+  
+  plotTwoElement <- reactive({
+    
     w.use <- w.use()
 
     data.elements <- c(input$data.elements.min,input$data.elements.max)
@@ -224,10 +249,23 @@ shinyServer(function(input, output, session) {
     year.x.y <- c(input$year_x,input$year_y)
     plotTwoElement <- compare_two_elements(w.use, data.elements, year.x.y, area.column, areas.p2e)
 
-    print(plotTwoElement)
+    plotTwoElement
+    
   })
 
+  output$downloadPlotTwoElem <- downloadHandler(
+    filename = function() { "plotTwoElement.png" },
+    content = function(file) {
+      ggsave(file, plot = plotTwoElement(), device = "png")
+    }
+  )
+  
   output$plotTime <- renderPlot({
+    print(tsPlot())
+    
+  })
+  
+  tsPlot <- reactive({
     w.use <- w.use()
 
     data.elements <- df[["data.element"]]
@@ -247,9 +285,18 @@ shinyServer(function(input, output, session) {
     w.use <- subset_wuse(w.use, data.elements, area.column, areas.pt)
     w.use <- w.use[!is.na(w.use[data.elements]),]
 
-    time_series_data(w.use, data.elements, area.column, plot.points = points,
+    tsPlot <- time_series_data(w.use, data.elements, area.column, plot.points = points,
                      areas = areas.pt, legend = legend, log = log, years= NA)
+    
+    tsPlot
   })
+  
+  output$downloadPlotTime <- downloadHandler(
+    filename = function() { "tsPlot.png" },
+    content = function(file) {
+      ggsave(file, plot = tsPlot(), device = "png")
+    }
+  )
   
   output$rankData <- DT::renderDataTable({
 
@@ -284,6 +331,11 @@ shinyServer(function(input, output, session) {
 
 
   output$mapData <- renderPlot({
+    print(mapData())
+  })
+  
+  mapData <- reactive({
+    
     w.use <- w.use()
 
     if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
@@ -291,12 +343,24 @@ shinyServer(function(input, output, session) {
         w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
       }
 
-      choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
+      mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
                       area.column = "STATE_TERR", area = input$stateToMap)
 
+    } else {
+      mapData <- ggplot(data = mtcars) +
+        geom_text(x=0.5, y=0.5, label = "Choose new state or use County data")
     }
+    
+    mapData
 
   })
+  
+  output$downloadMap <- downloadHandler(
+    filename = function() { "map.png" },
+    content = function(file) {
+      ggsave(file, plot = mapData(), device = "png")
+    }
+  )
 
   output$plotTwoCode <- renderPrint({
 
