@@ -105,7 +105,13 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$area.column,  {
     df[["area.column"]] <- input$area.column
-    w.use <- w.use()
+    
+    w.use <- w.use_full()
+    states <- df[["state"]]
+    
+    if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use) | states != "All Available"){
+      w.use <- filter(w.use, USSTATEALPHACODE %in% states)
+    }
     
     df[["areas"]] <- unique(w.use[[input$area.column]])
     df[["area"]] <- unique(w.use[[input$area.column]])
@@ -210,24 +216,20 @@ shinyServer(function(input, output, session) {
   })
   
   output$hover_plotTwo <- renderPrint({
+    txt <- ""
+    
     if(!is.null(input$hover_plotTwo)){
       hover=input$hover_plotTwo
       plotTwo <- plotTwo()
       data <- plotTwo$data
       dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-      cat("Site:\n")
-      if(min(dist) < 3)
-        data$site[which.min(dist)]
-
+      if(min(dist, rm.na=TRUE) < 5){
+        txt <- data$site[which.min(dist)]
+      }
     }
-  })
-  
-  output$hover_info <- renderPrint({
-    if(!is.null(input$plot_hover)){
-
-      cat("Area:\n")
-      str(input$plot_hover)
-    }
+    
+    cat("Site:",txt)
+    
   })
   
   output$downloadPlotTwo <- downloadHandler(
@@ -254,11 +256,30 @@ shinyServer(function(input, output, session) {
     }
     legend <- input$legendOn
     area.column <- df[["area.column"]]
-    year.x.y <- c(input$year_x,input$year_y)
-    plotTwoElement <- compare_two_elements(w.use, data.elements, year.x.y, 
+    year <- input$year_x
+    
+    plotTwoElement <- compare_two_elements(w.use, data.elements, year, 
                                            area.column, areas.p2e, legend=legend)
 
     plotTwoElement
+    
+  })
+  
+  output$hover_plotTwoElem <- renderPrint({
+    txt <- ""
+    
+    if(!is.null(input$hover_plotTwoElem)){
+      hover=input$hover_plotTwoElem
+      plotTwoElement <- plotTwoElement()
+      data <- plotTwoElement$data
+      dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
+      if(min(dist, rm.na=TRUE) < 5){
+        txt <- data$site[which.min(dist)]
+      }
+
+    }
+    
+    cat("Site:", txt)  
     
   })
 
@@ -298,6 +319,33 @@ shinyServer(function(input, output, session) {
                      areas = areas.pt, legend = legend, log = log, years= NA)
     
     tsPlot
+  })
+  
+  output$hover_info_ts <- renderPrint({
+    txt <- ""
+    
+    points <- input$points
+    hover=input$hover_info_ts
+    
+    if(!is.null(hover)){
+      tsPlot <- tsPlot()
+      data <- tsPlot$data
+      
+      if(points){
+        dist=sqrt((hover$x-as.numeric(data$YEAR))^2+(hover$y-data$value)^2)
+        if(min(dist, rm.na=TRUE) < 5){
+          txt <- data[[df[["area.column"]]]][which.min(dist)]
+        }
+      } else {
+        dist=sqrt((hover$x-data$YEAR)^2)
+        if(min(dist, rm.na=TRUE) < 5){
+          txt <- data[[df[["area.column"]]]][which.min(dist)]
+        }
+      }
+      
+    }
+    
+    cat("Site: ", txt)
   })
   
   output$downloadPlotTime <- downloadHandler(
@@ -375,7 +423,8 @@ shinyServer(function(input, output, session) {
 
     data.elements <- input$data.elements
     areas.ptC <- df[["area"]]
-
+    legend <- input$legendOn
+    
     areasOptions <- df[["areas"]]
 
     if(all(areasOptions %in% areas.ptC)){
@@ -392,12 +441,46 @@ shinyServer(function(input, output, session) {
       "areas <- ", areas.ptC, "\n",
       'area.column <- "', area.column, '"\n',
       "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
-      "compare_two_years(w.use, data.elements, year.x.y, area.column, areas)"
+      "legend <- ", legend, "\n",
+      "compare_two_years(w.use, data.elements, year.x.y, area.column, areas, legend)"
 
     )
 
     HTML(outText)
 
+  })
+  
+  output$plotTwoElementCode <- renderPrint({
+    
+    data.elements <- input$data.elements
+    areas.ptC <- df[["area"]]
+    legend <- input$legendOn
+    year <- input$year_x
+    
+    areasOptions <- df[["areas"]]
+    
+    if(all(areasOptions %in% areas.ptC)){
+      areas.ptC <- NA
+    } else {
+      areas.ptC <- paste0('c("',paste(areas.ptC, collapse = '","'),'")')
+    }
+    
+    area.column <- df[["area.column"]]
+    data.elements.x.y <- c(input$data.elements.min,input$data.elements.max)
+    
+    outText <- paste0(
+      'data.elements <- "',data.elements, '"\n',
+      "areas <- ", areas.ptC, "\n",
+      'area.column <- "', area.column, '"\n',
+      "year <- ", year, "\n",
+      "data.elements.x.y <- c(",paste0(data.elements.x.y,collapse = ","),")\n",
+      "legend <- ", legend, "\n",
+      "compare_two_elements(w.use, data.elements, year, area.column, areas, legend)"
+      
+    )
+    
+    HTML(outText)
+    
   })
 
   output$plotTimeCode <- renderPrint({

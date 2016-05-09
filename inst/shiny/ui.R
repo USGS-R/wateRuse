@@ -22,15 +22,16 @@ body <- dashboardBody(
               value = "plotTwoElem",
               h4("R Code:"),
               verbatimTextOutput("plotTwoElementCode"),
-              plotOutput("plotTwoElement",width = "400px", height = "400px"),
+              verbatimTextOutput("hover_plotTwoElem"),
+              plotOutput("plotTwoElement",width = "400px", height = "400px",hover = hoverOpts(id = "hover_plotTwoElem")),
               downloadButton('downloadPlotTwoElem', 'Download Plot')
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               h4("R Code:"),
               verbatimTextOutput("plotTimeCode"),
-              verbatimTextOutput("hover_info"),
-              plotOutput("plotTime",hover = hoverOpts(id = "plot_hover")),
+              verbatimTextOutput("hover_info_ts"),
+              plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
               downloadButton('downloadPlotTime', 'Download Plot')
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
@@ -85,12 +86,15 @@ sidebar <- dashboardSidebar(
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
-      selectInput("year_x", label = "Year x:", width = 100,
-                choices = unique(wUseSample$YEAR),
-                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE),
       selectInput("year_y", label = "Year y:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))], multiple = FALSE)
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    selectInput("year_x", label = "Year:", width = 100,
+                choices = unique(wUseSample$YEAR),
+                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoElem'",
