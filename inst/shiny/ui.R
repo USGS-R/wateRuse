@@ -14,21 +14,24 @@ body <- dashboardBody(
               value = "plotTwoTab",
               h4("R Code:"),
               verbatimTextOutput("plotTwoCode"),
-              plotOutput("plotTwo",width = "400px", height = "400px"),
+              verbatimTextOutput("hover_plotTwo"),
+              plotOutput("plotTwo", width = 400, height = 400,hover = hoverOpts(id = "hover_plotTwo")),#"400px", height = "400px",
               downloadButton('downloadPlotTwo', 'Download Plot')
      ),
      tabPanel(title = tagList("Compare Two Elements",shiny::icon("bar-chart")),
               value = "plotTwoElem",
               h4("R Code:"),
               verbatimTextOutput("plotTwoElementCode"),
-              plotOutput("plotTwoElement",width = "400px", height = "400px"),
+              verbatimTextOutput("hover_plotTwoElem"),
+              plotOutput("plotTwoElement",width = "400px", height = "400px",hover = hoverOpts(id = "hover_plotTwoElem")),
               downloadButton('downloadPlotTwoElem', 'Download Plot')
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               h4("R Code:"),
               verbatimTextOutput("plotTimeCode"),
-              plotOutput("plotTime"),
+              verbatimTextOutput("hover_info_ts"),
+              plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
               downloadButton('downloadPlotTime', 'Download Plot')
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
@@ -83,12 +86,15 @@ sidebar <- dashboardSidebar(
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
-      selectInput("year_x", label = "Year x:", width = 100,
-                choices = unique(wUseSample$YEAR),
-                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE),
       selectInput("year_y", label = "Year y:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))], multiple = FALSE)
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    selectInput("year_x", label = "Year:", width = 100,
+                choices = unique(wUseSample$YEAR),
+                selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoElem'",
@@ -101,9 +107,12 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
-      checkboxInput("legendOn", label = "Include Legend", value = TRUE),
       checkboxInput("log", label = "Log Scale"),
       checkboxInput("points", label = "Points")
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
