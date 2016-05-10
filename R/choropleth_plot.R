@@ -67,6 +67,9 @@ choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm
   
   # plot element
   p.elem <- data.elements
+  
+  if(all(is.na(w.use.sub[p.elem]))) stop('No data available.')
+  
   if (!is.na(norm.element)){p.elem <- paste0(data.elements,"_norm")}
   
   
