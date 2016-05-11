@@ -58,8 +58,8 @@ body <- dashboardBody(
               value = "plotTimeTab",
               h4("R Code:"),
               verbatimTextOutput("plotTimeCode"),
-              verbatimTextOutput("hover_info_ts"),
               plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
+              verbatimTextOutput("hover_info_ts"),
               h4(""),
               fluidRow(
                 column(3, downloadButton('downloadPlotTime', 'Download PNG')),
@@ -74,7 +74,8 @@ body <- dashboardBody(
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
               h3("Currently only works with county data"),
-              plotOutput('mapData'),
+              verbatimTextOutput("hover_map"),
+              plotOutput('mapData',hover = hoverOpts(id = "hover_map")),
               downloadButton('downloadMap', 'Download PNG')
      )
    ),
