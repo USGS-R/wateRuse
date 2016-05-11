@@ -53,10 +53,13 @@ test_that("Dump Data gets read in when given as a direct file", {
 })
 
 test_that("Test calculations", {
-  file <- c(system.file("extdata/dump/exampleAWUDSdump.txt", package="wateRuse"))
-  awuds <- get_awuds_data(awuds.data.files=file)
+  
+  awuds <- wUseSample
   awuds.calc <- caluculate_values(awuds)
   
-  expect_equal(awuds.calc$LV.WGWFr, awuds.calc$LS.WGWFr + awuds.calc$LA.WGWFr)
+  x1 <- awuds.calc$LV.WGWFr
+  y1 <- awuds.calc$LS.WGWFr + awuds.calc$LA.WGWFr
+  
+  expect_equivalent(object = x1, expected = y1)
   
 })
