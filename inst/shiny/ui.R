@@ -6,6 +6,9 @@ data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.element.names
 names(data.elements) <- dataelement$NAME
 
+data.elements.type <- category$CODE
+names(data.elements.type) <- category$NAME
+
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
@@ -18,17 +21,34 @@ body <- dashboardBody(
               value = "plotTwoTab",
               h4("R Code:"),
               verbatimTextOutput("plotTwoCode"),
-              verbatimTextOutput("hover_plotTwo"),
-              plotOutput("plotTwo", width = 400, height = 400,hover = hoverOpts(id = "hover_plotTwo")),#"400px", height = "400px",
-              downloadButton('downloadPlotTwo', 'Download Plot')
+              fluidRow(
+                column(8, 
+                       plotOutput("plotTwo", width = 500, height = 500,hover = hoverOpts(id = "hover_plotTwo"))),
+                column(3, h4("Hover to get site information:"),
+                       verbatimTextOutput("hover_plotTwo"))
+                       
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotTwo', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTwoPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTwoData', 'Download Data'))
+              )
+              
      ),
      tabPanel(title = tagList("Compare Two Elements",shiny::icon("bar-chart")),
               value = "plotTwoElem",
               h4("R Code:"),
               verbatimTextOutput("plotTwoElementCode"),
-              verbatimTextOutput("hover_plotTwoElem"),
-              plotOutput("plotTwoElement",width = "400px", height = "400px",hover = hoverOpts(id = "hover_plotTwoElem")),
-              downloadButton('downloadPlotTwoElem', 'Download Plot')
+              fluidRow(
+                column(9, 
+                       plotOutput("plotTwoElement",width = 500, height = 500, hover = hoverOpts(id = "hover_plotTwoElem"))),
+                column(3, h4("Hover to get site information:"),
+                       verbatimTextOutput("hover_plotTwoElem"))
+                
+              ),
+              h4(""),
+              downloadButton('downloadPlotTwoElem', 'Download PNG')
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
@@ -36,7 +56,7 @@ body <- dashboardBody(
               verbatimTextOutput("plotTimeCode"),
               verbatimTextOutput("hover_info_ts"),
               plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
-              downloadButton('downloadPlotTime', 'Download Plot')
+              downloadButton('downloadPlotTime', 'Download PNG')
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
@@ -46,7 +66,7 @@ body <- dashboardBody(
               value="map",
               h3("Currently only works with county data"),
               plotOutput('mapData'),
-              downloadButton('downloadMap', 'Download Plot')
+              downloadButton('downloadMap', 'Download PNG')
      )
    ),
   fluidRow(
@@ -76,6 +96,9 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs != 'plotTwoElem'",
+      selectInput("data.elements.type", label = "Data Element Type", 
+                choices = data.elements.type,
+                selected = data.elements.type[1], multiple = FALSE),   
       selectInput("data.elements", label = "Data Elements", 
                   choices = data.elements,
                   selected = data.elements[1], multiple = FALSE)),

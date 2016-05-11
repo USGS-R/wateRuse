@@ -6,15 +6,21 @@ library(tidyr)
 library(RColorBrewer)
 
 w.use.start <- wUseSample
+
+data.elements.type <- category$CODE
+names(data.elements.type) <- category$NAME
+
+data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
+data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
+
+
+
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
                     "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
 other.names <- c("STUDY","STATECODE","COUNTYCODE",
                  "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
-
-data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
-data.elements <- dataelement$NAME
-names(data.elements) <- data.element.names
 
 shinyServer(function(input, output, session) {
   
@@ -43,13 +49,13 @@ shinyServer(function(input, output, session) {
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
+    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+
+    df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
+    df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
+
     w.use <- subset_wuse(w.use, df[["data.elements"]], df[["area.column"]], areas = df[["area"]])
-    
-    w.use.data <- w.use[,!(names(w.use) %in% c(area.names,other.names))]
-    w.use.data <- w.use.data[,colSums(is.na(w.use.data))<nrow(w.use.data)]
-    
-    df[["data.elements"]] <- names(w.use.data) 
-    df[["data.element"]] <- names(w.use.data)[order(colSums(w.use.data),decreasing=TRUE)[1]]
     
     w.use
     
@@ -61,10 +67,8 @@ shinyServer(function(input, output, session) {
                        area = unique(w.use.start[["COUNTYNAME"]]),
                        states = unique(w.use.start[["USSTATEALPHACODE"]]),
                        state = unique(w.use.start[["USSTATEALPHACODE"]])[1],
-                       data.elements = names(w.use.start)[!(names(w.use.start) %in%
-                                                              c(area.names, other.names))],
-                       data.element = names(w.use.start)[!(names(w.use.start) %in%
-                                                              c(area.names, other.names))][1])
+                       data.elements = data.elements.start,
+                       data.element = data.elements.start[1])
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -91,13 +95,13 @@ shinyServer(function(input, output, session) {
     
     w.use <- w.use[w.use[[df[["area.column"]]]] %in% df[["area"]],]
     
-    w.use <- w.use[,colSums(is.na(w.use))<nrow(w.use)]
+    w.use <- w.use[,colSums(is.na(w.use)) < nrow(w.use)]
+
+    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     
-    w.use.data <- w.use[,!(names(w.use) %in% c(area.names,other.names))]
-    w.use.data <- w.use.data[,colSums(is.na(w.use.data))<nrow(w.use.data)]
-    
-    df[["data.elements"]] <- names(w.use.data)
-    df[["data.element"]] <- names(w.use.data)[order(colSums(w.use.data),decreasing=TRUE)[1]]
+    df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
+    df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
 
   })
   
@@ -107,6 +111,20 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$data.elements,  {
     df[["data.element"]] <- input$data.elements
+  })
+  
+  observeEvent(input$data.elements.type,  {
+    
+    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+      
+    w.use_full <- w.use_full()
+    
+    data.elements <- data.elements[which(data.elements %in% names(w.use_full))]
+    
+    df[["data.elements"]] <- data.elements
+    df[["data.element"]] <- data.elements[1]
+      
   })
   
   observeEvent(input$area.column,  {
@@ -157,19 +175,27 @@ shinyServer(function(input, output, session) {
                              selected = df[["area.column"]])
   })
   
-  # observe({
-  #   updateSelectInput(session, "data.elements", 
-  #                     choices = df[["data.elements"]], 
-  #                     selected = df[["data.element"]])
-  #   
-  #   updateSelectInput(session, "data.elements.min", 
-  #                     choices = df[["data.elements"]], 
-  #                     selected = df[["data.elements"]][1])
-  #   
-  #   updateSelectInput(session, "data.elements.max", 
-  #                     choices = df[["data.elements"]], 
-  #                     selected = df[["data.elements"]][2])
-  # })
+  observe({
+
+    fancy.names <- df[["data.elements"]]
+    names(fancy.names) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names)]
+    
+    fancy.names.single <- df[["data.element"]]
+    names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
+    
+    
+    updateSelectInput(session, "data.elements",
+                      choices = fancy.names,
+                      selected = fancy.names.single)
+
+    updateSelectInput(session, "data.elements.min",
+                      choices = fancy.names,
+                      selected = fancy.names[1])
+
+    updateSelectInput(session, "data.elements.max",
+                      choices = fancy.names,
+                      selected = fancy.names[1])
+  })
   
   observe({
     choices <- df[["states"]]
@@ -218,6 +244,8 @@ shinyServer(function(input, output, session) {
     year.x.y <- c(input$year_x,input$year_y)
     plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2, legend=legend)
 
+    write.csv(x = plotTwo$data, file = "plotTwo.csv", row.names = FALSE)
+    
     plotTwo
   })
   
@@ -245,6 +273,20 @@ shinyServer(function(input, output, session) {
     }
   )
 
+  output$downloadPlotTwoPDF <- downloadHandler(
+    filename = function() { "plotTwo.pdf" },
+    content = function(file) {
+      ggsave(file, plot = plotTwo(), device = "pdf")
+    }
+  )
+  
+  output$downloadPlotTwoData <- downloadHandler(
+    filename = function() { "plotTwo.csv" },
+    content = function(file) {
+      file.copy("plotTwo.csv", file)
+    }
+  )
+  
   output$plotTwoElement <- renderPlot({
     plotTwoElement()
   })
@@ -482,13 +524,12 @@ shinyServer(function(input, output, session) {
     data.elements.x.y <- c(input$data.elements.min,input$data.elements.max)
     
     outText <- paste0(
-      'data.elements <- "',data.elements, '"\n',
       "areas <- ", areas.ptC, "\n",
       'area.column <- "', area.column, '"\n',
       "year <- ", year, "\n",
-      "data.elements.x.y <- c(",paste0(data.elements.x.y,collapse = ","),")\n",
+      'data.elements.x.y <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
       "legend <- ", legend, "\n",
-      "compare_two_elements(w.use, data.elements, year, area.column, areas, legend)"
+      "compare_two_elements(w.use, data.elements.x.y, year, area.column, areas, legend)"
       
     )
     
@@ -511,6 +552,7 @@ shinyServer(function(input, output, session) {
 
     area.column <- df[["area.column"]]
     legend <- input$legendOn
+    points <- input$points
     log <- input$log
 
     outText <- paste0(
@@ -518,9 +560,10 @@ shinyServer(function(input, output, session) {
       "areas <- ",areas.pTC, "\n",
       'area.column <- "', area.column, '"\n',
       'legend <- ',legend,"\n",
+      'points <- ', points,"\n",
       'log <- ',log,"\n",
       "time_series_data(w.use, data.elements, area.column = area.column,\n",
-      "areas = areas,log=log, legend=legend)"
+      "areas = areas,log=log, legend=legend, plot.points=points)"
 
     )
 
