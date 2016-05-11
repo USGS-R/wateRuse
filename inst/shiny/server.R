@@ -309,6 +309,8 @@ shinyServer(function(input, output, session) {
     plotTwoElement <- compare_two_elements(w.use, data.elements, year, 
                                            area.column, areas.p2e, legend=legend)
 
+    write.csv(x = plotTwoElement$data, file="plotTwoElement.csv", row.names = FALSE)
+    
     plotTwoElement
     
   })
@@ -335,6 +337,20 @@ shinyServer(function(input, output, session) {
     filename = function() { "plotTwoElement.png" },
     content = function(file) {
       ggsave(file, plot = plotTwoElement(), device = "png")
+    }
+  )
+  
+  output$downloadPlotTwoElemPDF <- downloadHandler(
+    filename = function() { "plotTwoElement.pdf" },
+    content = function(file) {
+      ggsave(file, plot = plotTwoElement(), device = "pdf")
+    }
+  )
+  
+  output$downloadPlotTwoElemData <- downloadHandler(
+    filename = function() { "plotTwoElement.csv" },
+    content = function(file) {
+      file.copy("plotTwoElement.csv", file)
     }
   )
   
@@ -365,6 +381,8 @@ shinyServer(function(input, output, session) {
 
     tsPlot <- time_series_data(w.use, data.elements, area.column, plot.points = points,
                      areas = areas.pt, legend = legend, log = log, years= NA)
+    
+    write.csv(file = "tsPlot.csv", tsPlot$data, row.names = FALSE)
     
     tsPlot
   })
@@ -401,6 +419,20 @@ shinyServer(function(input, output, session) {
     filename = function() { "tsPlot.png" },
     content = function(file) {
       ggsave(file, plot = tsPlot(), device = "png")
+    }
+  )
+  
+  output$downloadPlotTimePDF <- downloadHandler(
+    filename = function() { "tsPlot.pdf" },
+    content = function(file) {
+      ggsave(file, plot = tsPlot(), device = "pdf")
+    }
+  )
+  
+  output$downloadPlotTimeData <- downloadHandler(
+    filename = function() { "tsPlot.csv" },
+    content = function(file) {
+      file.copy("tsPlot.csv", file)
     }
   )
   

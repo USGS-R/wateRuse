@@ -48,7 +48,11 @@ body <- dashboardBody(
                 
               ),
               h4(""),
-              downloadButton('downloadPlotTwoElem', 'Download PNG')
+              fluidRow(
+                column(3, downloadButton('downloadPlotTwoElem', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTwoElemPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTwoElemData', 'Download Data'))
+              )
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
@@ -56,7 +60,12 @@ body <- dashboardBody(
               verbatimTextOutput("plotTimeCode"),
               verbatimTextOutput("hover_info_ts"),
               plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
-              downloadButton('downloadPlotTime', 'Download PNG')
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotTime', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTimePDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTimeData', 'Download Data'))
+              )
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
