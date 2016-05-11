@@ -49,14 +49,16 @@ shinyServer(function(input, output, session) {
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
-    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
-    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+    data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
 
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
 
-    w.use <- subset_wuse(w.use, df[["data.elements"]], df[["area.column"]], areas = df[["area"]])
-    
+    df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
+    df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
+
     w.use
     
   })
@@ -68,7 +70,9 @@ shinyServer(function(input, output, session) {
                        states = unique(w.use.start[["USSTATEALPHACODE"]]),
                        state = unique(w.use.start[["USSTATEALPHACODE"]])[1],
                        data.elements = data.elements.start,
-                       data.element = data.elements.start[1])
+                       data.element = data.elements.start[1],
+                       data.elements.y = data.elements.start,
+                       data.element.y = data.elements.start[1])
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -97,12 +101,16 @@ shinyServer(function(input, output, session) {
     
     w.use <- w.use[,colSums(is.na(w.use)) < nrow(w.use)]
 
-    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
-    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+    data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+    
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
     
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
-
+    df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
+    df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
+    
   })
   
   observeEvent(input$area,  {
@@ -111,6 +119,10 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$data.elements,  {
     df[["data.element"]] <- input$data.elements
+  })
+  
+  observeEvent(input$data.elements.max,  {
+    df[["data.element.y"]] <- input$data.elements.max
   })
   
   observeEvent(input$data.elements.type,  {
@@ -125,6 +137,20 @@ shinyServer(function(input, output, session) {
     df[["data.elements"]] <- data.elements
     df[["data.element"]] <- data.elements[1]
       
+  })
+  
+  observeEvent(input$data.elements.type.max,  {
+    
+    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    
+    w.use_full <- w.use_full()
+    
+    data.elements <- data.elements[which(data.elements %in% names(w.use_full))]
+    
+    df[["data.elements.y"]] <- data.elements
+    df[["data.element.y"]] <- data.elements[1]
+    
   })
   
   observeEvent(input$area.column,  {
@@ -152,6 +178,20 @@ shinyServer(function(input, output, session) {
     }
     df[["areas"]] <- unique(w.use[[area.column]])
     df[["area"]] <- unique(w.use[[area.column]])
+    
+    data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
+    
+    data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
+    data.elements <- data.elements[which(data.elements %in% names(w.use))]
+    
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    data.elements.y <- data.elements.y[which(data.elements.y %in% names(w.use))]
+    
+    df[["data.elements"]] <- data.elements
+    df[["data.element"]] <- data.elements[1]
+    df[["data.elements.y"]] <- data.elements.y
+    df[["data.element.y"]] <- data.elements.y[1]
+    
   })
   
   observe({
@@ -183,15 +223,20 @@ shinyServer(function(input, output, session) {
     fancy.names.single <- df[["data.element"]]
     names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
     
-    
     updateSelectInput(session, "data.elements",
                       choices = fancy.names,
                       selected = fancy.names.single)
 
-    updateSelectInput(session, "data.elements.min",
-                      choices = fancy.names,
-                      selected = fancy.names[1])
-
+  })
+  
+  observe({
+    
+    fancy.names <- df[["data.elements.y"]]
+    names(fancy.names) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names)]
+    
+    fancy.names.single <- df[["data.element.y"]]
+    names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
+    
     updateSelectInput(session, "data.elements.max",
                       choices = fancy.names,
                       selected = fancy.names[1])
@@ -293,9 +338,9 @@ shinyServer(function(input, output, session) {
   
   plotTwoElement <- reactive({
     
-    w.use <- w.use()
+    w.use <- w.use_full()
 
-    data.elements <- c(input$data.elements.min,input$data.elements.max)
+    data.elements <- c(df[["data.element"]],df[["data.element.y"]])
 
     areas.p2e <- df[["area"]]
 
@@ -539,7 +584,6 @@ shinyServer(function(input, output, session) {
   
   output$plotTwoElementCode <- renderPrint({
     
-    data.elements <- input$data.elements
     areas.ptC <- df[["area"]]
     legend <- input$legendOn
     year <- input$year_x
@@ -553,7 +597,7 @@ shinyServer(function(input, output, session) {
     }
     
     area.column <- df[["area.column"]]
-    data.elements.x.y <- c(input$data.elements.min,input$data.elements.max)
+    data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
     
     outText <- paste0(
       "areas <- ", areas.ptC, "\n",

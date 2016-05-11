@@ -103,14 +103,21 @@ sidebar <- dashboardSidebar(
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
   ),
+  selectInput("data.elements.type", label = "Data Element Type", 
+              choices = data.elements.type,
+              selected = data.elements.type[1], multiple = FALSE),   
+  selectInput("data.elements", label = "Data Elements", 
+              choices = data.elements,
+              selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs != 'plotTwoElem'",
-      selectInput("data.elements.type", label = "Data Element Type", 
+    condition = "input.mainTabs == 'plotTwoElem'",
+    selectInput("data.elements.type.max", label = "Data Element Type y:", 
                 choices = data.elements.type,
-                selected = data.elements.type[1], multiple = FALSE),   
-      selectInput("data.elements", label = "Data Elements", 
-                  choices = data.elements,
-                  selected = data.elements[1], multiple = FALSE)),
+                selected = data.elements.type[1], multiple = FALSE), 
+    selectInput("data.elements.max", label = "Data Element y:", 
+                choices = data.elements,
+                selected = data.elements[2], multiple = FALSE)
+  ),
   conditionalPanel(
     condition = "input.mainTabs == 'map'",
     selectInput("stateToMap", label = "Map State", 
@@ -134,15 +141,6 @@ sidebar <- dashboardSidebar(
     selectInput("year_x", label = "Year:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
-  ),
-  conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoElem'",
-    selectInput("data.elements.min", label = "Data Element x:", 
-                choices = data.elements,
-                selected = data.elements[1], multiple = FALSE),
-    selectInput("data.elements.max", label = "Data Element y:", 
-                choices = data.elements,
-                selected = data.elements[2], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
