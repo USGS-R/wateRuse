@@ -14,8 +14,6 @@ data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
 data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
 
-
-
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
                     "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
@@ -45,7 +43,7 @@ shinyServer(function(input, output, session) {
     w.use <- w.use_full()
     states <- df[["state"]]
     
-    if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use) | states != "All Available"){
+    if(!is.null(w.use) && ("USSTATEALPHACODE" %in% names(w.use) | states != "All Available")){
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
@@ -125,6 +123,10 @@ shinyServer(function(input, output, session) {
     df[["data.element.y"]] <- input$data.elements.max
   })
   
+  observeEvent(input$norm.element,  {
+    df[["data.element.y"]] <- input$norm.element
+  })
+  
   observeEvent(input$data.elements.type,  {
     
     data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
@@ -153,13 +155,27 @@ shinyServer(function(input, output, session) {
     
   })
   
+  observeEvent(input$norm.element.type,  {
+    
+    data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$norm.element.type)]
+    
+    w.use_full <- w.use_full()
+    
+    data.elements <- data.elements[which(data.elements %in% names(w.use_full))]
+    
+    df[["data.elements.y"]] <- data.elements
+    df[["data.element.y"]] <- data.elements[1]
+    
+  })
+  
   observeEvent(input$area.column,  {
     df[["area.column"]] <- input$area.column
     
     w.use <- w.use_full()
     states <- df[["state"]]
     
-    if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use) | states != "All Available"){
+    if(!is.null(w.use) && ("USSTATEALPHACODE" %in% names(w.use) | any(states != "All Available"))){
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
@@ -173,7 +189,7 @@ shinyServer(function(input, output, session) {
     df[["state"]] <- input$state
     area.column <- df[["area.column"]]
     
-    if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use) | df[["state"]] != "All Available"){
+    if(!is.null(w.use) && ("USSTATEALPHACODE" %in% names(w.use) | df[["state"]] != "All Available")){
       w.use <- filter(w.use, USSTATEALPHACODE %in% df[["state"]])
     }
     df[["areas"]] <- unique(w.use[[area.column]])
@@ -201,9 +217,9 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    if(df[["state"]] %in% stateCd$STUSAB){
+    if(any(df[["state"]] %in% stateCd$STUSAB)){
       
-      state <- stateCd$STATE_NAME[which(df[["state"]] == stateCd$STUSAB)[1]]
+      state <- stateCd$STATE_NAME[which(stateCd$STUSAB %in% df[["state"]])[1]]
       
       updateCheckboxGroupInput(session, "stateToMap", selected = state)
     }
@@ -240,6 +256,19 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "data.elements.max",
                       choices = fancy.names,
                       selected = fancy.names[1])
+  })
+  
+  observe({
+    
+    fancy.names <- df[["data.elements.y"]]
+    names(fancy.names) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names)]
+    
+    fancy.names.single <- df[["data.element.y"]]
+    names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
+    
+    updateSelectInput(session, "norm.element",
+                      choices = c("None",fancy.names),
+                      selected = "None")
   })
   
   observe({

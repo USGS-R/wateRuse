@@ -93,17 +93,6 @@ body <- dashboardBody(
     )
 
 sidebar <- dashboardSidebar(
-  menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
-           checkboxGroupInput("state", label = "Choose State(s):",choices = states,
-                              selected=states[1])
-  ),  
-  selectInput("area.column", label = "Area Column", 
-              choices = area.columns,
-              selected = area.columns[1], multiple = FALSE),
-  menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
-           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
-                              selected=areas)
-  ),
   selectInput("data.elements.type", label = "Data Element Type", 
               choices = data.elements.type,
               selected = data.elements.type[1], multiple = FALSE),   
@@ -127,7 +116,10 @@ sidebar <- dashboardSidebar(
     selectInput("yearToMap", label = "Year",
                 choices =  unique(wUseSample$YEAR),
                 selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))]),
-    selectInput("norm.element", label = "Normalize Data Elements", 
+    selectInput("norm.element.type", label = "Normalized Data Element Type:", 
+                choices = data.elements.type,
+                selected = data.elements.type[1], multiple = FALSE), 
+    selectInput("norm.element", label = "Normalize Data Elements:", 
                 choices = c("None",data.elements),
                 selected = "None", multiple = FALSE)
     ),
@@ -151,6 +143,17 @@ sidebar <- dashboardSidebar(
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
+  ),
+  menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
+           checkboxGroupInput("state", label = "Choose State(s):",choices = states,
+                              selected=states[1])
+  ), 
+  selectInput("area.column", label = "Area Column", 
+              choices = area.columns,
+              selected = area.columns[1], multiple = FALSE),
+  menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
+           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
+                              selected=areas)
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
