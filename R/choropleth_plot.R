@@ -77,7 +77,7 @@ choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm
                  aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 
                  coord_map() + 
-                 scale_fill_distiller(name=p.elem, palette = "YlGn", breaks = pretty_breaks(n = 5))
+                 scale_fill_distiller(name=p.elem, palette = "YlGn", breaks = pretty_breaks(n = 5), trans = "reverse")
   
   print(ch.plot)
 
