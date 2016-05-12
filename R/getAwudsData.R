@@ -14,6 +14,10 @@
 #' @importFrom data.table setDT
 #' @importFrom data.table setDF
 #' @importFrom data.table dcast
+#' @importFrom utils unzip
+#' @importFrom stats as.formula
+#' @importFrom stats na.omit
+#' @importFrom utils read.table
 #' 
 #' @examples 
 #' awuds.data.path <- system.file("extdata/dump", package="wateRuse")

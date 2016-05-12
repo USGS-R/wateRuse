@@ -27,7 +27,8 @@ Imports:
     data.table,
     mapproj,
     rgeos,
-    scales
+    scales,
+    dplyr
 Suggests:
     testthat,
     knitr

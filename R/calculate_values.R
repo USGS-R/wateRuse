@@ -5,6 +5,7 @@
 #' @param w.use dataframe, the water use data 
 #' 
 #' @export
+#' @importFrom dplyr mutate
 #' 
 #' 
 #' @examples 

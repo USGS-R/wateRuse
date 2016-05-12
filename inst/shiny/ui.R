@@ -6,6 +6,9 @@ data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.element.names
 names(data.elements) <- dataelement$NAME
 
+data.elements.type <- category$CODE
+names(data.elements.type) <- category$NAME
+
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
@@ -18,25 +21,51 @@ body <- dashboardBody(
               value = "plotTwoTab",
               h4("R Code:"),
               verbatimTextOutput("plotTwoCode"),
-              verbatimTextOutput("hover_plotTwo"),
-              plotOutput("plotTwo", width = 400, height = 400,hover = hoverOpts(id = "hover_plotTwo")),#"400px", height = "400px",
-              downloadButton('downloadPlotTwo', 'Download Plot')
+              fluidRow(
+                column(8, 
+                       plotOutput("plotTwo", width = 500, height = 500,hover = hoverOpts(id = "hover_plotTwo"))),
+                column(3, h4("Hover to get site information:"),
+                       verbatimTextOutput("hover_plotTwo"))
+                       
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotTwo', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTwoPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTwoData', 'Download Data'))
+              )
+              
      ),
      tabPanel(title = tagList("Compare Two Elements",shiny::icon("bar-chart")),
               value = "plotTwoElem",
               h4("R Code:"),
               verbatimTextOutput("plotTwoElementCode"),
-              verbatimTextOutput("hover_plotTwoElem"),
-              plotOutput("plotTwoElement",width = "400px", height = "400px",hover = hoverOpts(id = "hover_plotTwoElem")),
-              downloadButton('downloadPlotTwoElem', 'Download Plot')
+              fluidRow(
+                column(9, 
+                       plotOutput("plotTwoElement",width = 500, height = 500, hover = hoverOpts(id = "hover_plotTwoElem"))),
+                column(3, h4("Hover to get site information:"),
+                       verbatimTextOutput("hover_plotTwoElem"))
+                
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotTwoElem', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTwoElemPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTwoElemData', 'Download Data'))
+              )
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               h4("R Code:"),
               verbatimTextOutput("plotTimeCode"),
-              verbatimTextOutput("hover_info_ts"),
               plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
-              downloadButton('downloadPlotTime', 'Download Plot')
+              verbatimTextOutput("hover_info_ts"),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotTime', 'Download PNG')),
+                column(3, downloadButton('downloadPlotTimePDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotTimeData', 'Download Data'))
+              )
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
@@ -45,8 +74,9 @@ body <- dashboardBody(
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
               h3("Currently only works with county data"),
-              plotOutput('mapData'),
-              downloadButton('downloadMap', 'Download Plot')
+              verbatimTextOutput("hover_map"),
+              plotOutput('mapData',hover = hoverOpts(id = "hover_map")),
+              downloadButton('downloadMap', 'Download PNG')
      )
    ),
   fluidRow(
@@ -63,22 +93,21 @@ body <- dashboardBody(
     )
 
 sidebar <- dashboardSidebar(
-  menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
-           checkboxGroupInput("state", label = "Choose State(s):",choices = states,
-                              selected=states[1])
-  ),  
-  selectInput("area.column", label = "Area Column", 
-              choices = area.columns,
-              selected = area.columns[1], multiple = FALSE),
-  menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
-           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
-                              selected=areas)
-  ),
+  selectInput("data.elements.type", label = "Data Element Type", 
+              choices = data.elements.type,
+              selected = data.elements.type[1], multiple = FALSE),   
+  selectInput("data.elements", label = "Data Elements", 
+              choices = data.elements,
+              selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs != 'plotTwoElem'",
-      selectInput("data.elements", label = "Data Elements", 
-                  choices = data.elements,
-                  selected = data.elements[1], multiple = FALSE)),
+    condition = "input.mainTabs == 'plotTwoElem'",
+    selectInput("data.elements.type.max", label = "Data Element Type y:", 
+                choices = data.elements.type,
+                selected = data.elements.type[1], multiple = FALSE), 
+    selectInput("data.elements.max", label = "Data Element y:", 
+                choices = data.elements,
+                selected = data.elements[2], multiple = FALSE)
+  ),
   conditionalPanel(
     condition = "input.mainTabs == 'map'",
     selectInput("stateToMap", label = "Map State", 
@@ -87,7 +116,10 @@ sidebar <- dashboardSidebar(
     selectInput("yearToMap", label = "Year",
                 choices =  unique(wUseSample$YEAR),
                 selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))]),
-    selectInput("norm.element", label = "Normalize Data Elements", 
+    selectInput("norm.element.type", label = "Normalized Data Element Type:", 
+                choices = data.elements.type,
+                selected = data.elements.type[1], multiple = FALSE), 
+    selectInput("norm.element", label = "Normalize Data Elements:", 
                 choices = c("None",data.elements),
                 selected = "None", multiple = FALSE)
     ),
@@ -104,15 +136,6 @@ sidebar <- dashboardSidebar(
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoElem'",
-    selectInput("data.elements.min", label = "Data Element x:", 
-                choices = data.elements,
-                selected = data.elements[1], multiple = FALSE),
-    selectInput("data.elements.max", label = "Data Element y:", 
-                choices = data.elements,
-                selected = data.elements[2], multiple = FALSE)
-  ),
-  conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab'",
       checkboxInput("log", label = "Log Scale"),
       checkboxInput("points", label = "Points")
@@ -120,6 +143,17 @@ sidebar <- dashboardSidebar(
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
+  ),
+  menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
+           checkboxGroupInput("state", label = "Choose State(s):",choices = states,
+                              selected=states[1])
+  ), 
+  selectInput("area.column", label = "Area Column", 
+              choices = area.columns,
+              selected = area.columns[1], multiple = FALSE),
+  menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
+           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
+                              selected=areas)
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")

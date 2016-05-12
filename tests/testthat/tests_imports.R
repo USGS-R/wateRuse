@@ -52,3 +52,14 @@ test_that("Dump Data gets read in when given as a direct file", {
   expect_is(object = awuds$TP.TotPop, class="numeric")
 })
 
+test_that("Test calculations", {
+  
+  awuds <- wUseSample
+  awuds.calc <- caluculate_values(awuds)
+  
+  x1 <- awuds.calc$LV.WGWFr
+  y1 <- awuds.calc$LS.WGWFr + awuds.calc$LA.WGWFr
+  
+  expect_equivalent(object = x1, expected = y1)
+  
+})
