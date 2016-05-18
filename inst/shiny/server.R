@@ -111,7 +111,7 @@ shinyServer(function(input, output, session) {
     
   })
   
-  observeEvent(input$area,  {
+  observeEvent(input$changeArea,  {
     df[["area"]] <- input$area
   })
   

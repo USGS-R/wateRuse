@@ -168,7 +168,9 @@ sidebar <- dashboardSidebar(
   selectInput("area.column", label = "Area Column", 
               choices = area.columns,
               selected = area.columns[1], multiple = FALSE),
+  
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
+           actionButton("changeArea", label="Click Here to Switch Areas"),
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
   ),
