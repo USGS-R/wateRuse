@@ -111,7 +111,7 @@ shinyServer(function(input, output, session) {
     
   })
   
-  observeEvent(input$area,  {
+  observeEvent(input$changeArea,  {
     df[["area"]] <- input$area
   })
   
@@ -428,10 +428,57 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  output$plotTime <- renderPlot({
-    tsPlot()
+  plotMultiElem <- reactive({
+    
+    w.use <- w.use()
+    
+    data.elements <- c(df[["data.element"]],df[["data.element.y"]])
+    
+    areas.p2e <- df[["area"]]
+    
+    if(all(df[["areas"]] %in% areas.p2e)){
+      areas.p2e <- NA
+    }
+    legend <- input$legendOn
+    points <- input$points
+    log <- input$log
+    
+    area.column <- df[["area.column"]]
+
+    plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
+                                        areas=areas.p2e, legend=legend, plot.points = points)
+    
+    write.csv(x = plotMultiElem$data, file="plotMultiElem.csv", row.names = FALSE)
+    
+    plotMultiElem
     
   })
+
+  output$plotMultiElem <- renderPlot({
+    plotMultiElem()
+    
+  })
+  
+  output$downloadPlotmultiElem <- downloadHandler(
+    filename = function() { "plotMultiElem.png" },
+    content = function(file) {
+      ggsave(file, plot = plotMultiElem(), device = "png")
+    }
+  )
+  
+  output$downloadPlotmultiElemPDF <- downloadHandler(
+    filename = function() { "plotMultiElem.pdf" },
+    content = function(file) {
+      ggsave(file, plot = plotMultiElem(), device = "pdf")
+    }
+  )
+  
+  output$downloadPlotmultiElemData <- downloadHandler(
+    filename = function() { "plotMultiElem.csv" },
+    content = function(file) {
+      file.copy("plotMultiElem.csv", file)
+    }
+  )
   
   tsPlot <- reactive({
     w.use <- w.use()
@@ -459,6 +506,11 @@ shinyServer(function(input, output, session) {
     write.csv(file = "tsPlot.csv", tsPlot$data, row.names = FALSE)
     
     tsPlot
+  })
+  
+  output$plotTime <- renderPlot({
+    tsPlot()
+    
   })
   
   output$hover_info_ts <- renderPrint({
@@ -522,7 +574,9 @@ shinyServer(function(input, output, session) {
     df <- spread_(w.use.sub, "YEAR", data.elements)
 
     df <- df[,colSums(is.na(df))<nrow(df)]
-
+    
+    write.csv(df, "rankData.csv",row.names = FALSE)
+    
     rankData <- DT::datatable(df, rownames = FALSE,
                               options = list(scrollX = TRUE,
                                              pageLength = nrow(df),
@@ -540,6 +594,13 @@ shinyServer(function(input, output, session) {
 
     rankData
   })
+  
+  output$downloadRankData <- downloadHandler(
+    filename = function() { "rankData.csv" },
+    content = function(file) {
+      file.copy("rankData.csv", file)
+    }
+  )
 
 
   output$mapData <- renderPlot({
@@ -691,6 +752,40 @@ shinyServer(function(input, output, session) {
 
     HTML(outText)
 
+  })
+  
+  output$plotMultiElemCode <- renderPrint({
+    
+    data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
+    areas.pTC <- df[["area"]]
+    
+    areasOptions <-  df[["areas"]]
+    
+    if(all(areasOptions %in% areas.pTC)){
+      areas.pTC <- NA
+    } else {
+      areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
+    }
+    
+    area.column <- df[["area.column"]]
+    legend <- input$legendOn
+    points <- input$points
+    log <- input$log
+    
+    outText <- paste0(
+      'data.elements <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
+      "areas <- ",areas.pTC, "\n",
+      'area.column <- "', area.column, '"\n',
+      'legend <- ',legend,"\n",
+      'points <- ', points,"\n",
+      'log <- ',log,"\n",
+      "multi_element_data(w.use, data.elements, area.column = area.column,\n",
+      "areas = areas,log=log, legend=legend, plot.points=points)"
+      
+    )
+    
+    HTML(outText)
+    
   })
   
 })

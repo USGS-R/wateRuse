@@ -54,6 +54,22 @@ body <- dashboardBody(
                 column(3, downloadButton('downloadPlotTwoElemData', 'Download Data'))
               )
      ),
+     tabPanel(title = tagList("Multi-Elements",shiny::icon("bar-chart")),
+              value = "multiElem",
+              h4("R Code:"),
+              verbatimTextOutput("plotMultiElemCode"),
+              fluidRow(
+                column(9, 
+                       plotOutput("plotMultiElem",width = 500, height = 500))
+                
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotmultiElem', 'Download PNG')),
+                column(3, downloadButton('downloadPlotmultiElemPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotmultiElemData', 'Download Data'))
+              )
+     ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               h4("R Code:"),
@@ -69,7 +85,8 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
-              DT::dataTableOutput('rankData')
+              DT::dataTableOutput('rankData'),
+              downloadButton('downloadRankData', 'Download Data')
      ),
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
@@ -100,7 +117,7 @@ sidebar <- dashboardSidebar(
               choices = data.elements,
               selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoElem'",
+    condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     selectInput("data.elements.type.max", label = "Data Element Type y:", 
                 choices = data.elements.type,
                 selected = data.elements.type[1], multiple = FALSE), 
@@ -136,12 +153,12 @@ sidebar <- dashboardSidebar(
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab'",
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
       checkboxInput("log", label = "Log Scale"),
-      checkboxInput("points", label = "Points")
+      checkboxInput("points", label = "Points", value = TRUE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
@@ -151,7 +168,9 @@ sidebar <- dashboardSidebar(
   selectInput("area.column", label = "Area Column", 
               choices = area.columns,
               selected = area.columns[1], multiple = FALSE),
+  
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
+           actionButton("changeArea", label="Click Here to Switch Areas"),
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas)
   ),

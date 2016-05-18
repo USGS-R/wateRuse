@@ -18,14 +18,10 @@
 #' @importFrom tidyr gather_
 #' 
 #' @examples 
-#' df <- wUseSample
+#' w.use <- wUseSample
 #' areas <- c("Kent County","Sussex County")
 #' area.column = "COUNTYNAME"
 #' data.elements <- c("PS.GWPop","TP.TotPop")
-#' w.use <- subset_wuse(df, data.elements,area.column,areas)
-#' year1 <- 2005
-#' year2 <- 2010
-#' years <- c(year1, year2)
 #' multi_element_data(w.use, data.elements, area.column = area.column,areas = areas)
 #' multi_element_data(w.use, data.elements, plot.points = FALSE,
 #'        area.column = area.column,areas = areas)
@@ -38,25 +34,25 @@
 multi_element_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                                years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
   
-  if(!all(is.na(areas))){
-    w.use <- w.use[w.use[[area.column]] %in% areas,]
-  }
+  w.use <- subset_wuse(w.use, data.elements, area.column, areas)
   
   df <- w.use[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
+  # df$area.column <- df[[area.column]]
   
-  me.object <- ggplot(data = df) 
+  me.object <- ggplot(data = df, aes_string(x = "YEAR", y = "value"))
   
   if(plot.points){
-    me.object <- me.object + geom_point(aes_string(x = "YEAR", y = "value", color = "dataElement"), show.legend = legend)
+    me.object <- me.object + 
+      geom_point(aes_string(color = "dataElement"), show.legend = legend) +
+      geom_line(aes_string(color = "dataElement"), show.legend = legend)
   } else {
-    me.object <- me.object + geom_bar(aes_string(x = "YEAR", y = "value", 
-                                                 fill = "dataElement"), 
+    me.object <- me.object + geom_bar(aes_string(fill = "dataElement"), 
                                       position = "dodge",stat="identity",show.legend = legend)
   }
   
-  me.object <- me.object + facet_grid(COUNTYNAME ~ .) +
+  me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
     ylab("") 
   
   if(!all(is.na(y.scale))){
