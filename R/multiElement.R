@@ -34,13 +34,12 @@
 multi_element_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                                years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
   
-  if(!all(is.na(areas))){
-    w.use <- w.use[w.use[[area.column]] %in% areas,]
-  }
+  w.use <- subset_wuse(w.use, data.elements, area.column, areas)
   
   df <- w.use[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
+  df$area.column <- df[[area.column]]
   
   me.object <- ggplot(data = df, aes_string(x = "YEAR", y = "value"))
   
@@ -53,7 +52,7 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
                                       position = "dodge",stat="identity",show.legend = legend)
   }
   
-  me.object <- me.object + facet_grid(COUNTYNAME ~ .) +
+  me.object <- me.object + facet_grid(area.column ~ .) +
     ylab("") 
   
   if(!all(is.na(y.scale))){

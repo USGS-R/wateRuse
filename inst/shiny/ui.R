@@ -54,6 +54,22 @@ body <- dashboardBody(
                 column(3, downloadButton('downloadPlotTwoElemData', 'Download Data'))
               )
      ),
+     tabPanel(title = tagList("Multi-Elements",shiny::icon("bar-chart")),
+              value = "multiElem",
+              h4("R Code:"),
+              verbatimTextOutput("plotMultiElemCode"),
+              fluidRow(
+                column(9, 
+                       plotOutput("plotMultiElem",width = 500, height = 500))
+                
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotmultiElem', 'Download PNG')),
+                column(3, downloadButton('downloadPlotmultiElemPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotmultiElemData', 'Download Data'))
+              )
+     ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               h4("R Code:"),
@@ -69,7 +85,8 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
-              DT::dataTableOutput('rankData')
+              DT::dataTableOutput('rankData'),
+              downloadButton('downloadRankData', 'Download Data')
      ),
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
@@ -100,7 +117,7 @@ sidebar <- dashboardSidebar(
               choices = data.elements,
               selected = data.elements[1], multiple = FALSE),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoElem'",
+    condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     selectInput("data.elements.type.max", label = "Data Element Type y:", 
                 choices = data.elements.type,
                 selected = data.elements.type[1], multiple = FALSE), 
