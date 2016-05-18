@@ -446,7 +446,7 @@ shinyServer(function(input, output, session) {
     area.column <- df[["area.column"]]
 
     plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
-                                        areas=areas.p2e, legend=legend,plot.points = points)
+                                        areas=areas.p2e, legend=legend, plot.points = points)
     
     write.csv(x = plotMultiElem$data, file="plotMultiElem.csv", row.names = FALSE)
     
@@ -756,7 +756,7 @@ shinyServer(function(input, output, session) {
   
   output$plotMultiElemCode <- renderPrint({
     
-    data.elements <- df[["data.element"]]
+    data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
     areas.pTC <- df[["area"]]
     
     areasOptions <-  df[["areas"]]
@@ -773,7 +773,7 @@ shinyServer(function(input, output, session) {
     log <- input$log
     
     outText <- paste0(
-      'data.elements <- "',data.elements, '"\n',
+      'data.elements <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
       "areas <- ",areas.pTC, "\n",
       'area.column <- "', area.column, '"\n',
       'legend <- ',legend,"\n",
