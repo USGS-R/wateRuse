@@ -153,12 +153,12 @@ sidebar <- dashboardSidebar(
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab'",
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
       checkboxInput("log", label = "Log Scale"),
-      checkboxInput("points", label = "Points")
+      checkboxInput("points", label = "Points", value = TRUE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",

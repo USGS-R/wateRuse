@@ -39,20 +39,20 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
   df <- w.use[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
-  df$area.column <- df[[area.column]]
+  # df$area.column <- df[[area.column]]
   
   me.object <- ggplot(data = df, aes_string(x = "YEAR", y = "value"))
   
   if(plot.points){
     me.object <- me.object + 
       geom_point(aes_string(color = "dataElement"), show.legend = legend) +
-      geom_line(aes_string(color = "dataElement"))
+      geom_line(aes_string(color = "dataElement"), show.legend = legend)
   } else {
     me.object <- me.object + geom_bar(aes_string(fill = "dataElement"), 
                                       position = "dodge",stat="identity",show.legend = legend)
   }
   
-  me.object <- me.object + facet_grid(area.column ~ .) +
+  me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
     ylab("") 
   
   if(!all(is.na(y.scale))){

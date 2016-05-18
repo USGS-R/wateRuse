@@ -440,10 +440,13 @@ shinyServer(function(input, output, session) {
       areas.p2e <- NA
     }
     legend <- input$legendOn
+    points <- input$points
+    log <- input$log
+    
     area.column <- df[["area.column"]]
 
-    plotMultiElem <- multi_element_data(w.use, data.elements, area.column, 
-                                        areas=areas.p2e, legend=legend)
+    plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
+                                        areas=areas.p2e, legend=legend,plot.points = points)
     
     write.csv(x = plotMultiElem$data, file="plotMultiElem.csv", row.names = FALSE)
     
@@ -503,6 +506,11 @@ shinyServer(function(input, output, session) {
     write.csv(file = "tsPlot.csv", tsPlot$data, row.names = FALSE)
     
     tsPlot
+  })
+  
+  output$plotTime <- renderPlot({
+    tsPlot()
+    
   })
   
   output$hover_info_ts <- renderPrint({
@@ -744,6 +752,40 @@ shinyServer(function(input, output, session) {
 
     HTML(outText)
 
+  })
+  
+  output$plotMultiElemCode <- renderPrint({
+    
+    data.elements <- df[["data.element"]]
+    areas.pTC <- df[["area"]]
+    
+    areasOptions <-  df[["areas"]]
+    
+    if(all(areasOptions %in% areas.pTC)){
+      areas.pTC <- NA
+    } else {
+      areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
+    }
+    
+    area.column <- df[["area.column"]]
+    legend <- input$legendOn
+    points <- input$points
+    log <- input$log
+    
+    outText <- paste0(
+      'data.elements <- "',data.elements, '"\n',
+      "areas <- ",areas.pTC, "\n",
+      'area.column <- "', area.column, '"\n',
+      'legend <- ',legend,"\n",
+      'points <- ', points,"\n",
+      'log <- ',log,"\n",
+      "multi_element_data(w.use, data.elements, area.column = area.column,\n",
+      "areas = areas,log=log, legend=legend, plot.points=points)"
+      
+    )
+    
+    HTML(outText)
+    
   })
   
 })
