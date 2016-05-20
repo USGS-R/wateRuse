@@ -5,3 +5,4 @@
 *.Rproj
 vignettes/wateRuse.R
 vignettes/wateRuse.html
+inst/shiny/*.csv
