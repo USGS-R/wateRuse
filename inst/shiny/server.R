@@ -330,101 +330,12 @@ shinyServer(function(input, output, session) {
 ###################################################################
   
 ###################################################################
-  output$rankData <- DT::renderDataTable({
 
-    w.use <- w.use()
-    data.elements <- df[["data.element"]]
-    areas.rd <- df[["areas"]]#input$area
-    area.column <- df[["area.column"]]
-    yearRange <- unique(w.use$YEAR)
-    w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
-
-    df <- spread_(w.use.sub, "YEAR", data.elements)
-
-    df <- df[,colSums(is.na(df))<nrow(df)]
-    
-    write.csv(df, "rankData.csv",row.names = FALSE)
-    
-    rankData <- DT::datatable(df, rownames = FALSE,
-                              options = list(scrollX = TRUE,
-                                             pageLength = nrow(df),
-                                             order=list(list(2,'desc'))))
-    yearRange <- names(df)[-1]
-    colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
-    names(colors)[1:length(yearRange)] <- yearRange
-    for(i in yearRange){
-      rankData <- formatStyle(rankData, as.character(i),
-                              background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
-                              backgroundSize = '100% 90%',
-                              backgroundRepeat = 'no-repeat',
-                              backgroundPosition = 'center' )
-    }
-
-    rankData
-  })
-  
-  output$downloadRankData <- downloadHandler(
-    filename = function() { "rankData.csv" },
-    content = function(file) {
-      file.copy("rankData.csv", file)
-    }
-  )
+  source("rankData.R",local=TRUE)$value
 
 ###################################################################
-  output$mapData <- renderPlot({
-    mapData()
-  })
-  
-  mapData <- reactive({
-    
-    w.use <- w.use()
-    
-    norm.element <- input$norm.element
-    
-    if(norm.element == "None"){
-      norm.element <- NA
-    }
 
-    if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
-      if(!("STATECOUNTYCODE" %in% names(w.use))){
-        w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
-      }
-
-      mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
-                      area.column = "STATE_TERR", area = input$stateToMap, norm.element = norm.element)
-
-    } else {
-      mapData <- ggplot(data = mtcars) +
-        geom_text(x=0.5, y=0.5, label = "Choose new state or use County data")
-    }
-    
-    mapData
-
-  })
-  
-  output$hover_map <- renderPrint({
-    txt <- ""
-    
-    hover=input$hover_map
-    
-    if(!is.null(hover)){
-      
-      data <- histCounties
-      point.to.check <- SpatialPoints(data.frame(x = hover$x, y=hover$y), proj4string=CRS(proj4string(data)))
-      
-      dist=over(point.to.check, data)
-      txt <- dist$FIPS
-    }
-    
-    cat("Site: ", txt)
-  })
-  
-  output$downloadMap <- downloadHandler(
-    filename = function() { "map.png" },
-    content = function(file) {
-      ggsave(file, plot = mapData(), device = "png")
-    }
-  )
+  source("mapData.R",local=TRUE)$value
   
 ###################################################################
   
