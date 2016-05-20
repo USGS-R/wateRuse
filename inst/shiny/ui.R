@@ -83,6 +83,19 @@ body <- dashboardBody(
                 column(3, downloadButton('downloadPlotTimeData', 'Download Data'))
               )
      ),
+     tabPanel(title = tagList("Bar Sums",shiny::icon("bar-chart")),
+              value = "plotBarSumsTab",
+              h4("R Code:"),
+              verbatimTextOutput("plotBarSumsCode"),
+              plotOutput("plotBarSums",hover = hoverOpts(id = "hover_info_bar")),
+              verbatimTextOutput("hover_info_bar"),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotBarSums', 'Download PNG')),
+                column(3, downloadButton('downloadPlotBarSumsPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotBarSumsData', 'Download Data'))
+              )
+     ),
      tabPanel(title = tagList("Rank Data", shiny::icon("bars")),
               value="rankData",
               DT::dataTableOutput('rankData'),
@@ -110,20 +123,23 @@ body <- dashboardBody(
     )
 
 sidebar <- dashboardSidebar(
-  selectInput("data.elements.type", label = "Data Element Type", 
-              choices = data.elements.type,
-              selected = data.elements.type[1], multiple = FALSE),   
-  selectInput("data.elements", label = "Data Elements", 
-              choices = data.elements,
-              selected = data.elements[1], multiple = FALSE),
+  conditionalPanel(
+    condition = "input.mainTabs != 'plotBarSumsTab'",
+    selectInput("data.elements.type", label = "Data Element Type", 
+                choices = data.elements.type,
+                selected = data.elements.type[1], multiple = FALSE),   
+    selectInput("data.elements", label = "Data Elements", 
+                choices = data.elements,
+                selected = data.elements[1], multiple = FALSE)
+  ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     selectInput("data.elements.type.max", label = "Data Element Type y:", 
                 choices = data.elements.type,
-                selected = data.elements.type[1], multiple = FALSE), 
+                selected = data.elements.type[2], multiple = FALSE), 
     selectInput("data.elements.max", label = "Data Element y:", 
                 choices = data.elements,
-                selected = data.elements[2], multiple = FALSE)
+                selected = data.elements[1], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'map'",
