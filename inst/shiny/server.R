@@ -53,11 +53,10 @@ shinyServer(function(input, output, session) {
     
     data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
-    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
 
     data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
     data.total.elements <- gsub("-", ".", data.total.elements)
-    
     
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
@@ -82,6 +81,8 @@ shinyServer(function(input, output, session) {
                        data.element = data.elements.start[1],
                        data.elements.y = data.elements.start,
                        data.element.y = data.elements.start[1],
+                       data.elements.norm = c("None",data.elements.start),
+                       data.element.norm = "None",
                        data.total.elements = data.total.elements,
                        data.total.element = data.total.elements[1])
   
@@ -115,12 +116,14 @@ shinyServer(function(input, output, session) {
     data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     
-    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
     
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
+    df[["data.elements.norm"]] <- c("None",data.elements.y[data.elements.y %in% names(w.use)])
+    df[["data.element.norm"]] <- "None"
     
     data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
     data.total.elements <- gsub("-",".", data.total.elements)
@@ -147,12 +150,12 @@ shinyServer(function(input, output, session) {
     df[["data.element"]] <- input$data.elements
   })
 
-  observeEvent(input$data.elements.max,  {
-    df[["data.element.y"]] <- input$data.elements.max
+  observeEvent(input$data.elements.y,  {
+    df[["data.element.y"]] <- input$data.elements.y
   })
   
   observeEvent(input$norm.element,  {
-    df[["data.element.y"]] <- input$norm.element
+    df[["data.element.norm"]] <- input$norm.element
   })
   
   observeEvent(input$data.elements.type,  {
@@ -169,10 +172,10 @@ shinyServer(function(input, output, session) {
       
   })
   
-  observeEvent(input$data.elements.type.max,  {
+  observeEvent(input$data.elements.type.y,  {
     
     data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
-    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    data.elements <- data.elements[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
     
     w.use_full <- w.use_full()
     
@@ -192,8 +195,8 @@ shinyServer(function(input, output, session) {
     
     data.elements <- data.elements[which(data.elements %in% names(w.use_full))]
     
-    df[["data.elements.y"]] <- data.elements
-    df[["data.element.y"]] <- data.elements[1]
+    df[["data.elements.norm"]] <- c("None",data.elements)
+    df[["data.element.norm"]] <- "None"
     
   })
   
@@ -228,13 +231,15 @@ shinyServer(function(input, output, session) {
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements <- data.elements[which(data.elements %in% names(w.use))]
     
-    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
+    data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
     data.elements.y <- data.elements.y[which(data.elements.y %in% names(w.use))]
     
     df[["data.elements"]] <- data.elements
     df[["data.element"]] <- data.elements[1]
     df[["data.elements.y"]] <- data.elements.y
     df[["data.element.y"]] <- data.elements.y[1]
+    df[["data.elements.norm"]] <- c("None",data.elements.y)
+    df[["data.element.norm"]] <- "None"
     
   })
   
@@ -287,22 +292,20 @@ shinyServer(function(input, output, session) {
     fancy.names.single <- df[["data.element.y"]]
     names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
     
-    updateSelectInput(session, "data.elements.max",
+    updateSelectInput(session, "data.elements.y",
                       choices = fancy.names,
-                      selected = fancy.names[1])
+                      selected = fancy.names.single)
   })
   
   observe({
     
-    fancy.names <- df[["data.elements.y"]]
-    names(fancy.names) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names)]
+    fancy.names <- df[["data.elements.norm"]]
     
-    fancy.names.single <- df[["data.element.y"]]
-    names(fancy.names.single) <- dataelement$NAME[which(gsub("-",".",dataelement$DATAELEMENT) %in% fancy.names.single)]
+    fancy.names.single <- df[["data.element.norm"]]
     
     updateSelectInput(session, "norm.element",
-                      choices = c("None",fancy.names),
-                      selected = "None")
+                      choices = fancy.names,
+                      selected = fancy.names.single)
   })
   
   observe({

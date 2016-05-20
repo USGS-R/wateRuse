@@ -137,10 +137,10 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
-    selectInput("data.elements.type.max", label = "Data Element Type y:", 
+    selectInput("data.elements.type.y", label = "Data Element Type y:", 
                 choices = data.elements.type,
                 selected = data.elements.type[2], multiple = FALSE), 
-    selectInput("data.elements.max", label = "Data Element y:", 
+    selectInput("data.elements.y", label = "Data Element y:", 
                 choices = data.elements,
                 selected = data.elements[1], multiple = FALSE)
   ),
@@ -156,7 +156,7 @@ sidebar <- dashboardSidebar(
                 choices = data.elements.type,
                 selected = data.elements.type[1], multiple = FALSE), 
     selectInput("norm.element", label = "Normalize Data Elements:", 
-                choices = c("None",data.elements),
+                choices = c("None",as.character(data.elements)),
                 selected = "None", multiple = FALSE)
     ),
   conditionalPanel(
