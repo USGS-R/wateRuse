@@ -38,3 +38,33 @@ output$downloadRankData <- downloadHandler(
     file.copy("rankData.csv", file)
   }
 )
+
+output$outputRankCode <- renderPrint({
+  
+  data.elements <- df[["data.element"]]
+  areas.pTC <- df[["area"]]
+  
+  areasOptions <-  df[["areas"]]
+  
+  if(all(areasOptions %in% areas.pTC)){
+    areas.pTC <- NA
+  } else {
+    areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
+  }
+  
+  area.column <- df[["area.column"]]
+  
+  outText <- paste0(
+    'library(dplyr)\n',
+    'data.elements <- c("',paste0(data.elements,collapse = '","'),'")\n',
+    "areas <- ",areas.pTC, "\n",
+    'area.column <- "', area.column, '"\n',
+    "w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)\n",
+    "w.use.rank <- spread_(w.use.sub, 'YEAR', data.elements)\n",
+    "w.use.rank <- w.use.rank[,colSums(is.na(w.use.rank))<nrow(w.use.rank)]"
+    
+  )
+  
+  HTML(outText)
+  
+})
