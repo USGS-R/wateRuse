@@ -2,9 +2,10 @@ output$rankData <- DT::renderDataTable({
   
   w.use <- w.use()
   data.elements <- df[["data.element"]]
-  areas.rd <- df[["areas"]]#input$area
+  areas.rd <- df[["area"]]
   area.column <- df[["area.column"]]
   yearRange <- unique(w.use$YEAR)
+  
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
   
   df <- spread_(w.use.sub, "YEAR", data.elements)
