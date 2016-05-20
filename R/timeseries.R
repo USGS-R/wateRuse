@@ -38,11 +38,15 @@
 time_series_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                              years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
 
-  if(!all(is.na(areas))){
-    w.use <- w.use[w.use[[area.column]] %in% areas,]
+  w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
+  
+  if(!any(is.na(years))){
+    w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% years,]
+    w.use.sub$YEAR <- as.factor(w.use.sub$YEAR)
+    levels(w.use.sub$YEAR) <- as.character(years)
   }
   
-  df <- w.use[,c("YEAR",area.column,data.elements)]
+  df <- w.use.sub[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
   
