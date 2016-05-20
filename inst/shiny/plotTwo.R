@@ -16,7 +16,7 @@ plotTwo <- reactive({
   
   area.column <- df[["area.column"]]
   year.x.y <- c(input$year_x,input$year_y)
-  plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2, legend=legend)
+  plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
   
   write.csv(x = plotTwo$data, file = "plotTwo.csv", row.names = FALSE)
   

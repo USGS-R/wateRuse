@@ -4,7 +4,7 @@ output$plotTwoElement <- renderPlot({
 
 plotTwoElement <- reactive({
   
-  w.use <- w.use_full()
+  w.use <- w.use()
   
   data.elements <- c(df[["data.element"]],df[["data.element.y"]])
   

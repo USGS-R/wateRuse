@@ -192,14 +192,15 @@ sidebar <- dashboardSidebar(
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,
                               selected=states[1])
   ), 
-  selectInput("area.column", label = "Area Column", 
-              choices = area.columns,
-              selected = area.columns[1], multiple = FALSE),
-  
   menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
            actionButton("changeArea", label="Click Here to Switch Areas"),
+           h4(""),
+           actionButton("deselectArea", label="Deselect All:"),
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
-                              selected=areas)
+                              selected=areas),
+           selectInput("area.column", label = "Area Column", 
+                       choices = area.columns,
+                       selected = area.columns[1], multiple = FALSE)
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
