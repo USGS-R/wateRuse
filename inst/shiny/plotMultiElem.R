@@ -1,0 +1,84 @@
+plotMultiElem <- reactive({
+  
+  w.use <- w.use()
+  
+  data.elements <- c(df[["data.element"]],df[["data.element.y"]])
+  
+  areas.p2e <- df[["area"]]
+  
+  if(all(df[["areas"]] %in% areas.p2e)){
+    areas.p2e <- NA
+  }
+  legend <- input$legendOn
+  points <- input$points
+  log <- input$log
+  
+  area.column <- df[["area.column"]]
+  
+  plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
+                                      areas=areas.p2e, legend=legend, plot.points = points)
+  
+  write.csv(x = plotMultiElem$data, file="plotMultiElem.csv", row.names = FALSE)
+  
+  plotMultiElem
+  
+})
+
+output$plotMultiElem <- renderPlot({
+  plotMultiElem()
+})
+
+output$downloadPlotmultiElem <- downloadHandler(
+  filename = function() { "plotMultiElem.png" },
+  content = function(file) {
+    ggsave(file, plot = plotMultiElem(), device = "png")
+  }
+)
+
+output$downloadPlotmultiElemPDF <- downloadHandler(
+  filename = function() { "plotMultiElem.pdf" },
+  content = function(file) {
+    ggsave(file, plot = plotMultiElem(), device = "pdf")
+  }
+)
+
+output$downloadPlotmultiElemData <- downloadHandler(
+  filename = function() { "plotMultiElem.csv" },
+  content = function(file) {
+    file.copy("plotMultiElem.csv", file)
+  }
+)
+
+output$plotMultiElemCode <- renderPrint({
+  
+  data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
+  areas.pTC <- df[["area"]]
+  
+  areasOptions <-  df[["areas"]]
+  
+  if(all(areasOptions %in% areas.pTC)){
+    areas.pTC <- NA
+  } else {
+    areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
+  }
+  
+  area.column <- df[["area.column"]]
+  legend <- input$legendOn
+  points <- input$points
+  log <- input$log
+  
+  outText <- paste0(
+    'data.elements <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
+    "areas <- ",areas.pTC, "\n",
+    'area.column <- "', area.column, '"\n',
+    'legend <- ',legend,"\n",
+    'points <- ', points,"\n",
+    'log <- ',log,"\n",
+    "multi_element_data(w.use, data.elements, area.column = area.column,\n",
+    "areas = areas,log=log, legend=legend, plot.points=points)"
+    
+  )
+  
+  HTML(outText)
+  
+})

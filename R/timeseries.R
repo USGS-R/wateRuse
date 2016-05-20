@@ -34,15 +34,19 @@
 #' time_series_data(w.use, data.elements, area.column)
 #' time_series_data(w.use, data.elements, area.column, y.scale = c(0,1000))
 #' time_series_data(w.use, data.elements, area.column, 
-#'        y.scale = c(0,100), years = c(1990,2005))
+#'        y.scale = c(0,100),years = c(1990,2005))
 time_series_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                              years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
 
-  if(!all(is.na(areas))){
-    w.use <- w.use[w.use[[area.column]] %in% areas,]
+  w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
+  
+  if(!any(is.na(years))){
+    w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% years,]
+    w.use.sub$YEAR <- as.factor(w.use.sub$YEAR)
+    levels(w.use.sub$YEAR) <- as.character(years)
   }
   
-  df <- w.use[,c("YEAR",area.column,data.elements)]
+  df <- w.use.sub[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
   
@@ -56,17 +60,13 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
                                       position = "dodge",stat="identity",show.legend = legend)
   }
  
-  ts.object <- ts.object + facet_grid(dataElement ~ .) +
+  ts.object <- ts.object + facet_grid(dataElement ~ ., scales = "free") +
     ylab("") 
   
   if(!all(is.na(y.scale))){
-    ts.object <- ts.object + ylim(y.scale)
+    ts.object <- ts.object + scale_y_continuous(limits=y.scale)
   }
-  
-  if(!all(is.na(years))){
-    ts.object <- ts.object + xlim(years)
-  }
-  
+
   if(log){
     ts.object <- ts.object + scale_y_log10()
   }

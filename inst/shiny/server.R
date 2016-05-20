@@ -14,6 +14,10 @@ data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
 data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
 
+data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+names(data.total.elements) <- calculation$CATEGORYCODE[grep(pattern = "WTotl", calculation$CALCULATION)]
+data.total.elements <- gsub("-", ".", data.total.elements)
+
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
                     "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
@@ -51,12 +55,19 @@ shinyServer(function(input, output, session) {
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
 
+    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+    data.total.elements <- gsub("-", ".", data.total.elements)
+    
+    
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
 
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
 
+    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
+    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
+    
     w.use
     
   })
@@ -70,7 +81,9 @@ shinyServer(function(input, output, session) {
                        data.elements = data.elements.start,
                        data.element = data.elements.start[1],
                        data.elements.y = data.elements.start,
-                       data.element.y = data.elements.start[1])
+                       data.element.y = data.elements.start[1],
+                       data.total.elements = data.total.elements,
+                       data.total.element = data.total.elements[1])
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -109,16 +122,31 @@ shinyServer(function(input, output, session) {
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
     
+    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+    data.total.elements <- gsub("-",".", data.total.elements)
+    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
+    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
+    
   })
   
   observeEvent(input$changeArea,  {
     df[["area"]] <- input$area
   })
   
+  observeEvent(input$deselectArea,  {
+    updateCheckboxGroupInput(session, "area", 
+                             choices =  df[["areas"]], 
+                             selected =  df[["areas"]][1])
+  })
+  
+  observeEvent(input$changeTotals,  {
+    df[["data.total.element"]] <- input$data.total.elements
+  })
+  
   observeEvent(input$data.elements,  {
     df[["data.element"]] <- input$data.elements
   })
-  
+
   observeEvent(input$data.elements.max,  {
     df[["data.element.y"]] <- input$data.elements.max
   })
@@ -217,6 +245,12 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
+    updateCheckboxGroupInput(session, "data.total.elements", 
+                             choices =  df[["data.total.elements"]], 
+                             selected =  df[["data.total.element"]])
+  })
+  
+  observe({
     if(any(df[["state"]] %in% stateCd$STUSAB)){
       
       state <- stateCd$STATE_NAME[which(stateCd$STUSAB %in% df[["state"]])[1]]
@@ -298,494 +332,45 @@ shinyServer(function(input, output, session) {
                       selected = yRange[length(yRange)])
   })
 
-  output$plotTwo <- renderPlot({
-    plotTwo()
-  })
+##################################################################
+
+  source("plotTwo.R",local=TRUE)$value
   
-  plotTwo <- reactive({
-    
-    w.use <- w.use()
+###################################################################
 
-    data.elements <- df[["data.element"]]
-    areas.p2 <- df[["area"]]#input$area
-
-    if(all(df[["areas"]] %in% areas.p2)){
-      areas.p2 <- NA
-    }
-    legend <- input$legendOn
-    
-    area.column <- df[["area.column"]]
-    year.x.y <- c(input$year_x,input$year_y)
-    plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas.p2, legend=legend)
-
-    write.csv(x = plotTwo$data, file = "plotTwo.csv", row.names = FALSE)
-    
-    plotTwo
-  })
+################################################################### 
   
-  output$hover_plotTwo <- renderPrint({
-    txt <- ""
-    
-    if(!is.null(input$hover_plotTwo)){
-      hover=input$hover_plotTwo
-      plotTwo <- plotTwo()
-      data <- plotTwo$data
-      dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-      if(min(dist, rm.na=TRUE) < 5){
-        txt <- data$site[which.min(dist)]
-      }
-    }
-    
-    cat("Site:",txt)
-    
-  })
+  source("plotTwoElement.R",local=TRUE)$value
   
-  output$downloadPlotTwo <- downloadHandler(
-    filename = function() { "plotTwo.png" },
-    content = function(file) {
-      ggsave(file, plot = plotTwo(), device = "png")
-    }
-  )
-
-  output$downloadPlotTwoPDF <- downloadHandler(
-    filename = function() { "plotTwo.pdf" },
-    content = function(file) {
-      ggsave(file, plot = plotTwo(), device = "pdf")
-    }
-  )
+##################################################################
   
-  output$downloadPlotTwoData <- downloadHandler(
-    filename = function() { "plotTwo.csv" },
-    content = function(file) {
-      file.copy("plotTwo.csv", file)
-    }
-  )
+    
+###################################################################
+
+  source("plotBarSums.R",local=TRUE)$value
   
-  output$plotTwoElement <- renderPlot({
-    plotTwoElement()
-  })
+###################################################################
   
-  plotTwoElement <- reactive({
-    
-    w.use <- w.use_full()
+###################################################################
 
-    data.elements <- c(df[["data.element"]],df[["data.element.y"]])
-
-    areas.p2e <- df[["area"]]
-
-    if(all(df[["areas"]] %in% areas.p2e)){
-      areas.p2e <- NA
-    }
-    legend <- input$legendOn
-    area.column <- df[["area.column"]]
-    year <- input$year_x
-    
-    plotTwoElement <- compare_two_elements(w.use, data.elements, year, 
-                                           area.column, areas.p2e, legend=legend)
-
-    write.csv(x = plotTwoElement$data, file="plotTwoElement.csv", row.names = FALSE)
-    
-    plotTwoElement
-    
-  })
+  source("plotMultiElem.R",local=TRUE)$value
   
-  output$hover_plotTwoElem <- renderPrint({
-    txt <- ""
-    
-    if(!is.null(input$hover_plotTwoElem)){
-      hover=input$hover_plotTwoElem
-      plotTwoElement <- plotTwoElement()
-      data <- plotTwoElement$data
-      dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-      if(min(dist, rm.na=TRUE) < 5){
-        txt <- data$site[which.min(dist)]
-      }
+###################################################################
 
-    }
-    
-    cat("Site:", txt)  
-    
-  })
+###################################################################  
 
-  output$downloadPlotTwoElem <- downloadHandler(
-    filename = function() { "plotTwoElement.png" },
-    content = function(file) {
-      ggsave(file, plot = plotTwoElement(), device = "png")
-    }
-  )
+  source("plotTimeSeries.R",local=TRUE)$value
   
-  output$downloadPlotTwoElemPDF <- downloadHandler(
-    filename = function() { "plotTwoElement.pdf" },
-    content = function(file) {
-      ggsave(file, plot = plotTwoElement(), device = "pdf")
-    }
-  )
+###################################################################
   
-  output$downloadPlotTwoElemData <- downloadHandler(
-    filename = function() { "plotTwoElement.csv" },
-    content = function(file) {
-      file.copy("plotTwoElement.csv", file)
-    }
-  )
+###################################################################
+
+  source("rankData.R",local=TRUE)$value
+
+###################################################################
+
+  source("mapData.R",local=TRUE)$value
   
-  plotMultiElem <- reactive({
-    
-    w.use <- w.use()
-    
-    data.elements <- c(df[["data.element"]],df[["data.element.y"]])
-    
-    areas.p2e <- df[["area"]]
-    
-    if(all(df[["areas"]] %in% areas.p2e)){
-      areas.p2e <- NA
-    }
-    legend <- input$legendOn
-    points <- input$points
-    log <- input$log
-    
-    area.column <- df[["area.column"]]
-
-    plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
-                                        areas=areas.p2e, legend=legend, plot.points = points)
-    
-    write.csv(x = plotMultiElem$data, file="plotMultiElem.csv", row.names = FALSE)
-    
-    plotMultiElem
-    
-  })
-
-  output$plotMultiElem <- renderPlot({
-    plotMultiElem()
-    
-  })
-  
-  output$downloadPlotmultiElem <- downloadHandler(
-    filename = function() { "plotMultiElem.png" },
-    content = function(file) {
-      ggsave(file, plot = plotMultiElem(), device = "png")
-    }
-  )
-  
-  output$downloadPlotmultiElemPDF <- downloadHandler(
-    filename = function() { "plotMultiElem.pdf" },
-    content = function(file) {
-      ggsave(file, plot = plotMultiElem(), device = "pdf")
-    }
-  )
-  
-  output$downloadPlotmultiElemData <- downloadHandler(
-    filename = function() { "plotMultiElem.csv" },
-    content = function(file) {
-      file.copy("plotMultiElem.csv", file)
-    }
-  )
-  
-  tsPlot <- reactive({
-    w.use <- w.use()
-
-    data.elements <- df[["data.element"]]
-    areas.pt <- df[["areas"]] #input$area
-
-    areasOptions <- df[["areas"]]
-
-    if(all(areasOptions %in% areas.pt)){
-      areas.pt <- NA
-    }
-
-    area.column <-  df[["area.column"]]
-    legend <- input$legendOn
-    log <- input$log
-    points <- input$points
-
-    w.use <- subset_wuse(w.use, data.elements, area.column, areas.pt)
-    w.use <- w.use[!is.na(w.use[data.elements]),]
-
-    tsPlot <- time_series_data(w.use, data.elements, area.column, plot.points = points,
-                     areas = areas.pt, legend = legend, log = log, years= NA)
-    
-    write.csv(file = "tsPlot.csv", tsPlot$data, row.names = FALSE)
-    
-    tsPlot
-  })
-  
-  output$plotTime <- renderPlot({
-    tsPlot()
-    
-  })
-  
-  output$hover_info_ts <- renderPrint({
-    txt <- ""
-    
-    points <- input$points
-    hover=input$hover_info_ts
-    
-    if(!is.null(hover)){
-      tsPlot <- tsPlot()
-      data <- tsPlot$data
-      
-      if(points){
-        dist=sqrt((hover$x-as.numeric(data$YEAR))^2+(hover$y-data$value)^2)
-        if(min(dist, rm.na=TRUE) < 5){
-          txt <- data[[df[["area.column"]]]][which.min(dist)]
-        }
-      # } else {
-      #   dist=sqrt((hover$x-data$YEAR)^2)
-      #   levels()
-      #   if(min(dist, rm.na=TRUE) < 5){
-      #     txt <- data[[df[["area.column"]]]][which.min(dist)]
-      #   }
-      }
-      
-    }
-    
-    cat("Site: ", txt)
-  })
-  
-  output$downloadPlotTime <- downloadHandler(
-    filename = function() { "tsPlot.png" },
-    content = function(file) {
-      ggsave(file, plot = tsPlot(), device = "png")
-    }
-  )
-  
-  output$downloadPlotTimePDF <- downloadHandler(
-    filename = function() { "tsPlot.pdf" },
-    content = function(file) {
-      ggsave(file, plot = tsPlot(), device = "pdf")
-    }
-  )
-  
-  output$downloadPlotTimeData <- downloadHandler(
-    filename = function() { "tsPlot.csv" },
-    content = function(file) {
-      file.copy("tsPlot.csv", file)
-    }
-  )
-  
-  output$rankData <- DT::renderDataTable({
-
-    w.use <- w.use()
-    data.elements <- df[["data.element"]]
-    areas.rd <- df[["areas"]]#input$area
-    area.column <- df[["area.column"]]
-    yearRange <- unique(w.use$YEAR)
-    w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
-
-    df <- spread_(w.use.sub, "YEAR", data.elements)
-
-    df <- df[,colSums(is.na(df))<nrow(df)]
-    
-    write.csv(df, "rankData.csv",row.names = FALSE)
-    
-    rankData <- DT::datatable(df, rownames = FALSE,
-                              options = list(scrollX = TRUE,
-                                             pageLength = nrow(df),
-                                             order=list(list(2,'desc'))))
-    yearRange <- names(df)[-1]
-    colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
-    names(colors)[1:length(yearRange)] <- yearRange
-    for(i in yearRange){
-      rankData <- formatStyle(rankData, as.character(i),
-                              background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
-                              backgroundSize = '100% 90%',
-                              backgroundRepeat = 'no-repeat',
-                              backgroundPosition = 'center' )
-    }
-
-    rankData
-  })
-  
-  output$downloadRankData <- downloadHandler(
-    filename = function() { "rankData.csv" },
-    content = function(file) {
-      file.copy("rankData.csv", file)
-    }
-  )
-
-
-  output$mapData <- renderPlot({
-    mapData()
-  })
-  
-  mapData <- reactive({
-    
-    w.use <- w.use()
-    
-    norm.element <- input$norm.element
-    
-    if(norm.element == "None"){
-      norm.element <- NA
-    }
-
-    if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
-      if(!("STATECOUNTYCODE" %in% names(w.use))){
-        w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
-      }
-
-      mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
-                      area.column = "STATE_TERR", area = input$stateToMap, norm.element = norm.element)
-
-    } else {
-      mapData <- ggplot(data = mtcars) +
-        geom_text(x=0.5, y=0.5, label = "Choose new state or use County data")
-    }
-    
-    mapData
-
-  })
-  
-  output$hover_map <- renderPrint({
-    txt <- ""
-    
-    hover=input$hover_map
-    
-    if(!is.null(hover)){
-      
-      data <- histCounties
-      point.to.check <- SpatialPoints(data.frame(x = hover$x, y=hover$y), proj4string=CRS(proj4string(data)))
-      
-      dist=over(point.to.check, data)
-      txt <- dist$FIPS
-    }
-    
-    cat("Site: ", txt)
-  })
-  
-  output$downloadMap <- downloadHandler(
-    filename = function() { "map.png" },
-    content = function(file) {
-      ggsave(file, plot = mapData(), device = "png")
-    }
-  )
-
-  output$plotTwoCode <- renderPrint({
-
-    data.elements <- input$data.elements
-    areas.ptC <- df[["area"]]
-    legend <- input$legendOn
-    
-    areasOptions <- df[["areas"]]
-
-    if(all(areasOptions %in% areas.ptC)){
-      areas.ptC <- NA
-    } else {
-      areas.ptC <- paste0('c("',paste(areas.ptC, collapse = '","'),'")')
-    }
-
-    area.column <- df[["area.column"]]
-    year.x.y <- c(input$year_x,input$year_y)
-
-    outText <- paste0(
-      'data.elements <- "',data.elements, '"\n',
-      "areas <- ", areas.ptC, "\n",
-      'area.column <- "', area.column, '"\n',
-      "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
-      "legend <- ", legend, "\n",
-      "compare_two_years(w.use, data.elements, year.x.y, area.column, areas, legend)"
-
-    )
-
-    HTML(outText)
-
-  })
-  
-  output$plotTwoElementCode <- renderPrint({
-    
-    areas.ptC <- df[["area"]]
-    legend <- input$legendOn
-    year <- input$year_x
-    
-    areasOptions <- df[["areas"]]
-    
-    if(all(areasOptions %in% areas.ptC)){
-      areas.ptC <- NA
-    } else {
-      areas.ptC <- paste0('c("',paste(areas.ptC, collapse = '","'),'")')
-    }
-    
-    area.column <- df[["area.column"]]
-    data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
-    
-    outText <- paste0(
-      "areas <- ", areas.ptC, "\n",
-      'area.column <- "', area.column, '"\n',
-      "year <- ", year, "\n",
-      'data.elements.x.y <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
-      "legend <- ", legend, "\n",
-      "compare_two_elements(w.use, data.elements.x.y, year, area.column, areas, legend)"
-      
-    )
-    
-    HTML(outText)
-    
-  })
-
-  output$plotTimeCode <- renderPrint({
-
-    data.elements <- df[["data.element"]]
-    areas.pTC <- df[["area"]]
-
-    areasOptions <-  df[["areas"]]
-
-    if(all(areasOptions %in% areas.pTC)){
-      areas.pTC <- NA
-    } else {
-      areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
-    }
-
-    area.column <- df[["area.column"]]
-    legend <- input$legendOn
-    points <- input$points
-    log <- input$log
-
-    outText <- paste0(
-      'data.elements <- "',data.elements, '"\n',
-      "areas <- ",areas.pTC, "\n",
-      'area.column <- "', area.column, '"\n',
-      'legend <- ',legend,"\n",
-      'points <- ', points,"\n",
-      'log <- ',log,"\n",
-      "time_series_data(w.use, data.elements, area.column = area.column,\n",
-      "areas = areas,log=log, legend=legend, plot.points=points)"
-
-    )
-
-    HTML(outText)
-
-  })
-  
-  output$plotMultiElemCode <- renderPrint({
-    
-    data.elements.x.y <- c(df[["data.element"]],df[["data.element.y"]])
-    areas.pTC <- df[["area"]]
-    
-    areasOptions <-  df[["areas"]]
-    
-    if(all(areasOptions %in% areas.pTC)){
-      areas.pTC <- NA
-    } else {
-      areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
-    }
-    
-    area.column <- df[["area.column"]]
-    legend <- input$legendOn
-    points <- input$points
-    log <- input$log
-    
-    outText <- paste0(
-      'data.elements <- c("',paste0(data.elements.x.y,collapse = '","'),'")\n',
-      "areas <- ",areas.pTC, "\n",
-      'area.column <- "', area.column, '"\n',
-      'legend <- ',legend,"\n",
-      'points <- ', points,"\n",
-      'log <- ',log,"\n",
-      "multi_element_data(w.use, data.elements, area.column = area.column,\n",
-      "areas = areas,log=log, legend=legend, plot.points=points)"
-      
-    )
-    
-    HTML(outText)
-    
-  })
+###################################################################
   
 })
