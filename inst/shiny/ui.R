@@ -9,6 +9,9 @@ names(data.elements) <- dataelement$NAME
 data.elements.type <- category$CODE
 names(data.elements.type) <- category$NAME
 
+data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+names(data.total.elements) <- calculation$CATEGORYCODE[grep(pattern = "WTotl", calculation$CALCULATION)]
+
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
 header <- dashboardHeader(title = "Explore Water Use Data")
@@ -87,8 +90,7 @@ body <- dashboardBody(
               value = "plotBarSumsTab",
               h4("R Code:"),
               verbatimTextOutput("plotBarSumsCode"),
-              plotOutput("plotBarSums",hover = hoverOpts(id = "hover_info_bar")),
-              verbatimTextOutput("hover_info_bar"),
+              plotOutput("plotBarSums"),
               h4(""),
               fluidRow(
                 column(3, downloadButton('downloadPlotBarSums', 'Download PNG')),
@@ -169,13 +171,22 @@ sidebar <- dashboardSidebar(
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
-      checkboxInput("log", label = "Log Scale"),
-      checkboxInput("points", label = "Points", value = TRUE)
+    condition = "input.mainTabs == 'plotBarSumsTab'",
+    menuItem("Choose Totals:", icon = icon("th"), tabName = "totalTab",
+     actionButton("changeTotals", label="Click Here to Switch Totals:"),
+     checkboxGroupInput("data.total.elements", label = "",
+                         choices = data.total.elements,
+                         selected=data.total.elements[1])),
+      checkboxInput("plot.stack", label = "Stacked Bars", value = TRUE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
+      checkboxInput("points", label = "Points", value = TRUE),
+      checkboxInput("log", label = "Log Scale")
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,

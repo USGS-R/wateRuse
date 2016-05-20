@@ -14,6 +14,10 @@ data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
 data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
 
+data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+names(data.total.elements) <- calculation$CATEGORYCODE[grep(pattern = "WTotl", calculation$CALCULATION)]
+data.total.elements <- gsub("-", ".", data.total.elements)
+
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
                     "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
@@ -51,12 +55,19 @@ shinyServer(function(input, output, session) {
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.max)]
 
+    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+    data.total.elements <- gsub("-", ".", data.total.elements)
+    
+    
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
 
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
 
+    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
+    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
+    
     w.use
     
   })
@@ -70,7 +81,9 @@ shinyServer(function(input, output, session) {
                        data.elements = data.elements.start,
                        data.element = data.elements.start[1],
                        data.elements.y = data.elements.start,
-                       data.element.y = data.elements.start[1])
+                       data.element.y = data.elements.start[1],
+                       data.total.elements = data.total.elements,
+                       data.total.element = data.total.elements[1])
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -109,16 +122,25 @@ shinyServer(function(input, output, session) {
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
     
+    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
+    data.total.elements <- gsub("-",".", data.total.elements)
+    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
+    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
+    
   })
   
   observeEvent(input$changeArea,  {
     df[["area"]] <- input$area
   })
   
+  observeEvent(input$changeTotals,  {
+    df[["data.total.element"]] <- input$data.total.elements
+  })
+  
   observeEvent(input$data.elements,  {
     df[["data.element"]] <- input$data.elements
   })
-  
+
   observeEvent(input$data.elements.max,  {
     df[["data.element.y"]] <- input$data.elements.max
   })
@@ -214,6 +236,12 @@ shinyServer(function(input, output, session) {
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["area"]])
+  })
+  
+  observe({
+    updateCheckboxGroupInput(session, "data.total.elements", 
+                             choices =  df[["data.total.elements"]], 
+                             selected =  df[["data.total.element"]])
   })
   
   observe({

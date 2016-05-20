@@ -9,7 +9,6 @@
 #' @param area.column character that defines which column to use to specify area
 #' @param y.scale allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.
 #' @param plot.stack is a logical function to show graph as optionally stacked or clustered bar graph
-
 #'
 #' 
 #' @export
@@ -17,14 +16,10 @@
 #' @importFrom tidyr gather_
 #' 
 #' @examples 
-#' df <- wUseSample
+#' w.use <- wUseSample
 #' areas <- c("New Castle County", "Kent County")
 #' area.column = "COUNTYNAME"
 #' data.elements <- c("PS.WTotl","CO.WTotl","DO.WTotl","IN.WTotl","PF.WTotl")
-#' w.use <- subset_wuse(df, data.elements,area.column,areas)
-#' year1 <- 2005
-#' year2 <- 2010
-#' years <- c(year1, year2)
 #' barchart_sums(w.use, data.elements, area.column = area.column,areas = areas)
 #' barchart_sums(w.use, data.elements, plot.stack = FALSE,
 #'        area.column = area.column,areas = areas)
@@ -35,11 +30,15 @@
 barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
                              years=NA, areas=NA, y.scale=NA){
   
-  if(!all(is.na(areas))){
-    w.use <- w.use[w.use[[area.column]] %in% areas,]
+  w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
+
+  if(!any(is.na(years))){
+    w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% years,]
+    w.use.sub$YEAR <- as.factor(w.use.sub$YEAR)
+    levels(w.use.sub$YEAR) <- as.character(years)
   }
   
-  df2 <- w.use[,c("YEAR",area.column,data.elements)]
+  df2 <- w.use.sub[,c("YEAR",area.column,data.elements)]
   
   df3 <- gather_(df2, "dataElement", "value", c(data.elements))
   
@@ -53,17 +52,13 @@ barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
                                       position = "dodge",stat="identity")
   }
   #facet if totals available for multiple areas (counties, etc)
-  bc.object <- bc.object + facet_grid(COUNTYNAME ~ .) +
+  bc.object <- bc.object + 
+    facet_grid(as.formula(paste0(area.column," ~ .")), scales="free") +
     ylab("") 
   
   if(!all(is.na(y.scale))){
     bc.object <- bc.object + ylim(y.scale)
   }
-  
-  if(!all(is.na(years))){
-    bc.object <- bc.object + xlim(years)
-  }
-  
   
   bc.object
   
