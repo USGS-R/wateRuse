@@ -34,7 +34,7 @@
 #' time_series_data(w.use, data.elements, area.column)
 #' time_series_data(w.use, data.elements, area.column, y.scale = c(0,1000))
 #' time_series_data(w.use, data.elements, area.column, 
-#'        y.scale = c(0,100), years = c(1990,2005))
+#'        y.scale = c(0,100),years = c(1990,2005))
 time_series_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                              years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
 
@@ -60,17 +60,13 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
                                       position = "dodge",stat="identity",show.legend = legend)
   }
  
-  ts.object <- ts.object + facet_grid(dataElement ~ .) +
+  ts.object <- ts.object + facet_grid(dataElement ~ ., scales = "free") +
     ylab("") 
   
   if(!all(is.na(y.scale))){
-    ts.object <- ts.object + ylim(y.scale)
+    ts.object <- ts.object + scale_y_continuous(limits=y.scale)
   }
-  
-  if(!all(is.na(years))){
-    ts.object <- ts.object + xlim(years)
-  }
-  
+
   if(log){
     ts.object <- ts.object + scale_y_log10()
   }
