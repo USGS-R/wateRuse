@@ -2,7 +2,7 @@ tsPlot <- reactive({
   w.use <- w.use()
   
   data.elements <- df[["data.element"]]
-  areas.pt <- df[["areas"]] #input$area
+  areas.pt <- df[["area"]]
   
   areasOptions <- df[["areas"]]
   
@@ -14,9 +14,6 @@ tsPlot <- reactive({
   legend <- input$legendOn
   log <- input$log
   points <- input$points
-  
-  w.use <- subset_wuse(w.use, data.elements, area.column, areas.pt)
-  w.use <- w.use[!is.na(w.use[data.elements]),]
   
   tsPlot <- time_series_data(w.use, data.elements, area.column, plot.points = points,
                              areas = areas.pt, legend = legend, log = log, years= NA)
