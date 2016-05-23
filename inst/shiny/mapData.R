@@ -6,7 +6,7 @@ mapData <- reactive({
   
   w.use <- w.use()
   
-  norm.element <- input$norm.element
+  norm.element <- df[["data.element.norm"]]
   
   if(norm.element == "None"){
     norm.element <- NA

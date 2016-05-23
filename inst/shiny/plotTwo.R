@@ -18,7 +18,7 @@ plotTwo <- reactive({
   year.x.y <- c(input$year_x,input$year_y)
   plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
   
-  write.csv(x = plotTwo$data, file = "plotTwo.csv", row.names = FALSE)
+  write.csv(x = plotTwo$data, file = "plotTwoYears.csv", row.names = FALSE)
   
   plotTwo
 })
@@ -41,23 +41,23 @@ output$hover_plotTwo <- renderPrint({
 })
 
 output$downloadPlotTwo <- downloadHandler(
-  filename = function() { "plotTwo.png" },
+  filename = function() { "plotTwoYears.png" },
   content = function(file) {
     ggsave(file, plot = plotTwo(), device = "png")
   }
 )
 
 output$downloadPlotTwoPDF <- downloadHandler(
-  filename = function() { "plotTwo.pdf" },
+  filename = function() { "plotTwoYears.pdf" },
   content = function(file) {
     ggsave(file, plot = plotTwo(), device = "pdf")
   }
 )
 
 output$downloadPlotTwoData <- downloadHandler(
-  filename = function() { "plotTwo.csv" },
+  filename = function() { "plotTwoYears.csv" },
   content = function(file) {
-    file.copy("plotTwo.csv", file)
+    file.copy("plotTwoYears.csv", file)
   }
 )
 
