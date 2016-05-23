@@ -142,6 +142,12 @@ shinyServer(function(input, output, session) {
                              selected =  df[["areas"]][1])
   })
   
+  observeEvent(input$selectArea,  {
+    updateCheckboxGroupInput(session, "area", 
+                             choices =  df[["areas"]], 
+                             selected =  df[["areas"]])
+  })
+  
   observeEvent(input$changeTotals,  {
     df[["data.total.element"]] <- input$data.total.elements
   })
