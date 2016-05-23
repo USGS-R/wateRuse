@@ -218,6 +218,7 @@ sidebar <- dashboardSidebar(
            actionButton("changeArea", label="Click Here to Switch Areas"),
            h4(""),
            actionButton("deselectArea", label="Deselect All:"),
+           actionButton("selectArea", label="Select All:"),
            checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
                               selected=areas),
            selectInput("area.column", label = "Area Column", 
