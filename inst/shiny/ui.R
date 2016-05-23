@@ -72,6 +72,22 @@ body <- dashboardBody(
               h4("R Code:"),
               verbatimTextOutput("plotMultiElemCode")
      ),
+     tabPanel(title = tagList("Box Plots",shiny::icon("bar-chart")),
+              value = "boxPlotTab",
+              fluidRow(
+                column(9, 
+                       plotOutput("plotBoxplots",width = 500, height = 500))
+                
+              ),
+              h4(""),
+              fluidRow(
+                column(3, downloadButton('downloadPlotBoxplots', 'Download PNG')),
+                column(3, downloadButton('downloadPlotBoxplotsPDF', 'Download PDF')),
+                column(3, downloadButton('downloadPlotBoxplotsData', 'Download Data'))
+              ),
+              h4("R Code:"),
+              verbatimTextOutput("plotBoxplotsCode")
+     ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
               plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
@@ -136,7 +152,7 @@ sidebar <- dashboardSidebar(
                 selected = data.elements[1], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
+    condition = "input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'| input.mainTabs == 'boxPlotTab'",
     selectInput("data.elements.type.max", label = "Data Element Type y:", 
                 choices = data.elements.type,
                 selected = data.elements.type[2], multiple = FALSE), 
@@ -183,6 +199,11 @@ sidebar <- dashboardSidebar(
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'multiElem'",
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'boxPlotTab'",
+    checkboxInput("notchOn", label = "Notched Boxes", value = FALSE),
+    checkboxInput("log", label = "Log Scale")
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
