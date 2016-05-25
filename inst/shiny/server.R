@@ -71,12 +71,15 @@ shinyServer(function(input, output, session) {
     
   })
   
+  states.in.order <- unique(w.use.start[["USSTATEALPHACODE"]])
+  states.in.order <- states.in.order[order(states.in.order)]
+  
   df <- reactiveValues(area.column="COUNTYNAME",
                        area.columns=c("STATECOUNTYCODE","COUNTYNAME"),
                        areas = unique(w.use.start[["COUNTYNAME"]]),
                        area = unique(w.use.start[["COUNTYNAME"]]),
-                       states = unique(w.use.start[["USSTATEALPHACODE"]]),
-                       state = unique(w.use.start[["USSTATEALPHACODE"]])[1],
+                       states = states.in.order,
+                       state = states.in.order[1],
                        data.elements = data.elements.start,
                        data.element = data.elements.start[1],
                        data.elements.y = data.elements.start,
@@ -91,6 +94,7 @@ shinyServer(function(input, output, session) {
     
     if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use)){
       choices <- unique(w.use$USSTATEALPHACODE)
+      choices <- choices[order(choices)]
     } else {
       choices <- "All Available"
     }
@@ -331,7 +335,8 @@ shinyServer(function(input, output, session) {
     w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.yr)
 
     yRange <- unique(w.use.sub$YEAR[!is.na(w.use.sub[[data.elements]])])
-
+    yRange <- yRange[order(yRange)]
+    
     updateSelectInput(session, "year_x",
                       choices = yRange,
                       selected = yRange[length(yRange)-1])
