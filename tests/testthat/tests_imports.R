@@ -60,6 +60,6 @@ test_that("Test calculations", {
   x1 <- awuds.calc$LV.WGWFr
   y1 <- awuds$LS.WGWFr + awuds$LA.WGWFr
   
-  expect_equivalent(object = x1, expected = y1)
+  expect_equal(object = x1, expected = y1)
   
 })
