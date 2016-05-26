@@ -2,9 +2,9 @@
 
 export(barchart_sums)
 export(boxplot_wu)
+export(calculate_values)
 export(calculation)
 export(calculation.formula)
-export(caluculate_values)
 export(category)
 export(choropleth_plot)
 export(compare_data_elements)

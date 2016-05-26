@@ -10,8 +10,8 @@
 #' 
 #' @examples 
 #' w.use <- wUseSample
-#' w.use.new <- caluculate_values(w.use)
-caluculate_values <- function(w.use){ 
+#' w.use.new <- calculate_values(w.use)
+calculate_values <- function(w.use){ 
   
   calculation.formula <- calculation.formula
   calculation.formula$CALCULATION <- gsub("-",".",calculation.formula$CALCULATION)
