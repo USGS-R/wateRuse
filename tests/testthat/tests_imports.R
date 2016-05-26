@@ -55,11 +55,11 @@ test_that("Dump Data gets read in when given as a direct file", {
 test_that("Test calculations", {
   
   awuds <- wUseSample
-  awuds.calc <- caluculate_values(awuds)
+  awuds.calc <- calculate_values(awuds)
   
   x1 <- awuds.calc$LV.WGWFr
-  y1 <- awuds.calc$LS.WGWFr + awuds.calc$LA.WGWFr
+  y1 <- awuds$LS.WGWFr + awuds$LA.WGWFr
   
-  expect_equivalent(object = x1, expected = y1)
+  expect_equal(object = x1, expected = y1)
   
 })

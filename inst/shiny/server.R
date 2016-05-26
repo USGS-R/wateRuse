@@ -38,7 +38,7 @@ shinyServer(function(input, output, session) {
       w.use <- get_awuds_data(awuds.data.files = newPath)
     }
 
-    w.use <- caluculate_values(w.use)
+    w.use <- calculate_values(w.use)
     
     w.use
   })
