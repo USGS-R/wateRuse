@@ -18,7 +18,13 @@ header <- dashboardHeader(title = "Explore Water Use Data")
 states <- unique(wUseSample$USSTATEALPHACODE)
 
 body <- dashboardBody(
-   fileInput("data", "Load files",multiple = TRUE),
+   fluidRow(
+     column(4,
+            fileInput("data", "Load files",multiple = TRUE)),
+     column(2,
+            tags$a(href="https://github.com/USGS-R/wateRuse/issues", "Report Bugs", id="test")
+            )
+   ),
    tabsetPanel(selected = "plotTwoTab",id = "mainTabs",
      tabPanel(title = tagList("Compare Two Years",shiny::icon("bar-chart")),
               value = "plotTwoTab",

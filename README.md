@@ -2,6 +2,61 @@
 =============
 Parser functions for water use data.
 
+
+##Package Installation
+To install the wateRuse package:
+
+1. Install R (version 3.0 or greater) from: [https://cran.r-project.org/](https://cran.r-project.org/)
+
+2. Install RStudio from: [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/)
+
+3. Finally, in the RStudio "Console" window (usually left or lower-left), run the following command:
+
+  ```r
+  install.packages("wateRuse")
+  ```
+  
+  To get cutting-edge changes, install from GitHub using the `devtools` packages:
+  
+  ```r
+  library(devtools)
+  install_github("USGS-R/wateRuse")
+  ```
+
+4. Add the USGS R repository to your "Rprofile" to get automatic updates. Run the following code:
+  
+  ```r
+  rprofile_path = file.path(Sys.getenv("HOME"), ".Rprofile")
+  write('\noptions(repos=c(getOption(\'repos\'), 
+      USGS=\'http://owi.usgs.gov/R\'))\n',
+        rprofile_path, 
+        append =  TRUE)
+  
+  cat('Your Rprofile has been updated to include GRAN.
+      Please restart R for changes to take effect.')
+  ```
+
+5. Restart R!
+
+6. Update often. Next time you update your packages, `wateRuse` will automatically update:
+
+![update]("https://github.com/USGS-R/wateRuse/images/update.png")
+
+
+## Run Shiny App
+
+After installing package, run the following command:
+
+```r
+library(wateRuse)
+
+explore_wateRuse()
+
+```
+
+Your default browser will open and start the app. If using IE, copy and paste the address to Firefox or Chrome.
+
+
  [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)
 
 ##Disclaimer
