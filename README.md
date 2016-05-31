@@ -40,7 +40,7 @@ To install the wateRuse package:
 
 6. Update often. Next time you update your packages, `wateRuse` will automatically update:
 
-![update]("https://github.com/USGS-R/wateRuse/images/update.png")
+![update]("https://raw.githubusercontent.com/USGS-R/wateRuse/master/images/update.png")
 
 
 ## Run Shiny App
