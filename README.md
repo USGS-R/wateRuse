@@ -48,7 +48,16 @@ Next time you update your packages, `wateRuse` will automatically update:
 
 ## Run Shiny App
 
-After installing package, run the following command 
+After installing package, run the following command:
+
+```r
+library(wateRuse)
+
+explore_wateRuse()
+
+```
+
+Your default browser will open and start the app. If using IE, copy and paste the address to Firefox or Chrome.
 
 
  [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)

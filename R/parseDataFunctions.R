@@ -104,6 +104,7 @@ parseEnteredElements <- function(file_path){
 }
 
 #' @export
+#' @importFrom stats complete.cases
 #' @rdname parser
 #' 
 #' @examples 

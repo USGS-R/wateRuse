@@ -1,4 +1,4 @@
 .travis.yml
-images\*.png
+images
 ^.*\.Rproj$
 ^\.Rproj\.user$
