@@ -14,10 +14,6 @@ data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
 data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
 
-data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
-names(data.total.elements) <- calculation$CATEGORYCODE[grep(pattern = "WTotl", calculation$CALCULATION)]
-data.total.elements <- gsub("-", ".", data.total.elements)
-
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
                     "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
@@ -26,7 +22,7 @@ other.names <- c("STUDY","STATECODE","COUNTYCODE",
 
 shinyServer(function(input, output, session) {
   
-  w.use_full <- reactive({
+  w.use_start <- reactive({
     w.use <- w.use.start
     
     if(!is.null(input$data)){
@@ -38,9 +34,39 @@ shinyServer(function(input, output, session) {
       w.use <- get_awuds_data(awuds.data.files = newPath)
     }
 
+    w.use
+  })
+  
+  w.use_full <- reactive({
+    w.use <- w.use_start()
+
     w.use <- calculate_values(w.use)
     
     w.use
+  })
+  
+  w.use_barSum <- reactive({
+    w.use <- w.use_start()
+    
+    w.use[is.na(w.use)] <- 0
+    w.use <- calculate_values(w.use)
+
+    totals <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl", 
+      "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")
+    
+    if("USSTATEALPHACODE" %in% names(w.use)){
+      w.use_state <- w.use[,c("USSTATEALPHACODE", "YEAR",totals)] %>%
+        group_by(USSTATEALPHACODE, YEAR) %>%
+        summarise_each(funs(sum))
+    } else {
+      w.use_state <- w.use[,c("YEAR",totals)] %>%
+        mutate(USSTATEALPHACODE = "01") %>%
+        group_by(USSTATEALPHACODE, YEAR) %>%
+        summarise_each(funs(sum))
+    }
+
+    
+    w.use_state
   })
   
   w.use <- reactive({
@@ -54,9 +80,6 @@ shinyServer(function(input, output, session) {
     data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
-
-    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
-    data.total.elements <- gsub("-", ".", data.total.elements)
     
     df[["data.elements"]] <- data.elements[data.elements %in% names(w.use)]
     df[["data.element"]] <- data.elements[data.elements %in% names(w.use)][1]
@@ -64,9 +87,6 @@ shinyServer(function(input, output, session) {
     df[["data.elements.y"]] <- data.elements.y[data.elements.y %in% names(w.use)]
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
 
-    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
-    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
-    
     w.use
     
   })
@@ -85,9 +105,7 @@ shinyServer(function(input, output, session) {
                        data.elements.y = data.elements.start,
                        data.element.y = data.elements.start[1],
                        data.elements.norm = c("None",data.elements.start),
-                       data.element.norm = "None",
-                       data.total.elements = data.total.elements,
-                       data.total.element = data.total.elements[1])
+                       data.element.norm = "None")
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()
@@ -128,12 +146,7 @@ shinyServer(function(input, output, session) {
     df[["data.element.y"]] <- data.elements.y[data.elements.y %in% names(w.use)][1]
     df[["data.elements.norm"]] <- c("None",data.elements.y[data.elements.y %in% names(w.use)])
     df[["data.element.norm"]] <- "None"
-    
-    data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
-    data.total.elements <- gsub("-",".", data.total.elements)
-    df[["data.total.elements"]] <- data.total.elements[data.total.elements %in% names(w.use)]
-    df[["data.total.element"]] <- data.total.elements[data.total.elements %in% names(w.use)][1]
-    
+
   })
   
   observeEvent(input$changeArea,  {
@@ -151,11 +164,7 @@ shinyServer(function(input, output, session) {
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]])
   })
-  
-  observeEvent(input$changeTotals,  {
-    df[["data.total.element"]] <- input$data.total.elements
-  })
-  
+
   observeEvent(input$data.elements,  {
     df[["data.element"]] <- input$data.elements
   })
@@ -258,13 +267,7 @@ shinyServer(function(input, output, session) {
                              choices =  df[["areas"]], 
                              selected =  df[["area"]])
   })
-  
-  observe({
-    updateCheckboxGroupInput(session, "data.total.elements", 
-                             choices =  df[["data.total.elements"]], 
-                             selected =  df[["data.total.element"]])
-  })
-  
+
   observe({
     if(any(df[["state"]] %in% stateCd$STUSAB)){
       
