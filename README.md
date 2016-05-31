@@ -10,20 +10,7 @@ To install the wateRuse package:
 
 2. Install RStudio from: [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/)
 
-3. Finally, in the RStudio "Console" window (usually left or lower-left), run the following command:
-
-  ```r
-  install.packages("wateRuse")
-  ```
-  
-  To get cutting-edge changes, install from GitHub using the `devtools` packages:
-  
-  ```r
-  library(devtools)
-  install_github("USGS-R/wateRuse")
-  ```
-
-4. Add the USGS R repository to your "Rprofile" to get automatic updates. Run the following code:
+3. Add the USGS R repository to your "Rprofile" to get automatic updates. Run the following code:
   
   ```r
   rprofile_path = file.path(Sys.getenv("HOME"), ".Rprofile")
@@ -36,7 +23,21 @@ To install the wateRuse package:
       Please restart R for changes to take effect.')
   ```
 
-5. Restart R!
+4. Restart R!
+
+5. In the RStudio "Console" window (usually left or lower-left), run the following command:
+
+  ```r
+  install.packages("wateRuse")
+  ```
+  
+  To get cutting-edge changes, install from GitHub using the `devtools` packages:
+  
+  ```r
+  library(devtools)
+  install_github("USGS-R/wateRuse")
+  ```
+
 
 6. Update often. Next time you update your packages, `wateRuse` will automatically update:
 
