@@ -9,8 +9,8 @@ names(data.elements) <- dataelement$NAME
 data.elements.type <- category$CODE
 names(data.elements.type) <- category$NAME
 
-data.total.elements <- calculation$CALCULATION[grep(pattern = "WTotl", calculation$CALCULATION)]
-names(data.total.elements) <- calculation$CATEGORYCODE[grep(pattern = "WTotl", calculation$CALCULATION)]
+data.total.elements <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl", 
+                         "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")
 
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
@@ -103,6 +103,7 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Bar Sums",shiny::icon("bar-chart")),
               value = "plotBarSumsTab",
+              h3("State Totals"),
               plotOutput("plotBarSums"),
               h4(""),
               fluidRow(
@@ -190,7 +191,6 @@ sidebar <- dashboardSidebar(
   conditionalPanel(
     condition = "input.mainTabs == 'plotBarSumsTab'",
     menuItem("Choose Totals:", icon = icon("th"), tabName = "totalTab",
-     actionButton("changeTotals", label="Click Here to Switch Totals:"),
      checkboxGroupInput("data.total.elements", label = "",
                          choices = data.total.elements,
                          selected=data.total.elements[1])),
@@ -214,16 +214,19 @@ sidebar <- dashboardSidebar(
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,
                               selected=states[1])
   ), 
-  menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
-           actionButton("changeArea", label="Click Here to Switch Areas"),
-           h4(""),
-           actionButton("deselectArea", label="Deselect All:"),
-           actionButton("selectArea", label="Select All:"),
-           checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
-                              selected=areas),
-           selectInput("area.column", label = "Area Column", 
-                       choices = area.columns,
-                       selected = area.columns[1], multiple = FALSE)
+  conditionalPanel(
+    condition = "input.mainTabs != 'plotBarSumsTab'",
+    menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",
+             actionButton("changeArea", label="Click Here to Switch Areas"),
+             h4(""),
+             actionButton("deselectArea", label="Deselect All:"),
+             actionButton("selectArea", label="Select All:"),
+             checkboxGroupInput("area", label = "Choose Area(s):",choices = areas,
+                                selected=areas),
+             selectInput("area.column", label = "Area Column", 
+                         choices = area.columns,
+                         selected = area.columns[1], multiple = FALSE)
+    )
   ),
   menuItem("Source code", icon = icon("file-code-o"), 
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")

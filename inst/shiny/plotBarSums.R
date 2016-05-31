@@ -4,22 +4,20 @@ output$plotBarSums <- renderPlot({
 
 plotBarSums <- reactive({
   
-  w.use <- w.use()
+  w.use <- w.use_barSum()
   
-  data.elements <- as.character(df[["data.total.element"]])
+  states <- df[["state"]]
   
-  areas.p2e <- df[["area"]]
-  
-  if(all(df[["areas"]] %in% areas.p2e)){
-    areas.p2e <- NA
+  if(!is.null(w.use) && (states != "All Available")){
+    w.use <- filter(w.use, USSTATEALPHACODE %in% states)
   }
   
+  data.elements <- input$data.total.elements
+
   plot.stack <- input$plot.stack
   
-  area.column <- df[["area.column"]]
-  
   plotBarSums <- barchart_sums(w.use, data.elements, 
-                               area.column, areas = areas.p2e, plot.stack=plot.stack)
+                               "USSTATEALPHACODE", areas = NA, plot.stack=plot.stack)
   
   write.csv(x = plotBarSums$data, file="plotBarSums.csv", row.names = FALSE)
   
@@ -50,30 +48,36 @@ output$downloadPlotBarSumsData <- downloadHandler(
 
 output$plotBarSumsCode <- renderPrint({
   
-  data.elements <- df[["data.total.element"]]
+  w.use <- w.use_start()
   
-  areas.pTC <- df[["area"]]
+  data.elements <- input$data.total.elements
   
-  areasOptions <-  df[["areas"]]
-  
-  if(all(areasOptions %in% areas.pTC)){
-    areas.pTC <- NA
-  } else {
-    areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
-  }
-  
-  area.column <- df[["area.column"]]
   stack <- input$plot.stack
   log <- input$log
   
+  if("USSTATEALPHACODE" %in% names(w.use)){
+    txt <- paste0('w.use_state <- w.use[,c("USSTATEALPHACODE", "YEAR",totals)] %>%\n',
+      'group_by(USSTATEALPHACODE, YEAR) %>%\n',
+      'summarise_each(funs(sum))')
+  } else {
+    txt <- paste0('w.use_state <- w.use[,c("YEAR",totals)] %>%\n',
+      'mutate(USSTATEALPHACODE = "01") %>%\n',
+      'group_by(USSTATEALPHACODE, YEAR) %>%\n',
+      'summarise_each(funs(sum))')
+  }
+  
   outText <- paste0(
+    "library(dplyr)\n",
     'data.elements <- c("',paste0(data.elements,collapse = '","'),'")\n',
-    "areas <- ",areas.pTC, "\n",
-    'area.column <- "', area.column, '"\n',
     'plot.stack <- ', stack,"\n",
     'log <- ',log,"\n",
-    "barchart_sums(w.use, data.elements, area.column = area.column,\n",
-    "areas = areas,log=log, plot.stack=plot.stack)"
+    'w.use[is.na(w.use)] <- 0\n',
+    'w.use <- calculate_values(w.use)\n',
+    txt,"\n",
+    'totals <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl",\n', 
+    ' "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")\n',
+    "barchart_sums(w.use_state, data.elements, area.column = 'USSTATEALPHACODE',\n",
+    "areas = NA,log=log, plot.stack=plot.stack)"
     
   )
   
