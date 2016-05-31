@@ -56,7 +56,7 @@ shinyServer(function(input, output, session) {
     w.use <- calculate_values(w.use)
 
     totals <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl", 
-      "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")
+      "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl","TP.TotPop","TO.WGWTo", "TO.WSWTo")
     
     if("USSTATEALPHACODE" %in% names(w.use)){
       w.use_state <- w.use[,c("USSTATEALPHACODE", "YEAR",totals)] %>%

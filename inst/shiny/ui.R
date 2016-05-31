@@ -10,7 +10,7 @@ data.elements.type <- category$CODE
 names(data.elements.type) <- category$NAME
 
 data.total.elements <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl", 
-                         "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")
+                         "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl","TP.TotPop","TO.WGWTo", "TO.WSWTo")
 
 area.columns <- c("STATECOUNTYCODE","COUNTYNAME")
 areas <- unique(wUseSample$STATECOUNTYCODE)
