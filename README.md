@@ -38,7 +38,7 @@ To install the wateRuse package:
 
 5. Restart R!
 
-Next time you update your packages, `wateRuse` will automatically update:
+6. Update often. Next time you update your packages, `wateRuse` will automatically update:
 
 ![update]("https://github.com/USGS-R/wateRuse/images/update.png")
 
