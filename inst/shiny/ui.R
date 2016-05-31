@@ -20,7 +20,7 @@ states <- unique(wUseSample$USSTATEALPHACODE)
 body <- dashboardBody(
    fluidRow(
      column(4,
-            fileInput("data", "Load files",multiple = TRUE)),
+            fileInput("data", "Load file(s)",multiple = TRUE)),
      column(2,
             tags$a(href="https://github.com/USGS-R/wateRuse/issues", "Report Bugs", id="test")
             )

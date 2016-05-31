@@ -12,7 +12,7 @@ names(data.elements.type) <- category$NAME
 
 data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
-data.elements.start <- data.elements[data.elements %in% names(w.use.start)]
+data.elements.start <- data.elements#[data.elements %in% names(w.use.start)]
 
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
@@ -23,7 +23,7 @@ other.names <- c("STUDY","STATECODE","COUNTYCODE",
 shinyServer(function(input, output, session) {
   
   w.use_start <- reactive({
-    w.use <- w.use.start
+    # w.use <- w.use.start
     
     if(!is.null(input$data)){
       
@@ -32,6 +32,10 @@ shinyServer(function(input, output, session) {
       newPath <- gsub(", ","_",newPath)
       file.rename(from = path, to = newPath)
       w.use <- get_awuds_data(awuds.data.files = newPath)
+    } else {
+      
+      w.use <- w.use.start
+      w.use <- w.use[-1:-nrow(w.use.start),]
     }
 
     w.use
@@ -90,16 +94,13 @@ shinyServer(function(input, output, session) {
     w.use
     
   })
-  
-  states.in.order <- unique(w.use.start[["USSTATEALPHACODE"]])
-  states.in.order <- states.in.order[order(states.in.order)]
-  
+
   df <- reactiveValues(area.column="COUNTYNAME",
                        area.columns=c("STATECOUNTYCODE","COUNTYNAME"),
-                       areas = unique(w.use.start[["COUNTYNAME"]]),
-                       area = unique(w.use.start[["COUNTYNAME"]]),
-                       states = states.in.order,
-                       state = states.in.order[1],
+                       areas = "Choose Data",
+                       area = "Choose Data",
+                       states = "All Available",
+                       state = "All Available",
                        data.elements = data.elements.start,
                        data.element = data.elements.start[1],
                        data.elements.y = data.elements.start,
