@@ -9,11 +9,13 @@
 #' @param year.x.y int, 2-element vector specifying the two years to be plotted
 #' @param area.column character that defines which column to use to specify area
 #' @param legend is a logical function to include list of counties in a legend if manageable, default is FALSE
+#' @param c.palette color palette to use for points
 #' 
 #' @export
 #' 
 #' @import ggplot2 
 #' @importFrom tidyr gather_
+#' @importFrom grDevices colorRampPalette
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -24,7 +26,9 @@
 #' compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 #' compare_two_years(w.use, data.elements, year.x.y, area.column)
 #' compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
-compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, legend = FALSE){ 
+compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, 
+                              legend = FALSE,
+                              c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){ 
 
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
@@ -58,7 +62,12 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     } else {
       df_full <- rbind(df_full, df)
     }
-  }# i
+  }
+  
+  if(length(unique(df_full$site)) > length(c.palette)){
+    c.palette.ramp <- colorRampPalette(c.palette)
+    c.palette <- c.palette.ramp(length(unique(df_full$site)))
+  }
   
   compare.plot <- ggplot(data = df_full) +
    geom_point(aes_string(x = "x", y = "y", color = "site"), 
@@ -66,7 +75,8 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     geom_line(aes_string(x = "x", y = "x"),col="red") +
     facet_wrap(~ Key, ncol = 1) +
     xlab(year.x.y[1]) +
-    ylab(year.x.y[2])
+    ylab(year.x.y[2]) +
+    scale_colour_manual(values=c.palette)
   
   compare.plot
   

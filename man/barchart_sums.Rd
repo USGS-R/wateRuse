@@ -5,7 +5,8 @@
 \title{barchart_sums}
 \usage{
 barchart_sums(w.use, data.elements, area.column, plot.stack = TRUE,
-  years = NA, areas = NA, y.scale = NA)
+  years = NA, areas = NA, y.scale = NA, c.palette = c("#999999",
+  "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
 }
 \arguments{
 \item{w.use}{is a subset of the datafile wUseSample that includes all areas in all data elements for state}
@@ -21,6 +22,8 @@ barchart_sums(w.use, data.elements, area.column, plot.stack = TRUE,
 \item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
 
 \item{y.scale}{allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.}
+
+\item{c.palette}{color palette to use for fill}
 }
 \description{
 barchart_sums
