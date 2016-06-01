@@ -6,8 +6,11 @@ Date: 2016-05-31
 Authors@R: c( person("Robert", "Dudley", role = c("aut", "cre"),
     email = "rwdudley@usgs.gov"),
     person("Laura","DeCicco", role = "aut"),
+    person("David","Blodgett", role = "aut"),
     person("Gary","Martin", role = "aut"),
-    person("Jennifer","Shourds", role = "aut"))
+    person("Jennifer","Shourds", role = "aut"),
+    person("Cheryl","Dieter", role = "ctb"),
+    person("Molly","Maupin", role = "ctb"))
 Description: Collection of functions to help parse and analyze AWUDS data.
 License: CC0
 Copyright: This software is in the public domain because it contains materials
