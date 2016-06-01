@@ -23,7 +23,6 @@ other.names <- c("STUDY","STATECODE","COUNTYCODE",
 shinyServer(function(input, output, session) {
   
   w.use_start <- reactive({
-    # w.use <- w.use.start
     
     if(!is.null(input$data)){
       
@@ -41,9 +40,33 @@ shinyServer(function(input, output, session) {
     w.use
   })
   
+  w.use_append <- reactive({
+    
+    if(!is.null(input$data.sup)){
+      
+      path <- file.path(input$data.sup$datapath)
+      newPath <- paste0(input$data.sup$datapath,"_",input$data.sup$name)
+      newPath <- gsub(", ","_",newPath)
+      file.rename(from = path, to = newPath)
+      w.use <- get_awuds_data(awuds.data.files = newPath)
+    } else {
+      
+      w.use <- w.use_start()
+      w.use <- w.use[-1:-nrow(w.use),]
+    }
+    
+    w.use
+  })
+  
   w.use_full <- reactive({
     w.use <- w.use_start()
-
+    w.use_append <- w.use_append()
+    
+    if(nrow(w.use_append) > 0){
+      w.use_append$YEAR <- paste0(w.use_append$YEAR,"a")
+      w.use <- full_join(w.use, w.use_append)
+    }
+    
     w.use <- calculate_values(w.use)
     
     w.use
@@ -68,7 +91,6 @@ shinyServer(function(input, output, session) {
         group_by(USSTATEALPHACODE, YEAR) %>%
         summarise_each(funs(sum))
     }
-
     
     w.use_state
   })
