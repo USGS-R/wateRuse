@@ -21,6 +21,8 @@ body <- dashboardBody(
    fluidRow(
      column(4,
             fileInput("data", "Load file(s)",multiple = TRUE)),
+     column(4,
+            fileInput("data.sup", "Load Supplemental File",multiple = TRUE)),
      column(2,
             tags$a(href="https://github.com/USGS-R/wateRuse/issues", "Report Bugs", id="test")
             )
@@ -64,6 +66,7 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Multi-Elements",shiny::icon("bar-chart")),
               value = "multiElem",
+              h5("Only first 3 areas supported in app"),
               fluidRow(
                 column(9, 
                        plotOutput("plotMultiElem",width = 500, height = 500))
