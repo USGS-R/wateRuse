@@ -36,53 +36,218 @@ The ability to see data, whether national approved or state working data, will d
 This package provides basic data visualization tools that provide graphical displays of water-use data for different types of water uses by area and years. 
 
 ### Compare two years
-The `compare_two_years` function enables the user to examine data for different data elements (one data element per plot) by  area (county, HUC8, aquifer) for two years. This plot is produced as a scatterplot. A comparison between two years for a single data element is graphed for an entire collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region). 
+The `compare_two_years` function enables the user to examine data by  area (county, HUC8, aquifer) for two years. This plot is produced as a scatterplot with a 1:1 line of equivalence to aid comparison. A comparison between two years for a single data element is graphed for an entire user-selected collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region).
 
-Users can request this plot for multiple data elements, which results in one plot per data element but as a stacked group of plots. When areas are subsetted for a data element, a single graph is produced for only the subsetted areas. 
-
-users should be aware of what data elements exist for different years. For example, if a data element exists in one year but not both of the selected years, the plot will not be produced.
+Users should be aware of what data elements exist for different years. For example, if a data element exists in one year but not both of the selected years, the plot will not be produced.
 FAQ: My compare two years plot doesn't have any data plotted, what's wrong? Answer: There may be data missing for the years selected. 
 
 
 ```{r message=FALSE}
-library(wateRuse)
 w.use <- wUseSample
+data.elements <- c("PS.TOPop", "PS.SWPop")
+areas <- "15" # NA uses all areas
+area.column <- "STATECODE"
+year.x.y <- c(2005,2010)
+compare_two_years(w.use, "PS.TOPop", year.x.y, area.column, areas)
+
+```
+
+Users can specify multiple data elements which results in a stacked group of plots, with one plot per data element. 
+
+```{r message=FALSE}
+w.use <- wUseSample
+data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "10" # NA uses all areas
 area.column <- "STATECODE"
 year.x.y <- c(2005,2010)
-compare_two_years(w.use, "PS.TOPop", year.x.y,area.column)
+compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 
+```
+
+Multiple areas plot on the same plot.
+
+```{r message=FALSE}
+w.use <- wUseSample
+data.elements <- "PS.TOPop"
+areas <- c("10","15") # NA uses all areas
+area.column <- "STATECODE"
+year.x.y <- c(2005,2010)
+compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 
 ```
 
 
 ### Compare two elements 
 
-This function will also plot two data elements for the same year or multiple years.  The user is able to illustrate the relationship between two elements in one scatterplot, for example, the number of irrigated acres and total irrigated withdrawals for a state for a given year.  Multiple years on one plot are not able.  Multiple stacked plots are possible for the same pairs of data elements for multiple years. 
+This function produces a scatterplot for comparison of two data elements for the same year or multiple years, for example, the number of irrigated acres and total irrigated withdrawals for a state for a given year.  Users can specify multiple years which results in a stacked group of plots, with one plot per year.  
+
+```{r message=FALSE}
+w.use <- wUseSample
+data.elements.x.y <- c("TP.TotPop", "PS.WSWFr")
+areas <- "15" # NA uses all areas
+area.column <- "STATECODE"
+years <- c(2000, 2005, 2010)
+compare_two_elements(w.use, data.elements.x.y, years, area.column, areas)
 
 ```
 
+Multiple areas are plotted together on the same plot.
 
+```{r message=FALSE}
+w.use <- wUseSample
+compare_two_elements(w.use, c("TP.TotPop","PS.WSWFr"), "2010", "STATECODE", c("10","15"))
+```
+
+### Multi-Elements
+Creates time series plots for one or more elements. Multiple data elements for a single area of interest (e.g. county) appear on the same plot. If more than one area is specified, multiple stacked plots are generated.   
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- c("Kent County","Sussex County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","TP.TotPop")
+multi_element_data(w.use, data.elements, area.column = area.column,areas = areas)
 
 ```
 
+Setting `plot.points=FALSE` will generate bar plots.
 
-### Ranked data element tables
-Users can rank data elements using the shiny application.  Once data is loaded, users can selected areas, years and data element types to display tables of values, which can be displayed in various ranking forms by clicking on the column name. 
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- c("Kent County","Sussex County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","TP.TotPop")
+multi_element_data(w.use, data.elements, plot.points = FALSE,
+      area.column = area.column, areas = areas)
+
+```
+
+### Box Plots
+Creates box plots for one or more elements. Multiple data elements are rendered as stacked plots (one plot per element).    
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- "15"
+area.column = "STATECODE"
+data.elements <- c("PS.GWPop","TP.TotPop")
+boxplot_wu(w.use, data.elements, area.column = area.column,areas = areas)
+```
+
+If `areas = NA` then all areas are included in the plotted data. If `log = TRUE` the axis is changed to a log scale.
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- "15"
+area.column = "STATECODE"
+data.elements <- c("PS.GWPop","TP.TotPop")
+boxplot_wu(w.use, data.elements, area.column, areas=NA, log=TRUE)
+
+```
 
 ### Time series plots 
 A time series plot shows water use for a data element for all areas of a subset of areas over time.  A user has the option to  illustration this using a bar graph or line graph, or point plot.  A selection of all areas or a subset of areas is also possible.  Only one data element per plot is possible but plots can be clustered to show multiple data elements in groups. 
 
   
 ```{r message=FALSE}
+df <- wUseSample
 areas <- c("Kent County","Sussex County")
 area.column = "COUNTYNAME"
-data.elements <- c("PS.GWPop","PS.SWPop")
+data.elements <- c("PS.GWPop","TP.TotPop")
 time_series_data(w.use, data.elements, area.column = area.column,areas = areas)
+```
+
+Setting `plot.points = FALSE` will change the format to a bar plot.
+
+```{r message=FALSE}
+df <- wUseSample
+areas <- c("Kent County","Sussex County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","TP.TotPop")
+time_series_data(w.use, data.elements, plot.points = FALSE, area.column = area.column,areas = areas)
 
 ```
-  
- 
+
+If `years` are not specified, all years in the dataset are plotted. In the example below, years are specified.
+
+```{r message=FALSE}
+df <- wUseSample
+areas <- c("Hawaii County","Honolulu County","Kauai County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","TP.TotPop")
+time_series_data(w.use, data.elements, plot.points = FALSE,
+       area.column = area.column, areas = areas, legend=TRUE, years = c("1995", "2000", "2005"))
+
+```
+
+The default range of the y-axis can be over-ridden by a user-specified range.
+
+```{r message=FALSE}
+df <- wUseSample
+areas <- c("Hawaii County","Honolulu County","Kauai County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.GWPop","TP.TotPop")
+time_series_data(w.use, data.elements, area.column, areas = areas, plot.points = FALSE, y.scale = c(0,1000))
+
+```
+
+### Bar Sums
+This function is similar to the time series function as it creates bar plots for one or more data elements and years, however it will generate stacked bar plots comprising all data elements specified. Multiple stacked plots are generated if more than one area (e.g. county) is specified (one plot per area). 
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- c("New Castle County", "Kent County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.WTotl","CO.WTotl","DO.WTotl","IN.WTotl","PF.WTotl")
+barchart_sums(w.use, data.elements, area.column = area.column,areas = areas)
+
+```
+
+The data elements can be unstacked by setting `plot.stack = FALSE`.
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- c("New Castle County", "Kent County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.WTotl","CO.WTotl","DO.WTotl","IN.WTotl","PF.WTotl")
+barchart_sums(w.use, data.elements, plot.stack = FALSE, area.column = area.column,areas = areas)
+```
+
+The default range of the y-axis scale can be over-ridden by the user with `y.scale`.
+
+```{r message=FALSE}
+w.use <- wUseSample
+areas <- c("New Castle County", "Kent County")
+area.column = "COUNTYNAME"
+data.elements <- c("PS.WTotl","CO.WTotl","DO.WTotl","IN.WTotl","PF.WTotl")
+barchart_sums(w.use, data.elements, area.column, areas=areas, y.scale = c(0,500))
+```
+
+### Ranked data element tables
+Users can rank data elements using the shiny application.  Once data is loaded, users can selected areas, years and data element types to display tables of values, which can be displayed in various ranking forms by clicking on the column name. 
+
+### Choropleth
+This function generates a map of counties shaded on a scaled color gradient representing the values of a data element and year of interest. Light shading corresponds to low values, dark shading corresponds to high values.
+
+```{r message=FALSE}
+w.use <- wUseSample
+data.elements <- "PS.WFrTo"
+year <- 2010 
+areas <- "Hawaii" 
+area.column <- "STATE_TERR"
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column)
+```
+
+The primary data element can be normalized to a secondary data element. The example below normalizes fresh water public supply by total population.
+
+```{r message=FALSE}
+w.use <- wUseSample
+data.elements <- "PS.WFrTo"
+norm.element <- "PS.TOPop"
+year <- 2010 
+areas <- "Hawaii" 
+area.column <- "STATE_TERR"
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+```
 
 # Disclaimer
 Software created by USGS employees along with contractors and grantees (unless specific stipulations are made in a contract or grant award) are to be released as Public Domain and free of copyright or license. Contributions of software components such as specific algorithms to existing software licensed through a third party are encouraged, but those contributions should be annotated as freely available in the Public Domain wherever possible. If USGS software uses existing licensed components, those licenses must be adhered to and redistributed.
