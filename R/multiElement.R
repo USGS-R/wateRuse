@@ -11,11 +11,13 @@
 #' @param log = TRUE or FALSE allows user to set log scale, default is FALSE
 #' @param plot.points is a logical function to show counties as points or clustered bar graph
 #' @param legend is a logical function to include list of counties in a legend if manageable, default is TRUE
+#' @param c.palette color palette to use for points and lines
 #'
 #' 
 #' @export
 #' @import ggplot2
 #' @importFrom tidyr gather_
+#' @importFrom grDevices colorRampPalette
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -32,7 +34,8 @@
 #' multi_element_data(w.use, data.elements, area.column, 
 #'        y.scale = c(0,100), years = c(1990,2005))
 multi_element_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
-                               years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE){
+                               years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE,
+                               c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){
   
   w.use <- subset_wuse(w.use, data.elements, area.column, areas)
   
@@ -52,8 +55,14 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
                                       position = "dodge",stat="identity",show.legend = legend)
   }
   
+  if(length(unique(df$dataElement)) > length(c.palette)){
+    c.palette.ramp <- colorRampPalette(c.palette)
+    c.palette <- c.palette.ramp(length(unique(df$dataElement)))
+  }
+  
   me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
-    ylab("") 
+    ylab("") +
+    scale_colour_manual(values=c.palette)
   
   if(!all(is.na(y.scale))){
     me.object <- me.object + ylim(y.scale)

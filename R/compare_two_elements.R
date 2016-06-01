@@ -9,6 +9,7 @@
 #' @param years int, vector specifying the years to be plotted (1 plot per year)
 #' @param area.column chr, defines which column to use to specify area
 #' @param legend is a logical function to include list of counties in a legend if manageable, default is FALSE
+#' @param c.palette color palette to use for points
 #' 
 #' @export
 #' 
@@ -24,7 +25,9 @@
 #' compare_two_elements(w.use, data.elements.x.y, years, area.column, areas)
 #' compare_two_elements(w.use, data.elements.x.y, years, area.column)
 #' compare_two_elements(w.use, data.elements.x.y, "2010", area.column)
-compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, areas=NA, legend= FALSE){ 
+compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, 
+                                 areas=NA, legend= FALSE,
+                                 c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){ 
   
   w.use.sub <- subset_wuse(w.use, data.elements.x.y, area.column, areas)
   
@@ -58,12 +61,18 @@ compare_two_elements <- function(w.use, data.elements.x.y, years, area.column, a
     message("No data reported for:",data.elements.x.y[2])
   }
   
+  if(length(unique(df_full$site)) > length(c.palette)){
+    c.palette.ramp <- colorRampPalette(c.palette)
+    c.palette <- c.palette.ramp(length(unique(df_full$site)))
+  }
+  
   compare.plot <- ggplot(data = df_full) +
     geom_point(aes_string(x = "x", y = "y", color = "site"), 
                show.legend = legend, size = 3) +
     facet_wrap(~ YEAR, ncol = 1) +
     xlab(data.elements.x.y[1]) +
-    ylab(data.elements.x.y[2])
+    ylab(data.elements.x.y[2]) +
+    scale_colour_manual(values=c.palette) 
   
   compare.plot
   

@@ -57,25 +57,23 @@ output$plotBarSumsCode <- renderPrint({
   
   if("USSTATEALPHACODE" %in% names(w.use)){
     txt <- paste0('w.use_state <- w.use[,c("USSTATEALPHACODE", "YEAR",totals)] %>%\n',
-      'group_by(USSTATEALPHACODE, YEAR) %>%\n',
-      'summarise_each(funs(sum))')
+      '     group_by(USSTATEALPHACODE, YEAR) %>%\n',
+      '     summarise_each(funs(sum))')
   } else {
     txt <- paste0('w.use_state <- w.use[,c("YEAR",totals)] %>%\n',
-      'mutate(USSTATEALPHACODE = "01") %>%\n',
-      'group_by(USSTATEALPHACODE, YEAR) %>%\n',
-      'summarise_each(funs(sum))')
+      '     mutate(USSTATEALPHACODE = "01") %>%\n',
+      '     group_by(USSTATEALPHACODE, YEAR) %>%\n',
+      '     summarise_each(funs(sum))')
   }
   
   outText <- paste0(
     "library(dplyr)\n",
-    'data.elements <- c("',paste0(data.elements,collapse = '","'),'")\n',
     'plot.stack <- ', stack,"\n",
     'log <- ',log,"\n",
     'w.use[is.na(w.use)] <- 0\n',
     'w.use <- calculate_values(w.use)\n',
+    'totals <- c("',paste0(data.elements,collapse = '","'),'")\n',
     txt,"\n",
-    'totals <- c("PS.WTotl","DO.WTotl","IN.WTotl", "PT.WTotl",\n', 
-    ' "MI.WTotl", "LS.WTotl", "AQ.WTotl","IT.WTotl")\n',
     "barchart_sums(w.use_state, data.elements, area.column = 'USSTATEALPHACODE',\n",
     "areas = NA,log=log, plot.stack=plot.stack)"
     

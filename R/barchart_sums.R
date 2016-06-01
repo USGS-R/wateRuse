@@ -9,11 +9,13 @@
 #' @param area.column character that defines which column to use to specify area
 #' @param y.scale allows R to set the y-axis scale given available data range. Defaults to NA which lets R set the scale based on dataset values.
 #' @param plot.stack is a logical function to show graph as optionally stacked or clustered bar graph
+#' @param c.palette color palette to use for fill
 #'
 #' 
 #' @export
 #' @import ggplot2
 #' @importFrom tidyr gather_
+#' @importFrom grDevices colorRampPalette
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -28,7 +30,8 @@
 #' barchart_sums(w.use, data.elements, area.column, 
 #'        y.scale = c(0,100), years = c(1990,2005))
 barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
-                             years=NA, areas=NA, y.scale=NA){
+                          years=NA, areas=NA, y.scale=NA,
+                          c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){
   
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
 
@@ -51,8 +54,15 @@ barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
     bc.object <- bc.object + geom_bar(aes_string(x = "YEAR", y = "value", fill = "dataElement"), 
                                       position = "dodge",stat="identity")
   }
+  
+  if(length(unique(df3$dataElement)) > length(c.palette)){
+    c.palette.ramp <- colorRampPalette(c.palette)
+    c.palette <- c.palette.ramp(length(unique(df3$dataElement)))
+  }
+  
   #facet if totals available for multiple areas (counties, etc)
   bc.object <- bc.object + 
+    scale_fill_manual(values=c.palette) +
     facet_grid(as.formula(paste0(area.column," ~ .")), scales="free") +
     ylab("") 
   

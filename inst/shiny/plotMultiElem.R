@@ -6,9 +6,10 @@ plotMultiElem <- reactive({
   
   areas.p2e <- df[["area"]]
   
-  if(all(df[["areas"]] %in% areas.p2e)){
-    areas.p2e <- NA
-  }
+  if(all(df[["areas"]] %in% areas.p2e) | length(areas.p2e) > 3){
+    areas.p2e <- areas.p2e[1:3]
+  } 
+  
   legend <- input$legendOn
   points <- input$points
   log <- input$log
@@ -56,8 +57,8 @@ output$plotMultiElemCode <- renderPrint({
   
   areasOptions <-  df[["areas"]]
   
-  if(all(areasOptions %in% areas.pTC)){
-    areas.pTC <- NA
+  if(all(areasOptions %in% areas.pTC) | length(areas.pTC) > 3){
+    areas.pTC <- paste0('c("',paste(areas.pTC[1:3], collapse = '","'),'")')
   } else {
     areas.pTC <- paste0('c("',paste(areas.pTC, collapse = '","'),'")')
   }

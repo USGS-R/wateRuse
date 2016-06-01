@@ -5,7 +5,8 @@
 \title{compare_two_elements}
 \usage{
 compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA,
-  legend = FALSE)
+  legend = FALSE, c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73",
+  "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -19,6 +20,8 @@ compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA,
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
 
 \item{legend}{is a logical function to include list of counties in a legend if manageable, default is FALSE}
+
+\item{c.palette}{color palette to use for points}
 }
 \description{
 Returns scatter plot for 2 data elements for years of interest.
