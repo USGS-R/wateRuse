@@ -78,3 +78,19 @@ NULL
 #' plot(histCounties[which(histCounties@data$STATE_TERR == "New Jersey"),])
 #' }
 NULL
+
+#' HUC08 Polygons for use in mapping water use data.
+#'
+#' HUC08 snapshot was taken from the June 30th 2016 snapshot of the Watershed Boundary Dataset.
+#'
+#' @name huc08Poly
+#' @rdname huc08Poly
+#' @export
+#' @keywords HUC08 Waterhsed polygons
+#' @import sp
+#' @examples 
+#' names(huc08Poly@data)
+#' \dontrun{
+#' plot(huc08Poly[which(huc08Poly@data$STATES == "IA"),])
+#' }
+NULL
