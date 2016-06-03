@@ -4,12 +4,12 @@
 \alias{subset_county_polygons}
 \title{subset_county_polygons}
 \usage{
-subset_county_polygons(area.column, year, areas = NA)
+subset_county_polygons(year, area.column = NA, areas = NA)
 }
 \arguments{
-\item{area.column}{chr, defines which column to use to specify area}
-
 \item{year}{int, the year of interest to be mapped (defines historical basis for counties)}
+
+\item{area.column}{chr, defines which column to use to specify area}
 
 \item{areas}{chr, vector of codes indicating HUCs, counties, states, regions, aquifers, etc.}
 }

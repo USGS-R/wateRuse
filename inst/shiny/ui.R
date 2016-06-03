@@ -183,7 +183,8 @@ sidebar <- dashboardSidebar(
                 selected = data.elements.type[1], multiple = FALSE), 
     selectInput("norm.element", label = "Normalize Data Elements:", 
                 choices = c("None",as.character(data.elements)),
-                selected = "None", multiple = FALSE)
+                selected = "None", multiple = FALSE),
+    checkboxInput("unitTypeHUC", label = "HUC08", value = FALSE)
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
