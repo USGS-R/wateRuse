@@ -46,23 +46,24 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
   
   me.object <- ggplot(data = df, aes_string(x = "YEAR", y = "value"))
   
-  if(plot.points){
-    me.object <- me.object + 
-      geom_point(aes_string(color = "dataElement"), show.legend = legend) +
-      geom_line(aes_string(color = "dataElement"), show.legend = legend)
-  } else {
-    me.object <- me.object + geom_bar(aes_string(fill = "dataElement"), 
-                                      position = "dodge",stat="identity",show.legend = legend)
-  }
-  
   if(length(unique(df$dataElement)) > length(c.palette)){
     c.palette.ramp <- colorRampPalette(c.palette)
     c.palette <- c.palette.ramp(length(unique(df$dataElement)))
   }
   
+  if(plot.points){
+    me.object <- me.object + 
+      geom_point(aes_string(color = "dataElement"), show.legend = legend) +
+      geom_line(aes_string(color = "dataElement"), show.legend = legend) +
+      scale_colour_manual(values=c.palette)
+  } else {
+    me.object <- me.object + geom_bar(aes_string(fill = "dataElement"), 
+                                      position = "dodge",stat="identity",show.legend = legend) +
+      scale_fill_manual(values=c.palette)
+  }
+  
   me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
-    ylab("") +
-    scale_colour_manual(values=c.palette)
+    ylab("") 
   
   if(!all(is.na(y.scale))){
     me.object <- me.object + ylim(y.scale)
