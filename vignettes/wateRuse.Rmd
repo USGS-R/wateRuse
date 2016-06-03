@@ -36,10 +36,12 @@ The ability to see data, whether national approved or state working data, will d
 This package provides basic data visualization tools that provide graphical displays of water-use data for different types of water uses by area and years. 
 
 ### Compare two years
-The `compare_two_years` function enables the user to examine data by  area (county, HUC8, aquifer) for two years. This plot is produced as a scatterplot with a 1:1 line of equivalence to aid comparison. A comparison between two years for a single data element is graphed for an entire user-selected collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region).
+The `compare_two_years` function enables the user to examine data for selected  areas (counties, HUC8's, aquifers) for two years. This plot is produced as a scatterplot with a 1:1 line of equivalence to aid comparison. A comparison between two years for a single data element is graphed for an entire user-selected collection of areas (e.g., all counties in a state or all states in the US) or for a subset of areas (e.g., top twenty counties in a state or selected states in a region).
 
 Users should be aware of what data elements exist for different years. For example, if a data element exists in one year but not both of the selected years, the plot will not be produced.
 FAQ: My compare two years plot doesn't have any data plotted, what's wrong? Answer: There may be data missing for the years selected. 
+
+[In shiny, to display the area identifier, hover the mouse-cursor over the plotted point.]
 
 
 ```{r message=FALSE}
@@ -52,7 +54,7 @@ compare_two_years(w.use, "PS.TOPop", year.x.y, area.column, areas)
 
 ```
 
-Users can specify multiple data elements which results in a stacked group of plots, with one plot per data element. 
+Users can specify multiple data elements which results in a stacked group of plots, with one plot per data element.  [In shiny, a single data element is selected to plot comparison of values for two different years.]
 
 ```{r message=FALSE}
 w.use <- wUseSample
@@ -79,7 +81,7 @@ compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 
 ### Compare two elements 
 
-This function produces a scatterplot for comparison of two data elements for the same year or multiple years, for example, the number of irrigated acres and total irrigated withdrawals for a state for a given year.  Users can specify multiple years which results in a stacked group of plots, with one plot per year.  
+This function produces a scatterplot for comparison of two data elements for selected areas in the same year. For example, the number of irrigated acres and total irrigated withdrawals for selected areas in a state for a given year can be plotted.  Users can specify multiple years which results in a stacked group of plots, with one plot per year.    [In shiny, users select a single year to make one scatterplot, and data-element values for all areas (counties) are shown.]
 
 ```{r message=FALSE}
 w.use <- wUseSample
@@ -99,7 +101,7 @@ compare_two_elements(w.use, c("TP.TotPop","PS.WSWFr"), "2010", "STATECODE", c("1
 ```
 
 ### Multi-Elements
-Creates time series plots for one or more elements. Multiple data elements for a single area of interest (e.g. county) appear on the same plot. If more than one area is specified, multiple stacked plots are generated.   
+Creates time series plots for one or more elements. Multiple data elements for a single area of interest (e.g. county) appear on the same plot. If more than one area is specified, multiple stacked plots are generated.   [In shiny, only the first three areas are selected now to make three multi-data-element time-series plots. ??? Will an full areas pick list be implemented???]
 
 ```{r message=FALSE}
 w.use <- wUseSample
@@ -123,7 +125,7 @@ multi_element_data(w.use, data.elements, plot.points = FALSE,
 ```
 
 ### Box Plots
-Creates box plots for one or more elements. Multiple data elements are rendered as stacked plots (one plot per element).    
+Creates box plots for one or more data elements by year. The values of data elements for a selected group of areas (counties, huc8's, aquifers) in a given year form each box. Multiple data elements are rendered as stacked plots (one plot per element). [In shiny, box plots are made for up to two selected data elements at a time. Users can select areas (counties) in a given state in the pick list on the left to include in the sample. Notches that do not overlap imply statistically significant differences in median data-element values between years. Limits on the time period plotted on the x-axis are not available in version 1.0.0 at present. ]
 
 ```{r message=FALSE}
 w.use <- wUseSample
@@ -145,7 +147,7 @@ boxplot_wu(w.use, data.elements, area.column, areas=NA, log=TRUE)
 ```
 
 ### Time series plots 
-A time series plot shows water use for a data element for all areas of a subset of areas over time.  A user has the option to  illustration this using a bar graph or line graph, or point plot.  A selection of all areas or a subset of areas is also possible.  Only one data element per plot is possible but plots can be clustered to show multiple data elements in groups. 
+A time series plot shows the value of a data element for all areas (counties, huc8's, or aquifers) or a subset of areas over time.  A user has the option to plot using a bar graph or line graph, or point plot.  A single data element is displayed per plot, but multiple plots are generated when multiple data elements are specified.   [In shiny, a single selected data element is plotted for areas (counties) selected from the pick list on left. (Deselect all, then select desired counties and update graph by clicking "Click Here to Swith Areas.") Limits on the time period plotted on the x-axis and pick lists for huc8's and aquifers are not available in version 1.0.0 at present. ]
 
   
 ```{r message=FALSE}
@@ -167,7 +169,7 @@ time_series_data(w.use, data.elements, plot.points = FALSE, area.column = area.c
 
 ```
 
-If `years` are not specified, all years in the dataset are plotted. In the example below, years are specified.
+If `years` are not specified, all years in the dataset are plotted. In the example below, years are specified to limit the range of the horizontal axis.
 
 ```{r message=FALSE}
 df <- wUseSample
@@ -191,7 +193,7 @@ time_series_data(w.use, data.elements, area.column, areas = areas, plot.points =
 ```
 
 ### Bar Sums
-This function is similar to the time series function as it creates bar plots for one or more data elements and years, however it will generate stacked bar plots comprising all data elements specified. Multiple stacked plots are generated if more than one area (e.g. county) is specified (one plot per area). 
+This function is similar to the time series function, as it creates clustered bar charts for one or more water-use withdrawal data elements and years, and it will generate stacked bar plots comprising all data elements specified for each year. Multiple stacked or clustered bar charts are generated if more than one area (e.g. county) is specified (one plot per area) in RStudio. [In shiny, annual sums of withdrawals of 8 major categories (public supply, domestic, industrial, thermoelectric, mining, livestock, aquaculture, and irrigation) and total groundwater and surface-water withdrawals are calculated for a state, after setting all the NA's (missing values) to zero in the AWUDS dump file from NWIS. The category and GW/SW total annual state withdrawals are plotted in clusetered or stacked bar plots by years.  Only state annual category and GW/SW totals are plotted over time in shiny in version 1.0.0. (Totals by huc8 or aquifer not available in version 1.0.0.)]
 
 ```{r message=FALSE}
 w.use <- wUseSample
@@ -226,7 +228,7 @@ barchart_sums(w.use, data.elements, area.column, areas=areas, y.scale = c(0,500)
 Users can rank data elements using the shiny application.  Once data is loaded, users can selected areas, years and data element types to display tables of values, which can be displayed in various ranking forms by clicking on the column name. 
 
 ### Choropleth
-This function generates a map of counties shaded on a scaled color gradient representing the values of a data element and year of interest. Light shading corresponds to low values, dark shading corresponds to high values.
+This function generates a map of counties or huc8's shaded on a scaled color gradient representing the values of a data element and year of interest. Light shading corresponds to low values, dark shading corresponds to high values.
 
 ```{r message=FALSE}
 w.use <- wUseSample
