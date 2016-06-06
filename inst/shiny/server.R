@@ -176,12 +176,19 @@ shinyServer(function(input, output, session) {
     df[["area"]] <- input$area
   })
   
+  observe({
+
+    hucLogic <- "HUCCODE" %in% names(w.use_full)
+    
+    updateCheckboxInput(session, "unitTypeHUC", value = hucLogic)
+  })
+ 
   observeEvent(input$deselectArea,  {
-    updateCheckboxGroupInput(session, "area", 
+    updateCheckboxInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]][1])
   })
-  
+   
   observeEvent(input$selectArea,  {
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 

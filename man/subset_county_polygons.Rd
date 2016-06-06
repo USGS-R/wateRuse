@@ -4,7 +4,7 @@
 \alias{subset_county_polygons}
 \title{subset_county_polygons}
 \usage{
-subset_county_polygons(year, area.column = NA, areas = NA)
+subset_county_polygons(year, area.column, areas)
 }
 \arguments{
 \item{year}{int, the year of interest to be mapped (defines historical basis for counties)}

@@ -1,4 +1,5 @@
 ## ----message=FALSE-------------------------------------------------------
+library(wateRuse)
 w.use <- wUseSample
 data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "15" # NA uses all areas
@@ -128,9 +129,8 @@ barchart_sums(w.use, data.elements, area.column, areas=areas, y.scale = c(0,500)
 w.use <- wUseSample
 data.elements <- "PS.WFrTo"
 year <- 2010 
-areas <- "Hawaii" 
-area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column)
+areas <- "Hawaii"
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas)
 
 ## ----message=FALSE-------------------------------------------------------
 w.use <- wUseSample
@@ -138,6 +138,5 @@ data.elements <- "PS.WFrTo"
 norm.element <- "PS.TOPop"
 year <- 2010 
 areas <- "Hawaii" 
-area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, norm.element)
 

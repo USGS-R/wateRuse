@@ -172,19 +172,16 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'map'",
+    checkboxInput("unitTypeHUC", label = "HUC08", value = FALSE),
     selectInput("stateToMap", label = "Map State", 
                 choices = stateCd$STATE_NAME,
                 selected = stateCd$STATE_NAME[8], multiple = FALSE),
-    selectInput("yearToMap", label = "Year",
-                choices =  unique(wUseSample$YEAR),
-                selected =  unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))]),
     selectInput("norm.element.type", label = "Normalized Data Element Type:", 
                 choices = data.elements.type,
                 selected = data.elements.type[1], multiple = FALSE), 
     selectInput("norm.element", label = "Normalize Data Elements:", 
                 choices = c("None",as.character(data.elements)),
-                selected = "None", multiple = FALSE),
-    checkboxInput("unitTypeHUC", label = "HUC08", value = FALSE)
+                selected = "None", multiple = FALSE)
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
@@ -193,7 +190,7 @@ sidebar <- dashboardSidebar(
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))], multiple = FALSE)
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem'",
+    condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'map'",
     selectInput("year_x", label = "Year:", width = 100,
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)

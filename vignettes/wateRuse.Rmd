@@ -235,9 +235,8 @@ This function generates a map of counties or huc8's shaded on a scaled color gra
 w.use <- wUseSample
 data.elements <- "PS.WFrTo"
 year <- 2010 
-areas <- "Hawaii" 
-area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column)
+areas <- "Hawaii"
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas)
 ```
 
 The primary data element can be normalized to a secondary data element. The example below normalizes fresh water public supply by total population.
@@ -248,8 +247,7 @@ data.elements <- "PS.WFrTo"
 norm.element <- "PS.TOPop"
 year <- 2010 
 areas <- "Hawaii" 
-area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+ch.plot <- choropleth_plot(w.use, data.elements, year, areas, norm.element)
 ```
 
 # Disclaimer
