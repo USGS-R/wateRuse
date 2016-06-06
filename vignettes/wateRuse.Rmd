@@ -45,6 +45,7 @@ FAQ: My compare two years plot doesn't have any data plotted, what's wrong? Answ
 
 
 ```{r message=FALSE}
+library(wateRuse)
 w.use <- wUseSample
 data.elements <- c("PS.TOPop", "PS.SWPop")
 areas <- "15" # NA uses all areas
