@@ -8,27 +8,32 @@ mapData <- reactive({
   
   norm.element <- df[["data.element.norm"]]
   
-  if (input$unitTypeHUC == TRUE){
-    unit.type=="huc"
-  }else{
-    unit.type=="county"
+  if(input$unitTypeHUC){
+    unit.type <- "huc"
+  } else {
+    unit.type <- "county"
   }
   
   if(norm.element == "None"){
     norm.element <- NA
   }
   
-  if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE"))){
-    if(!("STATECOUNTYCODE" %in% names(w.use))){
-      w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
-    }
+  if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE","HUCCODE"))){
     
-    mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$yearToMap,
-                               area.column = "STATE_TERR", area = input$stateToMap, norm.element = norm.element)
+    if((df[["area.column"]] %in% c("Area"))){
+      if(!(input$unitTypeHUC)){
+        w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
+      } else {
+        w.use$HUCCODE <- w.use[[df[["area.column"]]]]
+      }
+    } 
     
+    mapData <- choropleth_plot(w.use, df[["data.element"]], year = input$year_x,
+                                 state = input$stateToMap, norm.element = norm.element, unit.type = unit.type)
+
   } else {
     mapData <- ggplot(data = mtcars) +
-      geom_text(x=0.5, y=0.5, label = "Choose new state or use County data")
+      geom_text(x=0.5, y=0.5, label = "Choose new state or use County or HUC data")
   }
   
   mapData
