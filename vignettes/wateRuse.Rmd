@@ -237,7 +237,7 @@ data.elements <- "PS.WFrTo"
 year <- 2010 
 areas <- "Hawaii" 
 area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column)
+ch.plot <- choropleth_plot(w.use, data.elements, year, area.column, areas)
 ```
 
 The primary data element can be normalized to a secondary data element. The example below normalizes fresh water public supply by total population.
@@ -249,7 +249,7 @@ norm.element <- "PS.TOPop"
 year <- 2010 
 areas <- "Hawaii" 
 area.column <- "STATE_TERR"
-ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+ch.plot <- choropleth_plot(w.use, data.elements, year, area.column, areas, norm.element)
 ```
 
 # Disclaimer
