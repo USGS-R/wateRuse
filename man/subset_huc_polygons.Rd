@@ -4,7 +4,7 @@
 \alias{subset_huc_polygons}
 \title{subset_huc_polygons}
 \usage{
-subset_huc_polygons(year, area.column = NA, areas = NA)
+subset_huc_polygons(year, area.column, areas)
 }
 \arguments{
 \item{year}{int, the year of interest to be mapped (defines historical basis for HUCs)}
