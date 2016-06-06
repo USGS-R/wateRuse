@@ -8,6 +8,12 @@ mapData <- reactive({
   
   norm.element <- df[["data.element.norm"]]
   
+  if (input$unitTypeHUC == TRUE){
+    unit.type=="huc"
+  }else{
+    unit.type=="county"
+  }
+  
   if(norm.element == "None"){
     norm.element <- NA
   }

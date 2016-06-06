@@ -1,17 +1,18 @@
 #' choropleth_plot
 #'
 #' Returns choropleth plot of data element of interest for year of interest
-#' Currently written to work with counties only
-#' Only works with one state, data element, and year as currently written
+#' Currently written to work with counties and hucs only
+#' Only works with one data element and year as currently written
 #'
 #' 
 #' @param w.use dataframe, the water use data 
 #' @param data.elements chr, data element to be plotted
-#' @param norm.element chr, data element to be used for normalizing data.elements
 #' @param year int, the year of interest to be mapped (defines historical basis for counties)
 #' @param areas chr, vector of codes indicating HUCs, counties, states, regions, aquifers, etc. 
 #' @param area.column chr, defines which column to use to specify area
-#' 
+#' @param norm.element chr, data element to be used for normalizing data.elements
+#' @param unit.type chr, type of unit to be mapped; acceptable options are "county", "huc", or "aquifer"
+#'  
 #' @export
 #' 
 #' @import ggplot2
@@ -27,28 +28,44 @@
 #' year <- 2010 
 #' areas <- "Delaware" 
 #' area.column <- "STATE_TERR"
-#' ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+#' ch.plot <- choropleth_plot(w.use, data.elements, year, area.column, areas, norm.element)
 #' ch.plot
 #' norm.element <- NA
-#' ch.plot <- choropleth_plot(w.use, data.elements, year, areas, area.column, norm.element)
+#' ch.plot <- choropleth_plot(w.use, data.elements, year, area.column, areas, norm.element)
 #' ch.plot
-choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm.element=NA){
+#' 
+
+choropleth_plot <- function(w.use, data.elements, year, area.column=NA, areas=NA, norm.element=NA, unit.type="county"){
   
-  # get counties
-  hc.sub <- subset_county_polygons(area.column, year, areas)
-  hc.subf<-fortify(hc.sub,region = "FIPS")
-  hc.sub@data$id<-hc.sub@data$FIPS
-  hc.subf<-merge(hc.subf,hc.sub@data, by="id", all.x=TRUE)
-  hc.subf<-hc.subf[order(hc.subf$order), ] 
-  
-  # get water use data
-  wu.areas <- hc.sub$FIPS
-  wu.area.column <- "STATECOUNTYCODE"
   if (!is.na(norm.element)){
     data.elements.all <- cbind(data.elements, norm.element)
   }else{
     data.elements.all <- data.elements
   }
+  
+  if(unit.type=="county"){
+    # get county polygons
+    hc.sub <- subset_county_polygons(year, area.column, areas)
+    hc.subf<-fortify(hc.sub,region = "FIPS")
+    hc.sub@data$id<-hc.sub@data$FIPS
+    # wu params for retrieving wu data
+    wu.areas <- hc.sub$FIPS
+    wu.area.column <- "STATECOUNTYCODE"
+  }else if(unit.type=="huc"){
+    #get huc polygons
+    hc.sub <- subset_huc_polygons(year, area.column, areas)
+    hc.subf<-fortify(hc.sub,region = "HUC8")
+    hc.sub@data$id<-hc.sub@data$HUC8
+    # wu params for retrieving wu data
+    wu.areas <- hc.sub$HUC8
+    wu.area.column <- "Area"
+  }else if(unit.type=="aquifer"){
+    #get aquifer polygons
+  }
+  hc.subf<-merge(hc.subf,hc.sub@data, by="id", all.x=TRUE)
+
+  
+  # get water use data
   w.use.sub <- subset_wuse(w.use, data.elements.all, wu.area.column, wu.areas)
   w.use.sub <- w.use.sub[which(w.use.sub$YEAR == year),]# for year of interest
 
@@ -60,7 +77,8 @@ choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm
   }# if norm.element
   
   # set common key name "id" to merge water use data with polygon data
-  names(w.use.sub)[names(w.use.sub)=="STATECOUNTYCODE"] <- "id"
+  if (unit.type=="county") {names(w.use.sub)[names(w.use.sub)=="STATECOUNTYCODE"] <- "id"}
+  if (unit.type=="huc") {names(w.use.sub)[names(w.use.sub)=="Area"] <- "id"}
   
   # merge polygons and water use data to build choropleth dataset
   hc.subf <- merge(hc.subf,w.use.sub, by="id", all.x=TRUE)
@@ -72,7 +90,7 @@ choropleth_plot <- function(w.use, data.elements, year, areas, area.column, norm
   
   if (!is.na(norm.element)){p.elem <- paste0(data.elements,"_norm")}
   
-  
+  hc.subf<-hc.subf[order(hc.subf$order), ]
   ch.plot <- ggplot() + geom_polygon(data = hc.subf, 
                  aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 
