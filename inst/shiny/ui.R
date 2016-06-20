@@ -209,13 +209,16 @@ sidebar <- dashboardSidebar(
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'boxPlotTab'",
-    checkboxInput("notchOn", label = "Notched Boxes", value = FALSE),
-    checkboxInput("log", label = "Log Scale")
+    checkboxInput("notchOn", label = "Notched Boxes", value = FALSE)
+  ),
+  conditionalPanel(
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem' | input.mainTabs == 'boxPlotTab'",
+      checkboxInput("points", label = "Points", value = TRUE),
+      checkboxInput("log", label = "Log Scale")
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
-      checkboxInput("points", label = "Points", value = TRUE),
-      checkboxInput("log", label = "Log Scale")
+    checkboxInput("points", label = "Points", value = TRUE)
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,
