@@ -103,6 +103,18 @@ shinyServer(function(input, output, session) {
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
+    validate(
+      need(input$bestAvail, 'Choose Best Available, Work-In-Progress, or Both')
+    )
+    
+    if("BESTAVAILABLE" %in% names(w.use) & length(input$bestAvail) == 1){
+      if(input$bestAvail == "Best"){
+        w.use <- filter(w.use, BESTAVAILABLE == "yes")
+      } else {
+        w.use <- filter(w.use, BESTAVAILABLE == "no")
+      }
+    }
+    
     data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
