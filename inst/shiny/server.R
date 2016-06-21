@@ -203,10 +203,7 @@ shinyServer(function(input, output, session) {
  
   observeEvent(input$deselectArea, {
            
-    validate(
-      need(input$state, 'Choose a State'),
-      need(input$area, 'Choose an Area')
-    )
+    data.elements.type
         
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
@@ -360,6 +357,21 @@ shinyServer(function(input, output, session) {
                       choices = fancy.names,
                       selected = fancy.names.single)
 
+  })
+  
+  observe({
+    
+    w.use <- w.use_full()
+    category <- category
+    dataelement <- dataelement
+    
+    cateCodes <- unique(dataelement$CATEGORYCODE[gsub("-",".",dataelement$DATAELEMENT) %in% names(w.use)])
+    cateCodes <- left_join(data.frame(CODE=cateCodes, stringsAsFactors = FALSE), category)
+    
+    updateSelectInput(session, "data.elements.type",
+                      choices = setNames(cateCodes$CODE, cateCodes$NAME),
+                      selected = setNames(cateCodes$CODE, cateCodes$NAME)[1])
+    
   })
   
   observe({
