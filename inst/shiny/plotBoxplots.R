@@ -4,6 +4,11 @@ plotBoxplots <- reactive({
   
   data.elements <- c(df[["data.element"]],df[["data.element.y"]])
   
+  validate(
+    need(input$state, 'Choose a State'),
+    need(input$area, 'Choose an Area')
+  )
+  
   areas.p2e <- df[["area"]]
   
   if(all(df[["areas"]] %in% areas.p2e)){

@@ -224,6 +224,8 @@ sidebar <- dashboardSidebar(
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,
                               selected=states[1])
   ), 
+ checkboxGroupInput("bestAvail", label = "Best Available:",choices = c("Best","Work-in-progress"),
+                    selected=c("Best","Work-in-progress")),
   conditionalPanel(
     condition = "input.mainTabs != 'plotBarSumsTab'",
     menuItem("Choose Areas", icon = icon("th"), tabName = "areaTab",

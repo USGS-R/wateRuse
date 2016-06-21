@@ -103,6 +103,18 @@ shinyServer(function(input, output, session) {
       w.use <- filter(w.use, USSTATEALPHACODE %in% states)
     }
     
+    validate(
+      need(input$bestAvail, 'Choose Best Available, Work-In-Progress, or Both')
+    )
+    
+    if("BESTAVAILABLE" %in% names(w.use) & length(input$bestAvail) == 1){
+      if(input$bestAvail == "Best"){
+        w.use <- filter(w.use, BESTAVAILABLE == "yes")
+      } else {
+        w.use <- filter(w.use, BESTAVAILABLE == "no")
+      }
+    }
+    
     data.elements.full <- gsub("-", ".", dataelement$DATAELEMENT)
     data.elements <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type)]
     data.elements.y <- data.elements.full[which(dataelement$CATEGORYCODE == input$data.elements.type.y)]
@@ -173,6 +185,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$changeArea,  {
+    
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     df[["area"]] <- input$area
   })
   
@@ -183,13 +201,22 @@ shinyServer(function(input, output, session) {
     updateCheckboxInput(session, "unitTypeHUC", value = hucLogic)
   })
  
-  observeEvent(input$deselectArea,  {
-    updateCheckboxInput(session, "area", 
+  observeEvent(input$deselectArea, {
+           
+    data.elements.type
+        
+    updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]][1])
+    
   })
    
   observeEvent(input$selectArea,  {
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]])
@@ -266,6 +293,11 @@ shinyServer(function(input, output, session) {
   observeEvent(input$state, ignoreNULL = TRUE, {
 
     w.use <- w.use_full()
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     df[["state"]] <- input$state
     area.column <- df[["area.column"]]
     
@@ -325,6 +357,21 @@ shinyServer(function(input, output, session) {
                       choices = fancy.names,
                       selected = fancy.names.single)
 
+  })
+  
+  observe({
+    
+    w.use <- w.use_full()
+    category <- category
+    dataelement <- dataelement
+    
+    cateCodes <- unique(dataelement$CATEGORYCODE[gsub("-",".",dataelement$DATAELEMENT) %in% names(w.use)])
+    cateCodes <- left_join(data.frame(CODE=cateCodes, stringsAsFactors = FALSE), category)
+    
+    updateSelectInput(session, "data.elements.type",
+                      choices = setNames(cateCodes$CODE, cateCodes$NAME),
+                      selected = setNames(cateCodes$CODE, cateCodes$NAME)[1])
+    
   })
   
   observe({
