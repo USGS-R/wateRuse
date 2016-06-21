@@ -21,6 +21,8 @@ plotMultiElem <- reactive({
   
   area.column <- df[["area.column"]]
   
+  w.use <- filter(w.use, YEAR %in% input$whatYears)
+  
   plotMultiElem <- multi_element_data(w.use, data.elements, area.column, log = log,
                                       areas=areas.p2e, legend=legend, plot.points = points)
   

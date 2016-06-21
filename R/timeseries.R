@@ -71,7 +71,8 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
   }
 
   ts.object <- ts.object + facet_grid(dataElement ~ ., scales = "free") +
-    ylab("") 
+    ylab("") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   if(!all(is.na(y.scale))){
     ts.object <- ts.object + scale_y_continuous(limits=y.scale)

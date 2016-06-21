@@ -12,18 +12,20 @@ output$rankData <- DT::renderDataTable({
   yearRange <- unique(w.use$YEAR)
   
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
-  
+  w.use.sub <- w.use.sub[!is.na(w.use.sub[,data.elements]),]
   df <- spread_(w.use.sub, "YEAR", data.elements)
   
   df <- df[,colSums(is.na(df))<nrow(df)]
+
+  df <- df[,c(area.column,input$whatYears)]
   
   write.csv(df, "rankData.csv",row.names = FALSE)
   
-  rankData <- DT::datatable(df, rownames = FALSE,
+  rankData <- DT::datatable(df[,-2], rownames = FALSE,
                             options = list(scrollX = TRUE,
                                            pageLength = nrow(df),
                                            order=list(list(2,'desc'))))
-  yearRange <- names(df)[-1]
+  yearRange <- names(df)[-1:-2]
   colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
   names(colors)[1:length(yearRange)] <- yearRange
   for(i in yearRange){
