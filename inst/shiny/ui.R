@@ -185,13 +185,13 @@ sidebar <- dashboardSidebar(
     ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab'",
-      selectInput("year_y", label = "Year y:", width = 100,
+      selectInput("year_y", label = "Year y:", 
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))], multiple = FALSE)
   ),
   conditionalPanel(
     condition = "input.mainTabs == 'plotTwoTab' | input.mainTabs == 'plotTwoElem' | input.mainTabs == 'map'",
-    selectInput("year_x", label = "Year:", width = 100,
+    selectInput("year_x", label = "Year:", 
                 choices = unique(wUseSample$YEAR),
                 selected = unique(wUseSample$YEAR)[length(unique(wUseSample$YEAR))-1], multiple = FALSE)
   ),

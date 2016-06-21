@@ -63,8 +63,12 @@ shinyServer(function(input, output, session) {
     w.use_append <- w.use_append()
     
     if(nrow(w.use_append) > 0){
-      w.use_append$YEAR <- paste0(w.use_append$YEAR,"a")
+      w.use_append$YEAR <- paste0(w.use_append$YEAR,"_append")
       w.use <- full_join(w.use, w.use_append)
+    }
+    
+    if("DATASETNAME" %in% names(w.use) & nrow(w.use) > 0){
+      w.use$YEAR <- paste0(w.use$YEAR,"_",w.use$DATASETNAME)
     }
     
     w.use <- calculate_values(w.use)

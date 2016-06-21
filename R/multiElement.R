@@ -63,7 +63,8 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
   }
   
   me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
-    ylab("") 
+    ylab("") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   if(!all(is.na(y.scale))){
     me.object <- me.object + ylim(y.scale)

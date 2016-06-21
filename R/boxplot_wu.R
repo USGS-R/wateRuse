@@ -38,7 +38,8 @@ boxplot_wu <- function(w.use, data.elements, area.column, areas=NA, plot.notch=F
 
   bp.object <- ggplot(df3, aes_string(x = "YEAR", group="YEAR", y = "value") ) + 
     geom_boxplot(notch=plot.notch) +
-    facet_grid(dataElement ~ ., scales="free")  
+    facet_grid(dataElement ~ ., scales="free")  +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   # if(!all(is.na(y.scale))){
   #   bp.object <- bp.object + ylim(y.scale)
