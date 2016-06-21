@@ -19,6 +19,8 @@ plotBoxplots <- reactive({
   log <- input$log
   
   area.column <- df[["area.column"]]
+
+  w.use <- filter(w.use, YEAR %in% input$whatYears)
   
   plotBoxplots <- boxplot_wu(w.use, data.elements, area.column, areas=areas.p2e, 
                              plot.notch=notch, years=yrs, log=log)

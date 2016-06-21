@@ -16,6 +16,8 @@ output$rankData <- DT::renderDataTable({
   df <- spread_(w.use.sub, "YEAR", data.elements)
   
   df <- df[,colSums(is.na(df))<nrow(df)]
+
+  df <- df[,c(area.column,input$whatYears)]
   
   write.csv(df, "rankData.csv",row.names = FALSE)
   

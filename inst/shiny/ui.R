@@ -208,6 +208,10 @@ sidebar <- dashboardSidebar(
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   conditionalPanel(
+    condition = "input.mainTabs == 'multiElem' | input.mainTabs == 'boxPlotTab' | input.mainTabs == 'plotTimeTab' | input.mainTabs == 'rankData'",
+    checkboxGroupInput("whatYears", label = "Years", choices = c("1990","2010"), selected = "2010")
+  ),
+  conditionalPanel(
     condition = "input.mainTabs == 'boxPlotTab'",
     checkboxInput("notchOn", label = "Notched Boxes", value = FALSE)
   ),

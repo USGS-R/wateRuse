@@ -204,6 +204,14 @@ shinyServer(function(input, output, session) {
     
     updateCheckboxInput(session, "unitTypeHUC", value = hucLogic)
   })
+  
+  observe({
+    
+    w.use <- w.use()
+    years <- unique(w.use$YEAR)
+    
+    updateCheckboxGroupInput(session, "whatYears", choices = years, selected = years)
+  })
  
   observeEvent(input$deselectArea, {
            
