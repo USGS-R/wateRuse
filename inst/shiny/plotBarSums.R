@@ -6,6 +6,11 @@ plotBarSums <- reactive({
   
   w.use <- w.use_barSum()
   
+  validate(
+    need(input$state, 'Choose a State'),
+    need(input$area, 'Choose an Area')
+  )
+  
   states <- df[["state"]]
   
   if(!is.null(w.use) && (states != "All Available")){

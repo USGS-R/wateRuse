@@ -4,6 +4,11 @@ output$plotTwoElement <- renderPlot({
 
 plotTwoElement <- reactive({
   
+  validate(
+    need(input$state, 'Choose a State'),
+    need(input$area, 'Choose an Area')
+  )
+  
   w.use <- w.use()
   
   data.elements <- c(df[["data.element"]],df[["data.element.y"]])

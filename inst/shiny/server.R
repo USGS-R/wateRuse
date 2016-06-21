@@ -185,6 +185,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$changeArea,  {
+    
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     df[["area"]] <- input$area
   })
   
@@ -195,13 +201,25 @@ shinyServer(function(input, output, session) {
     updateCheckboxInput(session, "unitTypeHUC", value = hucLogic)
   })
  
-  observeEvent(input$deselectArea,  {
-    updateCheckboxInput(session, "area", 
+  observeEvent(input$deselectArea, {
+           
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+        
+    updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]][1])
+    
   })
    
   observeEvent(input$selectArea,  {
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     updateCheckboxGroupInput(session, "area", 
                              choices =  df[["areas"]], 
                              selected =  df[["areas"]])
@@ -278,6 +296,11 @@ shinyServer(function(input, output, session) {
   observeEvent(input$state, ignoreNULL = TRUE, {
 
     w.use <- w.use_full()
+    validate(
+      need(input$state, 'Choose a State'),
+      need(input$area, 'Choose an Area')
+    )
+    
     df[["state"]] <- input$state
     area.column <- df[["area.column"]]
     
