@@ -1,6 +1,6 @@
 ---
 title: "wateRuse"
-author: "Molly, Cheryl, etc..."
+author: "Molly Maupin, Cheryl Dieter"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   rmarkdown::html_vignette:
