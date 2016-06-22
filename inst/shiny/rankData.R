@@ -14,18 +14,16 @@ output$rankData <- DT::renderDataTable({
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas.rd)
   w.use.sub <- w.use.sub[!is.na(w.use.sub[,data.elements]),]
   df <- spread_(w.use.sub, "YEAR", data.elements)
-  
+  df <- df[,c(area.column,input$whatYears)[c(area.column,input$whatYears) %in% names(df)]]
   df <- df[,colSums(is.na(df))<nrow(df)]
-
-  df <- df[,c(area.column,input$whatYears)]
   
   write.csv(df, "rankData.csv",row.names = FALSE)
   
-  rankData <- DT::datatable(df[,-2], rownames = FALSE,
+  rankData <- DT::datatable(df, rownames = FALSE,
                             options = list(scrollX = TRUE,
                                            pageLength = nrow(df),
                                            order=list(list(2,'desc'))))
-  yearRange <- names(df)[-1:-2]
+  yearRange <- input$watYear
   colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
   names(colors)[1:length(yearRange)] <- yearRange
   for(i in yearRange){
