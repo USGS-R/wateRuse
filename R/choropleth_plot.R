@@ -19,6 +19,7 @@
 #' @import mapproj
 #' @import rgeos
 #' @import scales
+#' @importFrom dplyr left_join
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -61,7 +62,7 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
     #get aquifer polygons
   }
 
-  hc.subf<-merge(hc.subf,hc.sub@data, by="id", all.x=TRUE)
+  hc.subf <- left_join(hc.subf,hc.sub@data, by="id")
   
   # get water use data
   w.use.sub <- subset_wuse(w.use, data.elements.all, wu.area.column, wu.areas)
@@ -79,7 +80,7 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   if (unit.type=="huc") {names(w.use.sub)[names(w.use.sub)=="HUCCODE"] <- "id"}
   
   # merge polygons and water use data to build choropleth dataset
-  hc.subf <- merge(hc.subf,w.use.sub, by="id", all.x=TRUE)
+  hc.subf <- left_join(hc.subf,w.use.sub, by="id")
   
   # plot element
   p.elem <- data.elements
@@ -89,6 +90,8 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   if (!is.na(norm.element)){p.elem <- paste0(data.elements,"_norm")}
   
   hc.subf<-hc.subf[order(hc.subf$order), ]
+  hc.subf <- unique(hc.subf[,c("long","lat","group",p.elem)])
+  hc.subf <- hc.subf[!is.na(hc.subf[,p.elem]),]
   ch.plot <- ggplot() + geom_polygon(data = hc.subf, 
                  aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 

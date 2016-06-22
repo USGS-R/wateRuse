@@ -5,14 +5,10 @@ output$mapData <- renderPlot({
 mapData <- reactive({
   
   w.use <- w.use()
-  
+
   norm.element <- df[["data.element.norm"]]
   
-  if(input$unitTypeHUC){
-    unit.type <- "huc"
-  } else {
-    unit.type <- "county"
-  }
+  unit.type <- ifelse(input$unitTypeHUC, "huc", "county")
   
   if(norm.element == "None"){
     norm.element <- NA
@@ -27,7 +23,7 @@ mapData <- reactive({
         w.use$HUCCODE <- w.use[[df[["area.column"]]]]
       }
     } 
-
+    
     w.use$YEAR <- as.integer(sapply(strsplit(w.use$YEAR, "_"), function(x) x[[1]][1]))
     mapData <- choropleth_plot(w.use, df[["data.element"]], year = as.integer(sapply(strsplit(input$year_x, "_"), function(x) x[[1]][1])),
                                  state = input$stateToMap, norm.element = norm.element, unit.type = unit.type)
