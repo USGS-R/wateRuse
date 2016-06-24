@@ -40,7 +40,9 @@ output$hover_plotTwoElem <- renderPrint({
     data <- plotTwoElement$data
     dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
     if(min(dist, rm.na=TRUE) < 5){
-      txt <- data$site[which.min(dist)]
+      txt <- paste(data$site[which.min(dist)],
+                   "\n",df[["data.element"]],"=",data$x[which.min(dist)],
+                   "\n",df[["data.element.y"]],"=",data$y[which.min(dist)])
     }
     
   }
