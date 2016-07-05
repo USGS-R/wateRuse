@@ -209,6 +209,7 @@ shinyServer(function(input, output, session) {
     
     w.use <- w.use()
     years <- unique(w.use$YEAR)
+    years <- years[order(years)]
     
     updateCheckboxGroupInput(session, "whatYears", choices = years, selected = years)
   })

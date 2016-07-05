@@ -22,7 +22,7 @@ tsPlot <- reactive({
   points <- input$points
   
   w.use <- filter(w.use, YEAR %in% input$whatYears)
-  
+
   tsPlot <- time_series_data(w.use, data.elements, area.column, plot.points = points,
                              areas = areas.pt, legend = legend, log = log, years= NA)
   
