@@ -14,13 +14,14 @@ To install the wateRuse package:
   
   ```r
   rprofile_path = file.path(Sys.getenv("HOME"), ".Rprofile")
-  write('\noptions(repos=c(getOption(\'repos\'), 
-      USGS=\'http://owi.usgs.gov/R\'))\n',
-        rprofile_path, 
-        append =  TRUE)
-  
+  write('\noptions(repos=c(getOption(\'repos\'),
+    CRAN=\'https://cloud.r-project.org\',
+    USGS=\'http://owi.usgs.gov/R\'))\n',
+      rprofile_path, 
+      append =  TRUE)
+
   cat('Your Rprofile has been updated to include GRAN.
-      Please restart R for changes to take effect.')
+    Please restart R for changes to take effect.')
   ```
 
 4. Restart R!
