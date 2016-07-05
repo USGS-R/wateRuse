@@ -36,8 +36,8 @@ output$hover_plotTwo <- renderPrint({
     hover=input$hover_plotTwo
     plotTwo <- plotTwo()
     data <- plotTwo$data
-    distance=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-    if(min(distance, na.rm = TRUE) < 5){
+    dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
+    if(min(dist, na.rm = TRUE) < 5){
       txt <- paste(data$site[which.min(dist)],
                    "\n",input$year_x,"=",data$x[which.min(dist)],
                    "\n",input$year_y,"=",data$y[which.min(dist)])
