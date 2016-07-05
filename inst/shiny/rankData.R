@@ -23,7 +23,7 @@ output$rankData <- DT::renderDataTable({
                             options = list(scrollX = TRUE,
                                            pageLength = nrow(df),
                                            order=list(list(2,'desc'))))
-  yearRange <- input$watYear
+  yearRange <- input$whatYears
   colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
   names(colors)[1:length(yearRange)] <- yearRange
   for(i in yearRange){
