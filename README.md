@@ -1,7 +1,7 @@
 `wateRuse`
 =============
-Parser functions for water use data.
 
+ [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)
 
 ##Package Installation
 To install the wateRuse package:
@@ -57,8 +57,10 @@ explore_wateRuse()
 
 Your default browser will open and start the app. If using IE, copy and paste the address to Firefox or Chrome.
 
-
- [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)
+## Contributing
+If you would like to contribute functionality or bug fixes, some getting started document is [available here.](https://github.com/USGS-R/wateRuse/wiki/1)-Welcome-to-the-wateRuse-help-pages-wiki)  
+A visual of the github contribution workflow used [is here.](https://github.com/USGS-R/wateRuse/wiki/2)-A-visual-of-the-R-Studio-to-GITHUB-process)  
+Other userful information for contributing can be [found here.](https://github.com/USGS-R/wateRuse/wiki/3)-Useful-tips-and-links-for-working-in-R-and-R-Studio)
 
 ##Disclaimer
 This software is in the public domain because it contains materials that originally came from the U.S. Geological Survey, an agency of the United States Department of Interior. For more information, see the [official USGS copyright policy](http://www.usgs.gov/visual-id/credit_usgs.html#copyright/ "official USGS copyright policy")
