@@ -1,16 +1,3 @@
----
-title: "wateRuse"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
-output:
-  rmarkdown::html_vignette:
-    fig_height: 5
-    fig_width: 5
-    toc: yes
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{wateRuse Introduction}
-  \usepackage[utf8]{inputenc}
----
 
 # Introduction
 
