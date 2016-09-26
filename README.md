@@ -15,7 +15,7 @@ To install the wateRuse package:
   ```r
   rprofile_path = file.path(Sys.getenv("HOME"), ".Rprofile")
   write('\noptions(repos=c(getOption(\'repos\'),
-    CRAN=\'https://cloud.r-project.org\',
+    CRAN=\'http://cloud.r-project.org\',
     USGS=\'http://owi.usgs.gov/R\'))\n',
       rprofile_path, 
       append =  TRUE)
