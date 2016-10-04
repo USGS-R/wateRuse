@@ -8,6 +8,7 @@
 #' @import DT
 #' @import ggplot2
 #' @import shinydashboard
+#' @import scatterD3
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom tidyr gather_
 #' @examples 
