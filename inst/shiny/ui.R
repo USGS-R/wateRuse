@@ -24,7 +24,7 @@ body <- dashboardBody(
      column(4,
             fileInput("data.sup", "Load Supplemental File",multiple = TRUE)),
      column(2,
-            tags$a(href="https://github.com/USGS-R/wateRuse/issues", "Report Bugs", id="test")
+            tags$a(href="https://github.com/USGS-R/wateRuse/issues", "Report Bugs", id="test", target="_blank")
             )
    ),
    tabsetPanel(selected = "plotTwoTab",id = "mainTabs",
