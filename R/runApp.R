@@ -8,7 +8,12 @@
 #' @import DT
 #' @import ggplot2
 #' @import shinydashboard
-#' @import scatterD3
+#' @importFrom scatterD3 scatterD3Output
+#' @importFrom scatterD3 renderScatterD3
+#' @importFrom scatterD3 scatterD3
+#' @importFrom plotly plotlyOutput
+#' @importFrom plotly renderPlotly
+#' @importFrom plotly ggplotly
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom tidyr gather_
 #' @examples 

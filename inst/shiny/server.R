@@ -5,6 +5,7 @@ library(ggplot2)
 library(tidyr)
 library(RColorBrewer)
 library(scatterD3)
+library(plotly)
 
 w.use.start <- wUseSample
 

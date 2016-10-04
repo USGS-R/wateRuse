@@ -1,6 +1,7 @@
 library(shinydashboard)
 library(wateRuse)
 library(scatterD3)
+library(plotly)
 
 # data.elements <- names(wUseSample)[12:length(names(wUseSample))]
 data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
@@ -64,8 +65,8 @@ body <- dashboardBody(
               value = "multiElem",
               h5("Only first 3 areas supported in app"),
               fluidRow(
-                column(9, 
-                       plotOutput("plotMultiElem",width = 500, height = 500))
+                column(11, 
+                       plotlyOutput("plotMultiElem",width = "100%"))
                 
               ),
               h4(""),
@@ -80,8 +81,8 @@ body <- dashboardBody(
      tabPanel(title = tagList("Box Plots",shiny::icon("bar-chart")),
               value = "boxPlotTab",
               fluidRow(
-                column(9, 
-                       plotOutput("plotBoxplots",width = 500, height = 500))
+                column(11, 
+                       plotOutput("plotBoxplots",width = "100%"))
                 
               ),
               h4(""),
@@ -95,8 +96,7 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
-              plotOutput("plotTime",hover = hoverOpts(id = "hover_info_ts")),
-              verbatimTextOutput("hover_info_ts"),
+              plotlyOutput("plotTime"),
               h4(""),
               fluidRow(
                 column(3, downloadButton('downloadPlotTime', 'Download PNG')),
@@ -215,10 +215,6 @@ sidebar <- dashboardSidebar(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem' | input.mainTabs == 'boxPlotTab'",
       checkboxInput("points", label = "Points", value = TRUE),
       checkboxInput("log", label = "Log Scale")
-  ),
-  conditionalPanel(
-    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem'",
-    checkboxInput("points", label = "Points", value = TRUE)
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,

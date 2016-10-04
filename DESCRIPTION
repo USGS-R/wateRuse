@@ -35,7 +35,8 @@ Imports:
     rgeos,
     scales,
     dplyr,
-    scatterD3
+    scatterD3,
+    plotly
 Suggests:
     testthat,
     knitr
