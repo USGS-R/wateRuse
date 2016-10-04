@@ -32,13 +32,6 @@ To install the wateRuse package:
   install.packages("wateRuse")
   ```
   
-  To get cutting-edge changes, install from GitHub using the `devtools` packages:
-  
-  ```r
-  library(devtools)
-  install_github("USGS-R/wateRuse")
-  ```
-
 
 6. Update often. Next time you update your packages, `wateRuse` will automatically update:
 
