@@ -1,5 +1,6 @@
 library(shinydashboard)
 library(wateRuse)
+library(scatterD3)
 
 # data.elements <- names(wUseSample)[12:length(names(wUseSample))]
 data.element.names <- gsub("-", ".", dataelement$DATAELEMENT)
@@ -31,11 +32,8 @@ body <- dashboardBody(
      tabPanel(title = tagList("Compare Two Years",shiny::icon("bar-chart")),
               value = "plotTwoTab",
               fluidRow(
-                column(8, 
-                       plotOutput("plotTwo", width = 500, height = 500,hover = hoverOpts(id = "hover_plotTwo"))),
-                column(3, h4("Hover to get site information:"),
-                       verbatimTextOutput("hover_plotTwo"))
-                       
+                column(11, 
+                       scatterD3Output("plotTwo", height = "700px", width = "100%"))
               ),
               h4(""),
               fluidRow(
@@ -50,10 +48,8 @@ body <- dashboardBody(
      tabPanel(title = tagList("Compare Two Elements",shiny::icon("bar-chart")),
               value = "plotTwoElem",
               fluidRow(
-                column(9, 
-                       plotOutput("plotTwoElement",width = 500, height = 500, hover = hoverOpts(id = "hover_plotTwoElem"))),
-                column(3, h4("Hover to get site information:"),
-                       verbatimTextOutput("hover_plotTwoElem"))
+                column(11, 
+                       scatterD3Output("plotTwoElement",height = "700px", width = "100%"))
               ),
               h4(""),
               fluidRow(
@@ -244,7 +240,7 @@ sidebar <- dashboardSidebar(
                          selected = area.columns[1], multiple = FALSE)
     )
   ),
-  menuItem("Source code", icon = icon("file-code-o"), 
+  menuItem("Source code", icon = icon("file-code-o"), newtab = TRUE,
            href = "https://github.com/USGS-R/wateRuse/tree/master/inst/shiny")
 
 )

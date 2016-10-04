@@ -1,5 +1,16 @@
-output$plotTwoElement <- renderPlot({
-  plotTwoElement()
+output$plotTwoElement <- renderScatterD3({
+  plotTwoElement <- plotTwoElement()
+  area <- plotTwoElement$data$site
+  legend <- input$legendOn
+  data.elements <- c(df[["data.element"]],df[["data.element.y"]])
+  
+  scatterD3(x = plotTwoElement$data$x,
+            y = plotTwoElement$data$y,
+            xlab = data.elements[1],
+            ylab = data.elements[2],
+            legend_width = ifelse(legend,150, 0),
+            col_var = area
+  )
 })
 
 plotTwoElement <- reactive({
@@ -27,29 +38,10 @@ plotTwoElement <- reactive({
   
   write.csv(x = plotTwoElement$data, file="plotTwoElement.csv", row.names = FALSE)
   
-  plotTwoElement
+  return(plotTwoElement)
   
 })
 
-output$hover_plotTwoElem <- renderPrint({
-  txt <- ""
-  
-  if(!is.null(input$hover_plotTwoElem)){
-    hover=input$hover_plotTwoElem
-    plotTwoElement <- plotTwoElement()
-    data <- plotTwoElement$data
-    dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-    if(min(dist, na.rm =TRUE) < 5){
-      txt <- paste(data$site[which.min(dist)],
-                   "\n",df[["data.element"]],"=",data$x[which.min(dist)],
-                   "\n",df[["data.element.y"]],"=",data$y[which.min(dist)])
-    }
-    
-  }
-  
-  cat("Site:", txt)  
-  
-})
 
 output$downloadPlotTwoElem <- downloadHandler(
   filename = function() { "plotTwoElement.png" },

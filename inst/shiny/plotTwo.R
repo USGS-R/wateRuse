@@ -1,9 +1,8 @@
-output$plotTwo <- renderPlot({
-  plotTwo()
-})
+# output$plotTwo <- renderPlot({
+#   plotTwo()
+# })
 
 plotTwo <- reactive({
-  
   validate(
     need(input$state, 'Choose a State'),
     need(input$area, 'Choose an Area')
@@ -21,33 +20,34 @@ plotTwo <- reactive({
   
   area.column <- df[["area.column"]]
   year.x.y <- c(input$year_x,input$year_y)
+  
   plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
   
   write.csv(x = plotTwo$data, file = "plotTwoYears.csv", row.names = FALSE)
   
-  plotTwo
+  return(plotTwo)
 })
 
-output$hover_plotTwo <- renderPrint({
-  txt <- ""
+output$plotTwo <- renderScatterD3({
   
-  if(!is.null(input$hover_plotTwo)){
+  plotTwo <- plotTwo()
 
-    hover=input$hover_plotTwo
-    plotTwo <- plotTwo()
-    data <- plotTwo$data
-    dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-    if(min(dist, na.rm = TRUE) < 5){
-      txt <- paste(data$site[which.min(dist)],
-                   "\n",input$year_x,"=",data$x[which.min(dist)],
-                   "\n",input$year_y,"=",data$y[which.min(dist)])
-    }
-  }
+  area <- plotTwo$data$site
+  legend <- input$legendOn
   
-  cat("Site:",txt)
+  scatterD3(x = plotTwo$data$x,
+            y = plotTwo$data$y,
+            # lab = plotTwo$data$site,
+            xlab = input$year_x,
+            ylab = input$year_y,
+            legend_width = ifelse(legend,150, 0),
+            col_var = area
+            )
   
 })
 
+
+ 
 output$downloadPlotTwo <- downloadHandler(
   filename = function() { "plotTwoYears.png" },
   content = function(file) {

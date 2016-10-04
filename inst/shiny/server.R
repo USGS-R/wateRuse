@@ -4,6 +4,7 @@ library(wateRuse)
 library(ggplot2)
 library(tidyr)
 library(RColorBrewer)
+library(scatterD3)
 
 w.use.start <- wUseSample
 

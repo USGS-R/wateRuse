@@ -74,7 +74,7 @@ compare_two_elements <- function(w.use, data.elements.x.y, years, area.column,
     ylab(data.elements.x.y[2]) +
     scale_colour_manual(values=c.palette) 
   
-  compare.plot
+  # compare.plot
   
   return(compare.plot)
   
