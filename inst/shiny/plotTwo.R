@@ -28,26 +28,12 @@ plotTwo <- reactive({
   return(plotTwo)
 })
 
-output$plotTwo <- renderScatterD3({
-  
+output$plotTwo <- renderPlotly({
   plotTwo <- plotTwo()
-
-  area <- plotTwo$data$site
-  legend <- input$legendOn
   
-  scatterD3(x = plotTwo$data$x,
-            y = plotTwo$data$y,
-            # lab = plotTwo$data$site,
-            xlab = input$year_x,
-            ylab = input$year_y,
-            legend_width = ifelse(legend,150, 0),
-            col_var = area
-            )
-  
+  ggplotly(plotTwo)
 })
 
-
- 
 output$downloadPlotTwo <- downloadHandler(
   filename = function() { "plotTwoYears.png" },
   content = function(file) {

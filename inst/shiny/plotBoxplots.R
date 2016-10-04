@@ -27,12 +27,14 @@ plotBoxplots <- reactive({
   
   write.csv(x = plotBoxplots$data, file="plotBoxplots.csv", row.names = FALSE)
   
-  plotBoxplots
+  return(plotBoxplots)
   
 })
 
-output$plotBoxplots <- renderPlot({
-  plotBoxplots()
+output$plotBoxplots <- renderPlotly({
+  plotBoxplots <- plotBoxplots()
+
+  ggplotly(plotBoxplots)
 })
 
 output$downloadPlotBoxplots <- downloadHandler(

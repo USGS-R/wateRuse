@@ -1,16 +1,7 @@
-output$plotTwoElement <- renderScatterD3({
+output$plotTwoElement <- renderPlotly({
   plotTwoElement <- plotTwoElement()
-  area <- plotTwoElement$data$site
-  legend <- input$legendOn
-  data.elements <- c(df[["data.element"]],df[["data.element.y"]])
   
-  scatterD3(x = plotTwoElement$data$x,
-            y = plotTwoElement$data$y,
-            xlab = data.elements[1],
-            ylab = data.elements[2],
-            legend_width = ifelse(legend,150, 0),
-            col_var = area
-  )
+  ggplotly(plotTwoElement)
 })
 
 plotTwoElement <- reactive({

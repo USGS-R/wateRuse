@@ -22,7 +22,8 @@
 #' boxplot_wu(w.use, data.elements, area.column = area.column,areas = areas)
 #' boxplot_wu(w.use, data.elements, area.column, log=TRUE)
 #' boxplot_wu(w.use, data.elements, area.column, years = c(1995, 2005))
-boxplot_wu <- function(w.use, data.elements, area.column, areas=NA, plot.notch=FALSE, years=NA, log=FALSE){
+boxplot_wu <- function(w.use, data.elements, area.column, 
+                       areas=NA, plot.notch=FALSE, years=NA, log=FALSE){
   
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
@@ -37,7 +38,7 @@ boxplot_wu <- function(w.use, data.elements, area.column, areas=NA, plot.notch=F
   df3 <- gather_(df2, "dataElement", "value", c(data.elements))
 
   bp.object <- ggplot(df3, aes_string(x = "YEAR", group="YEAR", y = "value") ) + 
-    geom_boxplot(notch=plot.notch) +
+    geom_boxplot(notch=plot.notch,fill = "darkorange") +
     facet_grid(dataElement ~ ., scales="free")  +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   

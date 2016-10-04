@@ -34,7 +34,7 @@ body <- dashboardBody(
               value = "plotTwoTab",
               fluidRow(
                 column(11, 
-                       scatterD3Output("plotTwo", height = "700px", width = "100%"))
+                       plotlyOutput("plotTwo", width = "100%"))
               ),
               h4(""),
               fluidRow(
@@ -50,7 +50,7 @@ body <- dashboardBody(
               value = "plotTwoElem",
               fluidRow(
                 column(11, 
-                       scatterD3Output("plotTwoElement",height = "700px", width = "100%"))
+                       plotlyOutput("plotTwoElement",width = "100%"))
               ),
               h4(""),
               fluidRow(
@@ -82,7 +82,7 @@ body <- dashboardBody(
               value = "boxPlotTab",
               fluidRow(
                 column(11, 
-                       plotOutput("plotBoxplots",width = "100%"))
+                       plotlyOutput("plotBoxplots",width = "100%"))
                 
               ),
               h4(""),
@@ -212,9 +212,12 @@ sidebar <- dashboardSidebar(
     checkboxInput("notchOn", label = "Notched Boxes", value = FALSE)
   ),
   conditionalPanel(
+    condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem' ",
+      checkboxInput("points", label = "Points", value = TRUE)
+  ),
+  conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem' | input.mainTabs == 'boxPlotTab'",
-      checkboxInput("points", label = "Points", value = TRUE),
-      checkboxInput("log", label = "Log Scale")
+    checkboxInput("log", label = "Log Scale")
   ),
   menuItem("Choose States", icon = icon("th"), tabName = "stateTab",
            checkboxGroupInput("state", label = "Choose State(s):",choices = states,
