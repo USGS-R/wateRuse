@@ -2,6 +2,12 @@ output$plotBarSums <- renderPlot({
   plotBarSums()
 })
 
+output$plotBarSums <- renderPlotly({
+  plotBarSums <- plotBarSums()
+  
+  ggplotly(plotBarSums)
+})
+
 plotBarSums <- reactive({
   
   w.use <- w.use_barSum()

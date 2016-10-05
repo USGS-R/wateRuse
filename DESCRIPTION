@@ -35,7 +35,8 @@ Imports:
     rgeos,
     scales,
     dplyr,
-    plotly
+    plotly,
+    ggthemes
 Suggests:
     testthat,
     knitr

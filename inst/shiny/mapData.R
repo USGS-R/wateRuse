@@ -1,5 +1,6 @@
-output$mapData <- renderPlot({
-  mapData()
+output$mapData <- renderPlotly({
+  mapData <- mapData()
+  ggplotly(mapData)
 })
 
 mapData <- reactive({
@@ -36,23 +37,23 @@ mapData <- reactive({
   mapData
   
 })
-
-output$hover_map <- renderPrint({
-  txt <- ""
-  
-  hover=input$hover_map
-  
-  if(!is.null(hover)){
-    
-    data <- histCounties
-    point.to.check <- SpatialPoints(data.frame(x = hover$x, y=hover$y), proj4string=CRS(proj4string(data)))
-    
-    dist=over(point.to.check, data)
-    txt <- dist$FIPS
-  }
-  
-  cat("Site: ", txt)
-})
+# 
+# output$hover_map <- renderPrint({
+#   txt <- ""
+#   
+#   hover=input$hover_map
+#   
+#   if(!is.null(hover)){
+#     
+#     data <- histCounties
+#     point.to.check <- SpatialPoints(data.frame(x = hover$x, y=hover$y), proj4string=CRS(proj4string(data)))
+#     
+#     dist=over(point.to.check, data)
+#     txt <- dist$FIPS
+#   }
+#   
+#   cat("Site: ", txt)
+# })
 
 output$downloadMap <- downloadHandler(
   filename = function() { "map.png" },

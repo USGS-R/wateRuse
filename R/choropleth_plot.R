@@ -19,6 +19,7 @@
 #' @import mapproj
 #' @import rgeos
 #' @import scales
+#' @importFrom ggthemes theme_map
 #' @importFrom dplyr left_join
 #' 
 #' @examples 
@@ -95,7 +96,9 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   ch.plot <- ggplot() + geom_polygon(data = hc.subf, 
                  aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 
-                 coord_map() + 
+                 coord_quickmap() + 
+                 theme_map() +
+                 theme(legend.position=c(.8, .2)) +
                  scale_fill_distiller(name=p.elem, palette = "YlGn", breaks = pretty_breaks(n = 5), trans = "reverse")
   
   print(ch.plot)

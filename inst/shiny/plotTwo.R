@@ -31,7 +31,7 @@ plotTwo <- reactive({
 output$plotTwo <- renderPlotly({
   plotTwo <- plotTwo()
   
-  ggplotly(plotTwo)
+  ggplotly(plotTwo, height = "800px")
 })
 
 output$downloadPlotTwo <- downloadHandler(
