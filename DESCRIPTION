@@ -1,7 +1,7 @@
 Package: wateRuse
 Type: Package
 Title: wateRuse data analysis functions
-Version: 1.0.0
+Version: 1.0.1
 Date: 2016-07-05
 Authors@R: c( person("Robert", "Dudley", role = c("aut", "cre"),
     email = "rwdudley@usgs.gov"),
@@ -34,7 +34,9 @@ Imports:
     mapproj,
     rgeos,
     scales,
-    dplyr
+    dplyr,
+    plotly,
+    ggthemes
 Suggests:
     testthat,
     knitr

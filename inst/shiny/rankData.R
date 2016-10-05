@@ -25,7 +25,7 @@ output$rankData <- DT::renderDataTable({
                                            order=list(list(2,'desc'))))
   yearRange <- input$whatYears
   colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange)+1,3),"Blues")
-  names(colors)[2:length(yearRange)] <- yearRange
+  names(colors)[2:(length(yearRange)+1)] <- yearRange
   for(i in yearRange){
     rankData <- formatStyle(rankData, as.character(i),
                             background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), 

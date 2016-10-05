@@ -61,12 +61,12 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
   ts.object <- ggplot(data = df) 
   
   if(plot.points){
-    ts.object <- ts.object + geom_point(aes_string(x = "YEAR", y = "value", color = area.column), show.legend = legend)+
+    ts.object <- ts.object + geom_point(aes_string(x = "YEAR", y = "value", color = area.column)) +
       scale_colour_manual(values=c.palette)
   } else {
     ts.object <- ts.object + geom_bar(aes_string(x = "YEAR", y = "value", 
                                                  fill = area.column), 
-                                      position = "dodge",stat="identity",show.legend = legend)+
+                                      position = "dodge",stat="identity")+
       scale_fill_manual(values=c.palette)
   }
 
@@ -80,6 +80,10 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
 
   if(log){
     ts.object <- ts.object + scale_y_log10()
+  }
+  
+  if(!legend){
+    ts.object <- ts.object + theme(legend.position = "none")
   }
   
   ts.object

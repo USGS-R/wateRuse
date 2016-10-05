@@ -4,6 +4,7 @@ library(wateRuse)
 library(ggplot2)
 library(tidyr)
 library(RColorBrewer)
+library(plotly)
 
 w.use.start <- wUseSample
 
@@ -159,7 +160,7 @@ shinyServer(function(input, output, session) {
     choice.area <- names(w.use)[names(w.use) %in% area.names]
 
     df[["states"]] <- choices
-    df[["state"]] <- choices[1]
+    df[["state"]] <- ifelse("COUNTYNAME" %in% choices, "COUNTYNAME", choices[1])
     df[["area.column"]] <- choice.area[1]
     df[["area.columns"]] <- choice.area
     

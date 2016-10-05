@@ -6,8 +6,7 @@
 \usage{
 multi_element_data(w.use, data.elements, area.column, plot.points = TRUE,
   years = NA, areas = NA, y.scale = NA, log = FALSE, legend = TRUE,
-  c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
-  "#0072B2", "#D55E00", "#CC79A7"))
+  c.palette = c("dodgerblue", "forestgreen"))
 }
 \arguments{
 \item{w.use}{is a subset of the datafile wUseSample that includes all areas in all data elements for state}

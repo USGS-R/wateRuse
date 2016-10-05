@@ -28,40 +28,41 @@ tsPlot <- reactive({
   
   write.csv(file = "tsPlot.csv", tsPlot$data, row.names = FALSE)
   
-  tsPlot
+  return(tsPlot)
 })
 
-output$plotTime <- renderPlot({
-  tsPlot()
+output$plotTime <- renderPlotly({
+  tsPlot <- tsPlot()
+  ggplotly(tsPlot)
 })
 
-output$hover_info_ts <- renderPrint({
-  txt <- ""
-  
-  points <- input$points
-  hover=input$hover_info_ts
-  
-  if(!is.null(hover)){
-    tsPlot <- tsPlot()
-    data <- tsPlot$data
-    
-    if(points){
-      dist=sqrt((hover$x-as.numeric(data$YEAR))^2+(hover$y-data$value)^2)
-      if(min(dist, rm.na=TRUE) < 5){
-        txt <- data[[df[["area.column"]]]][which.min(dist)]
-      }
-      # } else {
-      #   dist=sqrt((hover$x-data$YEAR)^2)
-      #   levels()
-      #   if(min(dist, rm.na=TRUE) < 5){
-      #     txt <- data[[df[["area.column"]]]][which.min(dist)]
-      #   }
-    }
-    
-  }
-  
-  cat("Site: ", txt)
-})
+# output$hover_info_ts <- renderPrint({
+#   txt <- ""
+#   
+#   points <- input$points
+#   hover=input$hover_info_ts
+#   
+#   if(!is.null(hover)){
+#     tsPlot <- tsPlot()
+#     data <- tsPlot$data
+#     
+#     if(points){
+#       dist=sqrt((hover$x-as.numeric(data$YEAR))^2+(hover$y-data$value)^2)
+#       if(min(dist, rm.na=TRUE) < 5){
+#         txt <- data[[df[["area.column"]]]][which.min(dist)]
+#       }
+#       # } else {
+#       #   dist=sqrt((hover$x-data$YEAR)^2)
+#       #   levels()
+#       #   if(min(dist, rm.na=TRUE) < 5){
+#       #     txt <- data[[df[["area.column"]]]][which.min(dist)]
+#       #   }
+#     }
+#     
+#   }
+#   
+#   cat("Site: ", txt)
+# })
 
 output$downloadPlotTime <- downloadHandler(
   filename = function() { "tsPlot.png" },

@@ -1,9 +1,8 @@
-output$plotTwo <- renderPlot({
-  plotTwo()
-})
+# output$plotTwo <- renderPlot({
+#   plotTwo()
+# })
 
 plotTwo <- reactive({
-  
   validate(
     need(input$state, 'Choose a State'),
     need(input$area, 'Choose an Area')
@@ -21,31 +20,18 @@ plotTwo <- reactive({
   
   area.column <- df[["area.column"]]
   year.x.y <- c(input$year_x,input$year_y)
+  
   plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
   
   write.csv(x = plotTwo$data, file = "plotTwoYears.csv", row.names = FALSE)
   
-  plotTwo
+  return(plotTwo)
 })
 
-output$hover_plotTwo <- renderPrint({
-  txt <- ""
+output$plotTwo <- renderPlotly({
+  plotTwo <- plotTwo()
   
-  if(!is.null(input$hover_plotTwo)){
-
-    hover=input$hover_plotTwo
-    plotTwo <- plotTwo()
-    data <- plotTwo$data
-    dist=sqrt((hover$x-data$x)^2+(hover$y-data$y)^2)
-    if(min(dist, na.rm = TRUE) < 5){
-      txt <- paste(data$site[which.min(dist)],
-                   "\n",input$year_x,"=",data$x[which.min(dist)],
-                   "\n",input$year_y,"=",data$y[which.min(dist)])
-    }
-  }
-  
-  cat("Site:",txt)
-  
+  ggplotly(plotTwo, height = "800px")
 })
 
 output$downloadPlotTwo <- downloadHandler(
