@@ -52,6 +52,10 @@ time_series_data <- function(w.use, data.elements, area.column, plot.points = TR
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
   
+  fix.labs <- gsub("\\,","\\,\n",dataelement$NAME)
+  names(fix.labs) <- dataelement$DATAELEMENT
+  
+  df$dataElement <- fix.labs[gsub(pattern = "\\.", replacement = "-", x = df$dataElement)]
   
   if(length(unique(df[[area.column]])) > length(c.palette)){
     c.palette.ramp <- colorRampPalette(c.palette)
