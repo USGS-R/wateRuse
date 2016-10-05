@@ -15,7 +15,7 @@ mapData <- reactive({
     norm.element <- NA
   }
   
-  if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE","HUCCODE"))){
+  if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE","HUCCODE","COUNTYNAME"))){
     
     if((df[["area.column"]] %in% c("Area"))){
       if(!(input$unitTypeHUC)){
