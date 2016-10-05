@@ -21,6 +21,7 @@
 #' @import scales
 #' @importFrom ggthemes theme_map
 #' @importFrom dplyr left_join
+#' @importFrom scales pretty_breaks
 #' 
 #' @examples 
 #' w.use <- wUseSample
@@ -82,7 +83,7 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   
   # merge polygons and water use data to build choropleth dataset
   hc.subf <- left_join(hc.subf,w.use.sub, by="id")
-  
+
   # plot element
   p.elem <- data.elements
   
@@ -90,16 +91,29 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   
   if (!is.na(norm.element)){p.elem <- paste0(data.elements,"_norm")}
   
-  hc.subf<-hc.subf[order(hc.subf$order), ]
-  hc.subf <- unique(hc.subf[,c("long","lat","group",p.elem)])
+  if("COUNTYNAME" %in% names(w.use) & !("COUNTYNAME" %in% names(hc.subf))){
+    hc.subf <- left_join(hc.subf, w.use[,c("STATECOUNTYCODE", "COUNTYNAME")], by=c("id"="STATECOUNTYCODE"))
+    hc.subf$labels <- paste("Area:",hc.subf$COUNTYNAME, "\n",p.elem,":",hc.subf[[p.elem]])
+  } else {
+    hc.subf$labels <- paste("Area:",hc.subf$group, "\n",p.elem,":",hc.subf[[p.elem]])    
+  }
+  
+  hc.subf <- hc.subf[order(hc.subf$order), ]
+  hc.subf <- unique(hc.subf[,c("long","lat","group","labels",p.elem)])
   hc.subf <- hc.subf[!is.na(hc.subf[,p.elem]),]
+  
+
+
+ 
   ch.plot <- ggplot() + geom_polygon(data = hc.subf, 
-                 aes_string(x = "long", y = "lat", group="group", fill= p.elem),#hc.subf[,p.elem]), 
+                 aes_string(x = "long", y = "lat", 
+                            group="group", fill= p.elem, label = "labels"),#hc.subf[,p.elem]), 
                  color="black", size=0.25) + 
                  coord_quickmap() + 
                  theme_map() +
                  theme(legend.position=c(.8, .2)) +
-                 scale_fill_distiller(name=p.elem, palette = "YlGn", breaks = pretty_breaks(n = 5), trans = "reverse")
+                 scale_fill_distiller(name=p.elem, palette = "YlGn", 
+                                      breaks = pretty_breaks(n = 5), trans = "reverse")
   
   print(ch.plot)
 
