@@ -160,8 +160,8 @@ shinyServer(function(input, output, session) {
     choice.area <- names(w.use)[names(w.use) %in% area.names]
 
     df[["states"]] <- choices
-    df[["state"]] <- ifelse("COUNTYNAME" %in% choices, "COUNTYNAME", choices[1])
-    df[["area.column"]] <- choice.area[1]
+    df[["state"]] <- ifelse("AK" %in% choices & length(choices) > 1, choices[2], choices[1])
+    df[["area.column"]] <- ifelse("COUNTYNAME" %in% choice.area, "COUNTYNAME", choice.area[1])
     df[["area.columns"]] <- choice.area
     
     if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use)){
