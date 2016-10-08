@@ -1,6 +1,4 @@
-output$plotBarSums <- renderPlot({
-  plotBarSums()
-})
+
 
 output$plotBarSums <- renderPlotly({
   plotBarSums <- plotBarSums()
