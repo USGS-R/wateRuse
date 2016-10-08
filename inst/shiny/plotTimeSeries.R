@@ -32,7 +32,9 @@ tsPlot <- reactive({
 })
 
 output$plotTime <- renderPlotly({
-  tsPlot <- tsPlot()
+  tsPlot <- tsPlot()+
+    theme(plot.margin=unit(c(10,10,90, 90), "points"))
+  
   ggplotly(tsPlot)
 })
 

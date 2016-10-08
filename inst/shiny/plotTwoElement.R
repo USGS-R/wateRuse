@@ -1,6 +1,10 @@
 output$plotTwoElement <- renderPlotly({
   plotTwoElement <- plotTwoElement()
   
+  plotTwoElement <- plotTwoElement +
+    theme(plot.margin=unit(c(10,10,50, 50), "points")) +
+    theme(axis.title.y=element_text(vjust= -0.1))
+  
   ggplotly(plotTwoElement)
 })
 

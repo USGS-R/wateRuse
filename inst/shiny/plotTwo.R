@@ -29,7 +29,8 @@ plotTwo <- reactive({
 })
 
 output$plotTwo <- renderPlotly({
-  plotTwo <- plotTwo()
+  plotTwo <- plotTwo()+
+    theme(plot.margin=unit(c(10,10,50, 50), "points"))
   
   ggplotly(plotTwo, height = "800px")
 })
