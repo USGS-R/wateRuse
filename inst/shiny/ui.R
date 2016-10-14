@@ -127,7 +127,7 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Choropleth", shiny::icon("map-marker")),
               value="map",
-              h3("Currently only works with county data"),
+              #h3("Currently only works with county data"),
               verbatimTextOutput("hover_map"),
               plotlyOutput('mapData', height = "600px"),
               downloadButton('downloadMap', 'Download PNG')
