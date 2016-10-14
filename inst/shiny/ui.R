@@ -129,7 +129,7 @@ body <- dashboardBody(
               value="map",
               h3("Currently only works with county data"),
               verbatimTextOutput("hover_map"),
-              plotlyOutput('mapData', height = "600px"),
+              plotlyOutput('mapData',width = "500px"),
               downloadButton('downloadMap', 'Download PNG')
      )
    ),
