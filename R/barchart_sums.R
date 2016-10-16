@@ -71,14 +71,14 @@ barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
   if(all(data.elements %in% colorList)){
     bc.object <- bc.object + 
       scale_fill_manual(values =   c("PS.WTotl" = "mediumpurple4",
-                                     "DO.WTotl" = "deeppink3",
-                                     "IN.WTotl" = "snow4", 
-                                     "PT.WTotl" = "goldenrod3", 
-                                     "MI.WTotl" = "red", 
-                                     "LS.WTotl" = "orange", 
-                                     "AQ.WTotl" = "yellow",
-                                     "IT.WTotl" = "green",
-                                     "TP.TotPop" = "blue",
+                                     "DO.WTotl" = "maroon3",
+                                     "IN.WTotl" = "burlywood4", 
+                                     "PT.WTotl" = "darkgoldenrod2", 
+                                     "MI.WTotl" = "darkorange2", 
+                                     "LS.WTotl" = "firebrick2", 
+                                     "AQ.WTotl" = "steelblue",
+                                     "IT.WTotl" = "darkcyan",
+                                     "TP.TotPop" = "steelblue2",
                                      "TO.WGWTo" = "purple", 
                                      "TO.WSWTo" = "brown"))
   }
