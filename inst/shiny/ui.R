@@ -207,10 +207,6 @@ sidebar <- dashboardSidebar(
     checkboxGroupInput("whatYears", label = "Years", choices = c("1990","2010"), selected = "2010")
   ),
   conditionalPanel(
-    condition = "input.mainTabs == 'boxPlotTab'",
-    checkboxInput("notchOn", label = "Notched Boxes", value = FALSE)
-  ),
-  conditionalPanel(
     condition = "input.mainTabs == 'plotTimeTab' | input.mainTabs == 'multiElem' ",
       checkboxInput("points", label = "Points", value = TRUE)
   ),
