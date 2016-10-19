@@ -80,8 +80,10 @@ body <- dashboardBody(
      tabPanel(title = tagList("Box Plots",shiny::icon("bar-chart")),
               value = "boxPlotTab",
               fluidRow(
-                column(11, 
-                       plotlyOutput("plotBoxplots",height = "600px"))
+                column(8, 
+                       plotlyOutput("plotBoxplots",height = "600px")),
+                column(3,
+                       imageOutput("boxLegend"))
                 
               ),
               h4(""),
