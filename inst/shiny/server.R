@@ -487,4 +487,13 @@ shinyServer(function(input, output, session) {
   
 ###################################################################
   
+  output$boxLegend <- renderImage({
+
+    filename <- normalizePath(file.path('./images',"boxPlot.jpg" ))
+
+    list(src = filename,
+         alt = "Boxplot legend")
+    
+  })
+  
 })
