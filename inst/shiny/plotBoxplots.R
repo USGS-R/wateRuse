@@ -21,8 +21,10 @@ plotBoxplots <- reactive({
 
   w.use <- filter(w.use, YEAR %in% input$whatYears)
   
+  sub.area <- ifelse("COUNTYNAME" %in% names(w.use), "COUNTYNAME", area.column)
+  
   plotBoxplots <- boxplot_wu(w.use, data.elements, area.column, areas=areas.p2e, 
-                             years=yrs, log=log)
+                             years=yrs, log=log, sub.area = sub.area)
   
   write.csv(x = plotBoxplots$data, file="plotBoxplots.csv", row.names = FALSE)
   
