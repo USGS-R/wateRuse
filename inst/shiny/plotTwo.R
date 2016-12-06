@@ -20,7 +20,7 @@ plotTwo <- reactive({
   
   area.column <- df[["area.column"]]
   year.x.y <- c(input$year_x,input$year_y)
-  
+
   plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
   
   write.csv(x = plotTwo$data, file = "plotTwoYears.csv", row.names = FALSE)
@@ -32,7 +32,7 @@ output$plotTwo <- renderPlotly({
   plotTwo <- plotTwo()+
     theme(plot.margin=unit(c(10,10,50, 50), "points"))
   
-  ggplotly(plotTwo, height = "800px")
+  ggplotly(plotTwo)
 })
 
 output$downloadPlotTwo <- downloadHandler(
