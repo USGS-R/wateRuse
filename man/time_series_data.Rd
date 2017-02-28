@@ -52,4 +52,3 @@ time_series_data(w.use, data.elements, area.column, y.scale = c(0,1000))
 time_series_data(w.use, data.elements, area.column, 
        y.scale = c(0,100),years = c(1990,2005))
 }
-

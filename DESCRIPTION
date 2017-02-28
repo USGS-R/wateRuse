@@ -45,4 +45,4 @@ LazyData: true
 VignetteBuilder: knitr
 BugReports: https://github.com/USGS-R/wateRuse/issues
 URL: https://github.com/USGS-R/wateRuse
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

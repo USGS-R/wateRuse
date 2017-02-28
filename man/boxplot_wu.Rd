@@ -36,4 +36,3 @@ boxplot_wu(w.use, data.elements, area.column = area.column,areas = areas)
 boxplot_wu(w.use, data.elements, area.column, log=TRUE)
 boxplot_wu(w.use, data.elements, area.column, years = c(1995, 2005))
 }
-

@@ -29,4 +29,3 @@ area.column <- "STATECODE"
 
 w.use.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 }
-

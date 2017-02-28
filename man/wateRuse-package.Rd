@@ -20,4 +20,3 @@ LazyLoad: \tab yes\cr
 \details{
 Collection of functions to help parse and analyze AWUDS data.
 }
-

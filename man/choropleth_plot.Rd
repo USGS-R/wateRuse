@@ -38,4 +38,3 @@ ch.plot <- choropleth_plot(w.use, data.elements, year, state, norm.element)
 ch.plot
 
 }
-

@@ -37,4 +37,3 @@ year <- 1850 # Maine had 13 counties in 1850; Delaware 3
 hc.sub <- subset_county_polygons(year, area.column, areas)
 hc.sub$NAME
 }
-

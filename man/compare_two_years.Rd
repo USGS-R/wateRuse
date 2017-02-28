@@ -37,4 +37,3 @@ compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 compare_two_years(w.use, data.elements, year.x.y, area.column)
 compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
 }
-
