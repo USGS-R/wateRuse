@@ -16,4 +16,3 @@ head(wUseSample)
 \keyword{data}
 \keyword{use}
 \keyword{water}
-

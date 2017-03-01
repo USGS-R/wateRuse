@@ -37,4 +37,3 @@ compare_two_elements(w.use, data.elements.x.y, years, area.column, areas)
 compare_two_elements(w.use, data.elements.x.y, years, area.column)
 compare_two_elements(w.use, data.elements.x.y, "2010", area.column)
 }
-

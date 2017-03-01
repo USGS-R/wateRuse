@@ -33,4 +33,3 @@ file <- c(system.file("extdata/dump/exampleAWUDSdump.txt", package="wateRuse"))
 awuds.data <- get_awuds_data(awuds.data.files=file)
 
 }
-

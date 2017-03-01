@@ -15,4 +15,3 @@ plot(huc08Poly[which(huc08Poly@data$STATES == "IA"),])
 \keyword{HUC08}
 \keyword{Waterhsed}
 \keyword{polygons}
-

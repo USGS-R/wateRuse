@@ -16,4 +16,3 @@ plot(histCounties[which(histCounties@data$STATE_TERR == "New Jersey"),])
 }
 \keyword{county}
 \keyword{polygons}
-

@@ -17,7 +17,7 @@ data.elements.start <- data.elements#[data.elements %in% names(w.use.start)]
 
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
-                    "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+                    "HUCCODE","Area","Area.Name","USSTATEHUCCODE","HUCNAME")
 other.names <- c("STUDY","STATECODE","COUNTYCODE",
                  "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
 

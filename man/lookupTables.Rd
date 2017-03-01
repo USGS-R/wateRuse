@@ -2,13 +2,13 @@
 % Please edit documentation in R/wateRuse.R
 \docType{data}
 \name{lookupTables}
-\alias{calculation}
-\alias{calculation.formula}
+\alias{lookupTables}
 \alias{category}
 \alias{county}
 \alias{dataelement}
 \alias{huc8}
-\alias{lookupTables}
+\alias{calculation}
+\alias{calculation.formula}
 \alias{stateCd}
 \title{Included data}
 \description{
@@ -29,4 +29,3 @@ head(huc8)
 head(calculation)
 head(calculation.formula)
 }
-

@@ -27,4 +27,3 @@ year <- 1995
 hc.sub <- subset_huc_polygons(year, area.column, areas)
 hc.sub$HUCNAME
 }
-
