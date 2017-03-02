@@ -92,10 +92,16 @@ choropleth_plot <- function(w.use, data.elements, year, state, norm.element=NA, 
   if (!is.na(norm.element)){p.elem <- paste0(data.elements,"_norm")}
   
   if("COUNTYNAME" %in% names(w.use) & !("COUNTYNAME" %in% names(hc.subf))){
-    hc.subf <- left_join(hc.subf, w.use[,c("STATECOUNTYCODE", "COUNTYNAME")], by=c("id"="STATECOUNTYCODE"))
-    hc.subf$labels <- paste("Area:",hc.subf$COUNTYNAME, "\n",p.elem,":",hc.subf[[p.elem]])
+      hc.subf <- left_join(hc.subf, w.use[,c("STATECOUNTYCODE", "COUNTYNAME")], by=c("id"="STATECOUNTYCODE"))
+      hc.subf$labels <- paste("Area:",hc.subf$COUNTYNAME, "\n",p.elem,":",hc.subf[[p.elem]])
+  } else if(unit.type=="county" & "Area.Name" %in% names(w.use) & !("Area.Name" %in% names(hc.subf))) {
+      hc.subf <- left_join(hc.subf, w.use[,c("STATECOUNTYCODE", "Area.Name")], by=c("id"="STATECOUNTYCODE"))
+      hc.subf$labels <- paste("Area:",hc.subf$Area.Name, "\n",p.elem,":",hc.subf[[p.elem]])
+  } else if(unit.type=="huc" & "Area.Name" %in% names(w.use) & !("Area.Name" %in% names(hc.subf))) {
+      hc.subf <- left_join(hc.subf, w.use[,c("HUCCODE", "Area.Name")], by=c("id"="HUCCODE"))
+      hc.subf$labels <- paste("Area:",hc.subf$Area.Name, "\n",p.elem,":",hc.subf[[p.elem]])
   } else {
-    hc.subf$labels <- paste("Area:",hc.subf$group, "\n",p.elem,":",hc.subf[[p.elem]])    
+      hc.subf$labels <- paste("Area:",hc.subf$group, "\n",p.elem,":",hc.subf[[p.elem]])    
   }
   
   hc.subf <- hc.subf[order(hc.subf$order), ]
