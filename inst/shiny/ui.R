@@ -149,6 +149,14 @@ body <- dashboardBody(
     )
 
 sidebar <- dashboardSidebar(
+  tags$head(tags$style(".shiny-plot-output{height:80vh !important;}")),
+  tags$button(
+      id = 'close',
+      type = "button",
+      class = "btn action-button",
+      onclick = "setTimeout(function(){window.close();},500);",  # close browser
+      "Stop wateRuse"
+    ),
   conditionalPanel(
     condition = "input.mainTabs != 'plotBarSumsTab'",
     selectInput("data.elements.type", label = "Data Element Type", 
