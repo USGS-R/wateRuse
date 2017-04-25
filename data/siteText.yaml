@@ -1,0 +1,69 @@
+aboutThisReport: |
+  This report summarizes web traffic across a subset of USGS Water data delivery applications using Google Analytics. A summary across all applications
+  and information on individual applications are available. Data are updated on a daily basis. 
+
+disclaimerTitle: "Disclaimer"
+
+disclaimer1: |
+  GA algorithms are subject to change without notice and these changes may impact apparent trends in usage. 
+  
+  GA cannot record visitors using certain ad blockers or other browser plugins.
+  
+  Web applications included in this report have used GA for varying periods of time; therefore retrospective analysis 
+  may be limited by the GA history available for any given website or application.
+  
+  Web service calls (such as a user accessing data through the NWIS API) are not included in this report; only user visits 
+  to websites are tracked.
+
+disclaimer2: |  
+  [Bot Filtering](https://support.google.com/analytics/answer/1010249?hl=en) is a function that removes traffic attributed 
+  to automated crawlers (not real users) from web traffic tracking and reporting. Until recently bot filtering was used 
+  inconsistently across projects included in this report. Bots and spiders may artificially inflate the reported traffic 
+  for a website, and decrease time on page; reported data from low traffic websites without bot filtering enabled should 
+  be used with caution.  
+
+  
+glossaryTitle: "Google Analytics Glossary"
+
+session: |
+  [Session](https://support.google.com/analytics/answer/2731565?hl=en#sessions-and-new-users): 
+  A GA session is a group of interactions that users make on a website within a given time frame.
+  
+visitors: |
+  [Visitor, new and returning](https://support.google.com/analytics/answer/1257084?hl=en): 
+  The initial session by a user during any given date range is considered to be an additional session 
+  and an additional visitor (new visitor). Any future sessions from the same user during the selected 
+  time period are counted as additional sessions, but not as additional visitors (returning visitor).
+  Note that one person accessing a site on multiple devices or multiple browsers will count as multiple 
+  visitors. Additionally, if a user has disabled or deletes cookies GA will not recognize them as the
+  same visitor.
+  
+geographical: |
+  [Geographical data](https://support.google.com/analytics/answer/6160484?hl=en): 
+  Geographical data are obtained from IP-based locations and are approximate. 
+
+average: |
+  [Average time on page](http://help.analyticsedge.com/googleanalytics/misunderstood-metrics-time-on-page-session-duration/): 
+  The average amount of time users spend on a website. This number can be biased by users who exit a website without navigating 
+  to another page or otherwise interacting. This number should be interpreted with caution, especially for websites with relatively 
+  low traffic. 
+
+traffic: |
+  [Traffic source / medium](https://support.google.com/analytics/answer/6099206?hl=en): 
+  These two dimensions are combined into a single variable by GA. Source: the origin of your traffic, such as a search engine 
+  (for example, google) or a domain (example.com). Medium: the general category of the source, for example, organic search (organic), 
+  cost-per-click paid search (cpc), web referral (referral).
+  
+  Direct traffic sessions can originate from a wide range of sources that do not pass on referral information, particularly mobile apps.
+  Large numbers of direct sessions can be addressed by using URL tags in links people would use to access a site, for instance in a social
+  media campaign.
+  
+device: |
+  [Device category](https://support.google.com/analytics/answer/3123672?hl=en): 
+  Indicates the device categories used to engage your content: desktop, tablet, or mobile. 
+
+
+
+
+
+  

@@ -1,0 +1,89 @@
+<div class="container flexContainer">
+	{{{sideBar}}}
+  <div class="content flex5">
+    <a href="index.html">
+      <button class="return">Return to Summary</button>
+    </a>
+    <h2 class="projectName">{{project_name}}</h2>
+    <section class="full">
+      <div class="header">
+				<h3>Project Timeline Summaries</h3>
+			</div>
+			<div class="chartArea">
+			  <h3>Year</h3>
+				{{{year_line_sessions}}}
+			</div>
+			<div class="chartArea">
+			  <h3>Month</h3>
+				{{{month_line_sessions}}}
+			</div>
+			<div class="chartArea">
+			  <h3>Week</h3>
+				{{{week_line_sessions}}}
+			</div>
+			<div class="chartArea">
+			  <h3>Day</h3>
+				{{{day_line_sessions}}}
+			</div>
+    </section>
+    <section class="full">
+			<div class="header">
+				<h3>Geographic Locations: Previous Month</h3>
+			</div>
+			<div class="chartArea">
+				{{{viz_geo_apps}}}
+			</div>
+    </section>
+    <section class="half flexContainer">
+			<div class="flex1 flexBorder">
+				<div class="header">
+					<h3>Time-of-Day Activity</h3>
+				</div>
+				<div class="chartArea">
+					{{{timeDayUse_app}}}
+				</div>
+			</div>
+			<div class="flex1">
+				<div class="header">
+					<h3>Device Type</h3>
+				</div>
+				<div class="chartArea">
+					{{{device_type}}}
+				</div>
+			</div>
+		</section>
+		<section class="half flexContainer">
+		  <div class="flex1 flexBorder">
+			  <div class="header">
+					<h3>Traffic Sources</h3>
+				</div>
+				<div class="chartArea">
+					{{{source_counts}}}
+				</div>
+			</div>
+			<div class="flex1">
+			  <div class="header">
+					<h3>Average Time on Page</h3>
+				</div>
+				<div class="chartArea">
+					{{{app_time}}}
+				</div>	
+			</div>
+		</section>
+		<section class="full">
+		  <div class="header">
+				<h3>New vs Returning Users</h3>
+			</div>
+			<div class="chartArea">
+				{{{monthly_users_chart}}}
+			</div>
+		</section>
+		<section class="disclaimerGlossary">
+		  <div class="header">
+				<h3>Disclaimer/Glossary</h3>
+			</div>
+		  {{{disclaimerGlossaryText}}}
+		</section>
+  </div><!--content-->
+</div>
+  
