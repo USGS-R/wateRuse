@@ -7,9 +7,3 @@ vignettes/wateRuse.R
 vignettes/wateRuse.html
 vignettes/.build.timestamp
 inst/shiny/*.csv
-cache/
-target/
-user/
-figures/
-vizlab/
-makefile
