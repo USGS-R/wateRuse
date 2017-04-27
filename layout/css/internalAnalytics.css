@@ -1,0 +1,161 @@
+*{padding:0; margin:0;}
+
+body,
+html{
+  font-family:"Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  height:100%;
+  min-width:767px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+  font-weight:400;
+}
+
+.flexContainer{
+  display:flex;
+  flex-direction:row;
+}
+.flex1{
+  flex:1; 
+}
+
+.flex5{
+  flex:5;
+}
+
+.container{
+  min-height:100%;
+}
+
+.sideBar{
+  min-width:250px;
+	max-width:300px;
+	border-right:2px solid rgb(220,220,220);
+}
+
+.sideBar h4{
+  padding:7px 2% 5px 2%;
+}
+
+.full{
+	min-height:100px;
+}
+
+.header{
+	background:rgb(240,240,240);
+	height:26px;
+	padding:2px 10px;
+	margin-bottom:20px
+}
+
+.chartArea{
+	min-height:100px;
+	text-align: center;
+	padding:0 10px 10px 10px;
+}
+
+.chartArea h3{
+  text-align:left;
+}
+
+.chartArea img{
+	width:100%;
+}
+
+.flexBorder{
+	border-right:2px solid rgb(220,220,220);
+}
+
+.disclaimer,
+.glossary{
+  padding:0 10px 10px 10px;
+}
+
+.disclaimer h3,
+.glossary h3{
+  font-weight:600;
+  margin-top:20px;
+}
+
+.disclaimer a,
+.glossary a{
+  color:rgb(0,51,102);
+  font-weight:600;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.disclaimer a:hover,
+.glossary a:hover{
+  text-decoration:underline;
+}
+
+.disclaimer p,
+.glossary p{
+  margin-bottom:10px;
+  font-size:1em;
+}
+
+#projects a{
+  color:rgb(0,51,102);
+  text-decoration:none;
+  display:inline-block;
+  padding:10px 2%;
+  width:96%;
+  border-top:1px solid rgb(220,220,220);
+}
+
+#projects a:hover{
+  background:rgb(0,51,102);
+  color:#fff;
+}
+
+#projects p{
+  font-size:.8em;
+}
+
+#projects p:nth-child(1){
+  padding-top:5px;
+}
+
+@media screen and (min-width:768px){
+  .disclaimer h3,
+  .glossary h3{
+    margin-top:10px;
+  }
+  .disclaimer p,
+  .glossary p{
+    margin-top:10px;
+  }
+}
+
+@media screen and (min-width: 1200px){
+  .chartArea h3{
+    width:60%;
+    margin:0 auto;
+  }
+  .chartArea img{
+		width:60%;
+	}
+  .glossary,
+  .disclaimer{
+    width:960px;
+    margin:0 auto;
+  }
+  .content{
+    width:1100px;
+    margin:0 auto;
+  }
+}
+
+@media screen and (min-width:1700px){
+  .content{
+    width:1400px;
+  }
+}
+
