@@ -9,6 +9,8 @@
 #' @export
 #' @importFrom tidyr gather_
 #' @importFrom tidyr spread_
+#' @importFrom tidyr spread
+#' @importFrom dplyr bind_rows
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fread
 #' @importFrom data.table setDT
@@ -99,13 +101,14 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
         }else{
           next_awuds_data <- gather_(next_awuds_data, "data.element","value", names(next_awuds_data)[!(names(next_awuds_data) %in% c("YEAR","Area"))])
         }
-        awuds_data<-rbind(awuds_data,next_awuds_data)
+        awuds_data <- bind_rows(awuds_data,next_awuds_data)
       }
     }
-    
-    awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(names(awuds_data)[!(names(awuds_data) %in% c("data.element","value"))],collapse = "+"),"~ data.element")), value.var = "value")
-    awuds_data <- setDF(awuds_data)
-    # awuds_data <- spread_(awuds_data, "data.element","value")
+
+    awuds_data <- unique(awuds_data)
+
+    awuds_data <- spread(awuds_data,key = data.element, value = value)
+
 
   } else {
     if(length(dump_file_to_open) > 1){
