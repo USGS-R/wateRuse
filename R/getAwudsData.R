@@ -9,6 +9,8 @@
 #' @export
 #' @importFrom tidyr gather_
 #' @importFrom tidyr spread_
+#' @importFrom tidyr spread
+#' @importFrom dplyr bind_rows
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fread
 #' @importFrom data.table setDT
@@ -86,18 +88,27 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
       if ( !exists('awuds_data') ) {
         awuds_data<-normalize_awuds_excel( new_awuds_data )
         awuds_data$YEAR <- year
-        awuds_data <- gather_(awuds_data, "data.element","value", names(awuds_data)[!(names(awuds_data) %in% c("YEAR","Area"))])
+        if (any(grepl("Area.Name",names(awuds_data)))){
+          awuds_data <- gather_(awuds_data, "data.element","value", names(awuds_data)[!(names(awuds_data) %in% c("YEAR","Area","Area.Name"))])
+        }else{
+          awuds_data <- gather_(awuds_data, "data.element","value", names(awuds_data)[!(names(awuds_data) %in% c("YEAR","Area"))])
+        }
       } else {
         next_awuds_data<-normalize_awuds_excel( new_awuds_data )
         next_awuds_data$YEAR<-year
-        next_awuds_data <- gather_(next_awuds_data, "data.element","value", names(next_awuds_data)[!(names(next_awuds_data) %in% c("YEAR","Area"))])
-        awuds_data<-rbind(awuds_data,next_awuds_data)
+        if (any(grepl("Area.Name",names(next_awuds_data)))){
+          next_awuds_data <- gather_(next_awuds_data, "data.element","value", names(next_awuds_data)[!(names(next_awuds_data) %in% c("YEAR","Area","Area.Name"))])
+        }else{
+          next_awuds_data <- gather_(next_awuds_data, "data.element","value", names(next_awuds_data)[!(names(next_awuds_data) %in% c("YEAR","Area"))])
+        }
+        awuds_data <- bind_rows(awuds_data,next_awuds_data)
       }
     }
-    
-    awuds_data <- dcast(setDT(awuds_data), as.formula(paste(paste(names(awuds_data)[!(names(awuds_data) %in% c("data.element","value"))],collapse = "+"),"~ data.element")), value.var = "value")
-    awuds_data <- setDF(awuds_data)
-    # awuds_data <- spread_(awuds_data, "data.element","value")
+
+    awuds_data <- unique(awuds_data)
+
+    awuds_data <- spread(awuds_data,key = data.element, value = value)
+
 
   } else {
     if(length(dump_file_to_open) > 1){
@@ -144,7 +155,9 @@ normalize_awuds_excel<-function(parseExport_out) {
     if ( !exists('normalized_awuds') ) {
       normalized_awuds <- parseExport_out[[awuds_category]]
     } else {
-      normalized_awuds <- merge(normalized_awuds, parseExport_out[[awuds_category]],by='Area')
+      normalized_awuds_append <-parseExport_out[[awuds_category]]
+      if (any(grepl("Area Name",names(parseExport_out[[awuds_category]])))){normalized_awuds_append <-normalized_awuds_append[,-(which(names(normalized_awuds_append)=="Area Name"))]}
+      normalized_awuds <- merge(normalized_awuds, normalized_awuds_append,by='Area')
       # This works, but requires Area to be in the right order.
       # normalized_awuds <- cbind(normalized_awuds, parseExport_out[[awuds_category]][-1])
     }

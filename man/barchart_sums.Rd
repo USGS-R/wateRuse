@@ -41,4 +41,3 @@ barchart_sums(w.use, data.elements, area.column, y.scale = c(0,500))
 barchart_sums(w.use, data.elements, area.column, 
        y.scale = c(0,100), years = c(1990,2005))
 }
-

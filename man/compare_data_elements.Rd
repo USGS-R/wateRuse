@@ -16,4 +16,3 @@ Compare multiple files
 w.use <- wUseSample
 df <- compare_data_elements(w.use)
 }
-

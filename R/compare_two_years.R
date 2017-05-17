@@ -70,13 +70,16 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
   }
   
   compare.plot <- ggplot(data = df_full) +
-   geom_point(aes_string(x = "x", y = "y", color = "site"), 
-              show.legend = legend, size = 3) +
+   geom_point(aes_string(x = "x", y = "y", color = "site"), size = 3) +
     geom_line(aes_string(x = "x", y = "x"),col="red") +
     facet_wrap(~ Key, ncol = 1) +
     xlab(year.x.y[1]) +
     ylab(year.x.y[2]) +
     scale_colour_manual(values=c.palette)
+  
+  if(!legend){
+    compare.plot <- compare.plot + theme(legend.position = "none")
+  }
   
   compare.plot
   

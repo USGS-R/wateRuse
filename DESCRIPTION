@@ -1,8 +1,8 @@
 Package: wateRuse
 Type: Package
 Title: wateRuse data analysis functions
-Version: 1.0.0
-Date: 2016-07-05
+Version: 1.0.7
+Date: 2016-12-06
 Authors@R: c( person("Robert", "Dudley", role = c("aut", "cre"),
     email = "rwdudley@usgs.gov"),
     person("Laura","DeCicco", role = "aut"),
@@ -17,7 +17,7 @@ Copyright: This software is in the public domain because it contains materials
     that originally came from the United States Geological Survey, an agency of
     the United States Department of Interior. For more information, see the
     official USGS copyright policy at
-    http://www.usgs.gov/visual-id/credit_usgs.html#copyright
+    https://www.usgs.gov/visual-id/credit_usgs.html#copyright
 Depends:
     R (>= 3.0),
     maptools
@@ -34,7 +34,9 @@ Imports:
     mapproj,
     rgeos,
     scales,
-    dplyr
+    dplyr,
+    plotly,
+    ggthemes
 Suggests:
     testthat,
     knitr
@@ -43,4 +45,4 @@ LazyData: true
 VignetteBuilder: knitr
 BugReports: https://github.com/USGS-R/wateRuse/issues
 URL: https://github.com/USGS-R/wateRuse
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -16,4 +16,3 @@ Calculate values
 w.use <- wUseSample
 w.use.new <- calculate_values(w.use)
 }
-

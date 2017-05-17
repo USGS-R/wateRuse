@@ -35,14 +35,13 @@
 #'        y.scale = c(0,100), years = c(1990,2005))
 multi_element_data <- function(w.use, data.elements, area.column, plot.points = TRUE,
                                years= NA, areas= NA, y.scale=NA, log= FALSE, legend= TRUE,
-                               c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){
+                               c.palette = c("dodgerblue","forestgreen")){
   
   w.use <- subset_wuse(w.use, data.elements, area.column, areas)
   
   df <- w.use[,c("YEAR",area.column,data.elements)]
   
   df <- gather_(df, "dataElement", "value", c(data.elements))
-  # df$area.column <- df[[area.column]]
   
   me.object <- ggplot(data = df, aes_string(x = "YEAR", y = "value"))
   
@@ -53,16 +52,16 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
   
   if(plot.points){
     me.object <- me.object + 
-      geom_point(aes_string(color = "dataElement"), show.legend = legend) +
-      geom_line(aes_string(color = "dataElement"), show.legend = legend) +
+      geom_point(aes_string(color = "dataElement")) +
+      geom_line(aes_string(color = "dataElement")) +
       scale_colour_manual(values=c.palette)
   } else {
     me.object <- me.object + geom_bar(aes_string(fill = "dataElement"), 
-                                      position = "dodge",stat="identity",show.legend = legend) +
+                                      position = "dodge",stat="identity") +
       scale_fill_manual(values=c.palette)
   }
   
-  me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ ."))) +
+  me.object <- me.object + facet_grid(as.formula(paste0(area.column," ~ .")), scales = "free") +
     ylab("") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
@@ -76,6 +75,10 @@ multi_element_data <- function(w.use, data.elements, area.column, plot.points = 
   
   if(log){
     me.object <- me.object + scale_y_log10()
+  }
+  
+  if(!legend){
+    me.object <- me.object + theme(legend.position = "none")
   }
   
   me.object

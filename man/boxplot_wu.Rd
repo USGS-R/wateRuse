@@ -4,8 +4,8 @@
 \alias{boxplot_wu}
 \title{boxplot_wu}
 \usage{
-boxplot_wu(w.use, data.elements, area.column, areas = NA,
-  plot.notch = FALSE, years = NA, log = FALSE)
+boxplot_wu(w.use, data.elements, area.column, sub.area = "COUNTYNAME",
+  areas = NA, plot.notch = FALSE, years = NA, log = FALSE)
 }
 \arguments{
 \item{w.use}{is a subset of the datafile wUseSample that includes all areas in all data elements for state}
@@ -13,6 +13,8 @@ boxplot_wu(w.use, data.elements, area.column, areas = NA,
 \item{data.elements}{character name of data element within available categories by year for state}
 
 \item{area.column}{character that defines which column to use to specify area}
+
+\item{sub.area}{is the area (county, huc) column name. This is most useful for the app}
 
 \item{areas}{is a geographical area as defined in your datafile such as county, HUC, or aquifer}
 
@@ -34,4 +36,3 @@ boxplot_wu(w.use, data.elements, area.column = area.column,areas = areas)
 boxplot_wu(w.use, data.elements, area.column, log=TRUE)
 boxplot_wu(w.use, data.elements, area.column, years = c(1995, 2005))
 }
-

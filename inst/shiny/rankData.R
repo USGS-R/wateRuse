@@ -24,11 +24,12 @@ output$rankData <- DT::renderDataTable({
                                            pageLength = nrow(df),
                                            order=list(list(2,'desc'))))
   yearRange <- input$whatYears
-  colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange),3),"Blues")
-  names(colors)[1:length(yearRange)] <- yearRange
+  colors <- brewer.pal(ifelse(length(yearRange)>=3,length(yearRange)+1,3),"Blues")
+  names(colors)[2:(length(yearRange)+1)] <- yearRange
   for(i in yearRange){
     rankData <- formatStyle(rankData, as.character(i),
-                            background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), colors[as.character(i)]),
+                            background = styleColorBar(range(df[[as.character(i)]],na.rm = TRUE), 
+                                                       colors[as.character(i)]),
                             backgroundSize = '100% 90%',
                             backgroundRepeat = 'no-repeat',
                             backgroundPosition = 'center' )

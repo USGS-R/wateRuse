@@ -7,6 +7,7 @@
 #' 
 #' @importFrom readxl read_excel
 #' @importFrom readxl excel_sheets
+#' @importFrom utils packageVersion
 #' @rdname parser
 #' 
 #' @export
@@ -34,7 +35,13 @@ parseExport <- function(file_path, citations = FALSE){
  parsed_data <- lapply(sheets_to_parse, function(sheet, path, citations){
    
    if(citations){
-     all_df <- read_excel(path, sheet, skip = 1)
+     major_readxl <- packageVersion("readxl")
+     if(major_readxl >= "1.0.0"){
+       all_df <- read_excel(path, sheet, skip = 2)
+     } else {
+       all_df <- read_excel(path, sheet, skip = 1)
+     }
+     
    } else {
      all_df <- read_excel(path, sheet)
    }

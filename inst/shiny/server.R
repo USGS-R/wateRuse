@@ -4,6 +4,7 @@ library(wateRuse)
 library(ggplot2)
 library(tidyr)
 library(RColorBrewer)
+library(plotly)
 
 w.use.start <- wUseSample
 
@@ -16,7 +17,7 @@ data.elements.start <- data.elements#[data.elements %in% names(w.use.start)]
 
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
-                    "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+                    "HUCCODE","Area","Area.Name","USSTATEHUCCODE","HUCNAME")
 other.names <- c("STUDY","STATECODE","COUNTYCODE",
                  "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
 
@@ -159,8 +160,8 @@ shinyServer(function(input, output, session) {
     choice.area <- names(w.use)[names(w.use) %in% area.names]
 
     df[["states"]] <- choices
-    df[["state"]] <- choices[1]
-    df[["area.column"]] <- choice.area[1]
+    df[["state"]] <- ifelse("AK" %in% choices & length(choices) > 1, choices[2], choices[1])
+    df[["area.column"]] <- ifelse("COUNTYNAME" %in% choice.area, "COUNTYNAME", choice.area[1])
     df[["area.columns"]] <- choice.area
     
     if(!is.null(w.use) && "USSTATEALPHACODE" %in% names(w.use)){
@@ -485,5 +486,14 @@ shinyServer(function(input, output, session) {
   source("mapData.R",local=TRUE)$value
   
 ###################################################################
+  
+  output$boxLegend <- renderImage({
+
+    filename <- normalizePath(file.path(system.file(package="wateRuse"),"extdata","boxPlot.jpg"))
+
+    list(src = filename,
+         alt = "Boxplot legend")
+    
+  })
   
 })

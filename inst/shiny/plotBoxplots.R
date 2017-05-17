@@ -14,7 +14,6 @@ plotBoxplots <- reactive({
   if(all(df[["areas"]] %in% areas.p2e)){
     areas.p2e <- NA
   }
-  notch <- input$notchOn
   yrs <- NA # may want to code ability to select certain years
   log <- input$log
   
@@ -22,17 +21,22 @@ plotBoxplots <- reactive({
 
   w.use <- filter(w.use, YEAR %in% input$whatYears)
   
+  sub.area <- ifelse("COUNTYNAME" %in% names(w.use), "COUNTYNAME", area.column)
+  
   plotBoxplots <- boxplot_wu(w.use, data.elements, area.column, areas=areas.p2e, 
-                             plot.notch=notch, years=yrs, log=log)
+                             years=yrs, log=log, sub.area = sub.area)
   
   write.csv(x = plotBoxplots$data, file="plotBoxplots.csv", row.names = FALSE)
   
-  plotBoxplots
+  return(plotBoxplots)
   
 })
 
-output$plotBoxplots <- renderPlot({
-  plotBoxplots()
+output$plotBoxplots <- renderPlotly({
+  plotBoxplots <- plotBoxplots()+
+    theme(plot.margin=unit(c(10,10,50, 50), "points")) 
+
+  ggplotly(plotBoxplots)
 })
 
 output$downloadPlotBoxplots <- downloadHandler(
@@ -70,7 +74,6 @@ output$plotBoxplotsCode <- renderPrint({
   }
   
   area.column <- df[["area.column"]]
-  notch <- input$notchOn
   yrs <- NA #to be changed when code added for year selection
   log <- input$log
   
@@ -78,11 +81,10 @@ output$plotBoxplotsCode <- renderPrint({
     'data.elements <- c("',paste0(data.elem,collapse = '","'),'")\n',
     "areas <- ",areas.pTC, "\n",
     'area.column <- "', area.column, '"\n',
-    'notch <- ',notch,"\n",
     'yrs <- ', yrs,"\n",
     'log <- ',log,"\n",
     "boxplot_wu(w.use, data.elements, area.column, areas=areas.p2e,\n", 
-    "plot.notch=notch, years=yrs, log=log)"
+    "years=yrs, log=log)"
     
   )
   

@@ -48,21 +48,42 @@ barchart_sums <- function(w.use, data.elements, area.column, plot.stack=TRUE,
   bc.object <- ggplot(data = df3) 
   
   if(plot.stack){
-    bc.object <- bc.object + geom_bar(aes_string(x = "YEAR", y = "value", fill = "dataElement"), 
+    bc.object <- bc.object + geom_bar(aes_string(x = "YEAR", y = "value", 
+                                                 fill = "dataElement"), 
                                       position = "stack",stat="identity")
   } else {
     bc.object <- bc.object + geom_bar(aes_string(x = "YEAR", y = "value", fill = "dataElement"), 
                                       position = "dodge",stat="identity")
   }
-  
-  if(length(unique(df3$dataElement)) > length(c.palette)){
-    c.palette.ramp <- colorRampPalette(c.palette)
-    c.palette <- c.palette.ramp(length(unique(df3$dataElement)))
-  }
-  
+
+  colorList <- c("PS.WTotl",
+    "DO.WTotl",
+    "IN.WTotl", 
+    "PT.WTotl", 
+    "MI.WTotl", 
+    "LS.WTotl", 
+    "AQ.WTotl",
+    "IT.WTotl",
+    "TP.TotPop",
+    "TO.WGWTo", 
+    "TO.WSWTo")
   #facet if totals available for multiple areas (counties, etc)
-  bc.object <- bc.object + 
-    scale_fill_manual(values=c.palette) +
+  if(all(data.elements %in% colorList)){
+    bc.object <- bc.object + 
+      scale_fill_manual(values =   c("PS.WTotl" = "mediumpurple4",
+                                     "DO.WTotl" = "maroon3",
+                                     "IN.WTotl" = "burlywood4", 
+                                     "PT.WTotl" = "darkgoldenrod2", 
+                                     "MI.WTotl" = "darkorange2", 
+                                     "LS.WTotl" = "firebrick2", 
+                                     "AQ.WTotl" = "steelblue",
+                                     "IT.WTotl" = "darkcyan",
+                                     "TP.TotPop" = "steelblue2",
+                                     "TO.WGWTo" = "purple", 
+                                     "TO.WSWTo" = "brown"))
+  }
+
+  bc.object <- bc.object +
     facet_grid(as.formula(paste0(area.column," ~ .")), scales="free") +
     ylab("") 
   
