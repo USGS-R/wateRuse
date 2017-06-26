@@ -5,7 +5,7 @@ output$plotTwoElement <- renderPlotly({
     theme(plot.margin=unit(c(10,10,50, 50), "points")) +
     theme(axis.title.y=element_text(vjust= -0.1))
   
-  ggplotly(plotTwoElement, width = "100%")
+  ggplotly(plotTwoElement, width = "100%", height = "1000px")
 })
 
 plotTwoElement <- reactive({

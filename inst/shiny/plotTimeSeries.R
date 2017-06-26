@@ -35,7 +35,7 @@ output$plotTime <- renderPlotly({
   tsPlot <- tsPlot()+
     theme(plot.margin=unit(c(10,10,90, 90), "points"))
   
-  ggplotly(tsPlot, width = "100%")
+  ggplotly(tsPlot, width = "100%", height = "1000px")
 })
 
 # output$hover_info_ts <- renderPrint({
