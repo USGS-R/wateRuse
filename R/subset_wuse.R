@@ -20,6 +20,10 @@
 #' w.use.sub <- subset_wuse(w.use, data.elements,area.column,areas)
 subset_wuse <- function(w.use, data.elements, area.column, areas=NA) {
   # subset w.use on basis of areas and select the data elements of interest
+  # if (all(is.na(data.elements))){
+  #   stop("All data.elements cannot be NA.")
+  # }
+  data.elements <- data.elements[which(!is.na(data.elements))]
   if (all(is.na(areas))){
     w.use.sub <- w.use[,c("YEAR",area.column,data.elements)]
   }else{
