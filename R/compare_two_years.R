@@ -29,7 +29,9 @@
 compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, 
                               legend = FALSE,
                               c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){ 
-
+  
+  data.elements <- data.elements[which(!is.na(data.elements))]
+  
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
   
   w.use.sub <-  w.use.sub[w.use.sub$YEAR %in% year.x.y,] 
