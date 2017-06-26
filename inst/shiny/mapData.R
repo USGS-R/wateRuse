@@ -1,6 +1,6 @@
 output$mapData <- renderPlotly({
   mapData <- mapData()
-  ggplotly(mapData, tooltip = "label")
+  ggplotly(mapData, tooltip = "label", width = "100%")
 })
 
 mapData <- reactive({
