@@ -32,7 +32,7 @@ output$plotTwo <- renderPlotly({
   plotTwo <- plotTwo()+
     theme(plot.margin=unit(c(10,10,50, 50), "points"))
   
-  ggplotly(plotTwo)
+  ggplotly(plotTwo, width = "100%", height = "1000px")
 })
 
 output$downloadPlotTwo <- downloadHandler(

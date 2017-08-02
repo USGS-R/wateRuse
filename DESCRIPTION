@@ -1,8 +1,7 @@
 Package: wateRuse
 Type: Package
 Title: wateRuse data analysis functions
-Version: 1.0.7
-Date: 2017-04-27
+Version: 1.0.8
 Authors@R: c( person("Robert", "Dudley", role = c("aut", "cre"),
     email = "rwdudley@usgs.gov"),
     person("Laura","DeCicco", role = "aut"),
