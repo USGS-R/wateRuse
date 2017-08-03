@@ -77,6 +77,15 @@ A visual of the github contribution workflow used [is here.](https://github.com/
 
 Other userful information for contributing can be [found here.](https://github.com/USGS-R/wateRuse/wiki/3.-Useful-tips-and-links-for-working-in-R-and-R-Studio)
 
+### Development Mode
+The shiny app can be started in development mode, with sample data loaded automatically and shiny files in from the source `inst` directory. Assuming your working directory is the package source directory, start the app with a `dev` variable set to `TRUE` in your global environment and point to the `inst/shiny` directory like this:
+
+```
+library(wateRuse)
+dev <- TRUE
+runApp("inst/shiny", launch.browser = TRUE)
+```
+
 ## Disclaimer
 This software is in the public domain because it contains materials that originally came from the U.S. Geological Survey, an agency of the United States Department of Interior. For more information, see the [official USGS copyright policy](https://www.usgs.gov/visual-id/credit_usgs.html#copyright/ "official USGS copyright policy")
 
