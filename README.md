@@ -1,9 +1,28 @@
 `wateRuse`
 =============
 
- [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)
+## Package Status
 
-##Package Installation
+
+|Linux|Windows|Test Coverage| USGS Status |
+|----------|------------|------------|------------|
+| [![travis](https://travis-ci.org/USGS-R/wateRuse.svg?branch=master)](https://travis-ci.org/USGS-R/wateRuse)|[![Build status](https://ci.appveyor.com/api/projects/status/i2hr35abwxx85vgs?svg=true)](https://ci.appveyor.com/project/ldecicco-USGS/wateRuse)|[![Coverage Status](https://coveralls.io/repos/github/USGS-R/wateRuse/badge.svg?branch=master)](https://coveralls.io/github/USGS-R/wateRuse?branch=master)|[![status](https://img.shields.io/badge/USGS-Support-yellow.svg)](https://owi.usgs.gov/R/packages.html#support)|
+
+### Reporting bugs
+
+Please consider reporting bugs and asking questions on the Issues page:
+[https://github.com/USGS-R/wateRuse/issues](https://github.com/USGS-R/wateRuse/issues)
+
+Follow `@USGS_R` on Twitter for updates on USGS R packages:
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/USGS_R.svg?style=social&label=Follow%20USGS_R)](https://twitter.com/USGS_R)
+
+### Code of Conduct
+
+We want to encourage a warm, welcoming, and safe environment for contributing to this project. See the [code of conduct](https://github.com/USGS-R/wateRuse/blob/master/CONDUCT.md) for more information.
+
+
+## Package Installation
 To install the wateRuse package:
 
 1. Install R (version 3.0 or greater) from: [https://cran.r-project.org/](https://cran.r-project.org/)
@@ -58,7 +77,16 @@ A visual of the github contribution workflow used [is here.](https://github.com/
 
 Other userful information for contributing can be [found here.](https://github.com/USGS-R/wateRuse/wiki/3.-Useful-tips-and-links-for-working-in-R-and-R-Studio)
 
-##Disclaimer
+### Development Mode
+The shiny app can be started in development mode, with sample data loaded automatically and shiny files in from the source `inst` directory. Assuming your working directory is the package source directory, start the app with a `dev` variable set to `TRUE` in your global environment and point to the `inst/shiny` directory like this:
+
+```
+library(wateRuse)
+dev <- TRUE
+runApp("inst/shiny", launch.browser = TRUE)
+```
+
+## Disclaimer
 This software is in the public domain because it contains materials that originally came from the U.S. Geological Survey, an agency of the United States Department of Interior. For more information, see the [official USGS copyright policy](https://www.usgs.gov/visual-id/credit_usgs.html#copyright/ "official USGS copyright policy")
 
 Although this software program has been used by the U.S. Geological Survey (USGS), no warranty, expressed or implied, is made by the USGS or the U.S. Government as to the accuracy and functioning of the program and related program material nor shall the fact of distribution constitute any such warranty, and no responsibility is assumed by the USGS in connection therewith.

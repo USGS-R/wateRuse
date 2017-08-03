@@ -2,3 +2,4 @@
 images
 ^.*\.Rproj$
 ^\.Rproj\.user$
+CONDUCT.md

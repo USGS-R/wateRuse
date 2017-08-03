@@ -6,6 +6,8 @@ library(tidyr)
 library(RColorBrewer)
 library(plotly)
 
+if(!exists("dev")) dev=F
+
 w.use.start <- wUseSample
 
 data.elements.type <- category$CODE
@@ -13,7 +15,12 @@ names(data.elements.type) <- category$NAME
 
 data.elements <- gsub("-", ".", dataelement$DATAELEMENT)
 data.elements <- data.elements[which(dataelement$CATEGORYCODE == data.elements.type[1])]
-data.elements.start <- data.elements#[data.elements %in% names(w.use.start)]
+
+if(dev) {
+  data.elements.start <- data.elements#[data.elements %in% names(w.use.start)]
+} else {
+  data.elements.start <- data.elements
+}
 
 options(shiny.maxRequestSize=50*1024^2) 
 area.names <- c("STATECOUNTYCODE","COUNTYNAME",
@@ -35,7 +42,7 @@ shinyServer(function(input, output, session) {
     } else {
       
       w.use <- w.use.start
-      w.use <- w.use[-1:-nrow(w.use.start),]
+      if(!dev) w.use <- w.use[-1:-nrow(w.use.start),]
     }
 
     w.use
@@ -134,18 +141,37 @@ shinyServer(function(input, output, session) {
     
   })
 
-  df <- reactiveValues(area.column="COUNTYNAME",
-                       area.columns=c("STATECOUNTYCODE","COUNTYNAME"),
-                       areas = "Choose Data",
-                       area = "Choose Data",
-                       states = "All Available",
-                       state = "All Available",
-                       data.elements = data.elements.start,
-                       data.element = data.elements.start[1],
-                       data.elements.y = data.elements.start,
-                       data.element.y = data.elements.start[1],
-                       data.elements.norm = c("None",data.elements.start),
-                       data.element.norm = "None")
+  if(dev) {
+    states.in.order <- unique(w.use.start[["USSTATEALPHACODE"]])
+    states.in.order <- states.in.order[order(states.in.order)]
+    
+    df <- reactiveValues(area.column="COUNTYNAME",
+                         area.columns=c("STATECOUNTYCODE","COUNTYNAME"),
+                         areas = unique(w.use.start[["COUNTYNAME"]]),
+                         area = unique(w.use.start[["COUNTYNAME"]]),
+                         states = states.in.order,
+                         state = states.in.order[1],
+                         data.elements = data.elements.start,
+                         data.element = data.elements.start[1],
+                         data.elements.y = data.elements.start,
+                         data.element.y = data.elements.start[1],
+                         data.elements.norm = c("None",data.elements.start),
+                         data.element.norm = "None")
+  } else {
+  
+    df <- reactiveValues(area.column="COUNTYNAME",
+                         area.columns=c("STATECOUNTYCODE","COUNTYNAME"),
+                         areas = "Choose Data",
+                         area = "Choose Data",
+                         states = "All Available",
+                         state = "All Available",
+                         data.elements = data.elements.start,
+                         data.element = data.elements.start[1],
+                         data.elements.y = data.elements.start,
+                         data.element.y = data.elements.start[1],
+                         data.elements.norm = c("None",data.elements.start),
+                         data.element.norm = "None")
+  }
   
   observeEvent(input$data, ignoreNULL = TRUE, {
     w.use <- w.use_full()

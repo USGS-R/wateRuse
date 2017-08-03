@@ -33,7 +33,7 @@ body <- dashboardBody(
               value = "plotTwoTab",
               fluidRow(
                 column(11, 
-                       plotlyOutput("plotTwo", height = "600px"))
+                       plotlyOutput("plotTwo"))
               ),
               h4(""),
               fluidRow(
@@ -49,7 +49,7 @@ body <- dashboardBody(
               value = "plotTwoElem",
               fluidRow(
                 column(11, 
-                       plotlyOutput("plotTwoElement",height = "600px"))
+                       plotlyOutput("plotTwoElement"))
               ),
               h4(""),
               fluidRow(
@@ -65,7 +65,7 @@ body <- dashboardBody(
               h5("Only first 3 areas supported in app"),
               fluidRow(
                 column(11, 
-                       plotlyOutput("plotMultiElem",height = "600px"))
+                       plotlyOutput("plotMultiElem"))
                 
               ),
               h4(""),
@@ -81,7 +81,7 @@ body <- dashboardBody(
               value = "boxPlotTab",
               fluidRow(
                 column(8, 
-                       plotlyOutput("plotBoxplots",height = "600px")),
+                       plotlyOutput("plotBoxplots")),
                 column(3,
                        imageOutput("boxLegend"))
                 
@@ -97,7 +97,7 @@ body <- dashboardBody(
      ),
      tabPanel(title = tagList("Time Series",shiny::icon("bar-chart")),
               value = "plotTimeTab",
-              plotlyOutput("plotTime",height = "600px"),
+              plotlyOutput("plotTime"),
               h4(""),
               fluidRow(
                 column(3, downloadButton('downloadPlotTime', 'Download PNG')),
@@ -110,7 +110,7 @@ body <- dashboardBody(
      tabPanel(title = tagList("Bar Sums",shiny::icon("bar-chart")),
               value = "plotBarSumsTab",
               h3("State Totals"),
-              plotlyOutput("plotBarSums",height = "600px"),
+              plotlyOutput("plotBarSums"),
               h4(""),
               fluidRow(
                 column(3, downloadButton('downloadPlotBarSums', 'Download PNG')),
@@ -131,7 +131,7 @@ body <- dashboardBody(
               value="map",
               #h3("Currently only works with county data"),
               verbatimTextOutput("hover_map"),
-              plotlyOutput('mapData',width = "500px"),
+              plotlyOutput('mapData'),
               downloadButton('downloadMap', 'Download PNG')
      )
    ),
