@@ -36,7 +36,7 @@ output$plotBoxplots <- renderPlotly({
   plotBoxplots <- plotBoxplots()+
     theme(plot.margin=unit(c(10,10,50, 50), "points")) 
 
-  ggplotly(plotBoxplots, width = 700, height = 450)
+  ggplotly(plotBoxplots, width = 700, height = 400)
 })
 
 output$downloadPlotBoxplots <- downloadHandler(
