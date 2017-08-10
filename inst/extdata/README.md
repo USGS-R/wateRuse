@@ -9,17 +9,17 @@ These files are currently exports of annual data for one or more categories of w
 
 ### County
 
-/excel/Export-Indiana-County-2005-2b.xlsx
+/excel/Export-Indiana-County-2005-2b.xlsx, 
 /excel/Export-Indiana-County-2010-2b.xlsx
 
 ### HUC8
 
-/excel/Export-Indiana-HUC8-2005-2b.xlsx
+/excel/Export-Indiana-HUC8-2005-2b.xlsx, 
 /excel/Export-Indiana-HUC8-2010-2b.xlsx
 
 ## Aquifer
 
-/excel/Export-Indiana-Aquifer-2005-2c.xlsx
+/excel/Export-Indiana-Aquifer-2005-2c.xlsx, 
 /excel/Export-Indiana-Aquifer-2010-2c.xlsx
 
 These aquifer files do not load currently (Issue#187) as AWUDS 3.2.4 dropped TP, total population worksheet for aquifers (TP data.elements is NA). 
