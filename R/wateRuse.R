@@ -99,3 +99,7 @@ NULL
 #' plot(huc08Poly[which(huc08Poly@data$STATES == "IA"),])
 #' }
 NULL
+
+# To remove note about no visible binding
+
+data.element <- value <- "dplyr_variable"
