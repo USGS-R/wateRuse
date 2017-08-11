@@ -3,7 +3,7 @@
 output$plotBarSums <- renderPlotly({
   plotBarSums <- plotBarSums()
   
-  ggplotly(plotBarSums, width = "100%")
+  ggplotly(plotBarSums, width = 700, height = 400)
 })
 
 plotBarSums <- reactive({

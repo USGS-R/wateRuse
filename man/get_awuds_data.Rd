@@ -21,12 +21,12 @@ Get data from local excel export or dump file.
 awuds.data.path <- system.file("extdata/dump", package="wateRuse")
 awuds.data <- get_awuds_data(awuds.data.path)
 
-awuds.data.path <- system.file("extdata/excel", package="wateRuse")
+awuds.data.path <- system.file("extdata/excel_test", package="wateRuse")
 awuds.data <- get_awuds_data(awuds.data.path)
 
-fileList <- c(system.file("extdata/excel/Export_2005_County.xlsx", package="wateRuse"),
-system.file("extdata/excel/Export_2010_County.xlsx", package="wateRuse"),
-system.file("extdata/excel/Export_2015_County.xlsx", package="wateRuse"))
+fileList <- c(system.file("extdata/excel_test/Export_2005_County.xlsx", package="wateRuse"),
+system.file("extdata/excel_test_test/Export_2010_County.xlsx", package="wateRuse"),
+system.file("extdata/excel_test/Export_2015_County.xlsx", package="wateRuse"))
 awuds.data <- get_awuds_data(awuds.data.files=fileList)
 
 file <- c(system.file("extdata/dump/exampleAWUDSdump.txt", package="wateRuse"))

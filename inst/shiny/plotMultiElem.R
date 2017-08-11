@@ -34,7 +34,7 @@ plotMultiElem <- reactive({
 
 output$plotMultiElem <- renderPlotly({
   plotMultiElem <- plotMultiElem()
-  ggplotly(plotMultiElem, width = 700, height = 450)
+  ggplotly(plotMultiElem, width = 700, height = 400)
 })
 
 output$downloadPlotmultiElem <- downloadHandler(
