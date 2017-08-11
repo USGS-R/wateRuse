@@ -1,7 +1,7 @@
 context("Parsing Tests")
 
 test_that("Entered Data", {
-  path <- system.file("extdata/excel", package="wateRuse")
+  path <- system.file("extdata/excel_test", package="wateRuse")
   exportData <- parseExport(file.path(path,"Export_2010_County.xlsx"),citation=TRUE)
   
   expect_is(exportData, 'list')
@@ -15,7 +15,7 @@ test_that("Compare Data", {
 })
 
 test_that("Excel Data Gets Normalized", {
-  path <- system.file("extdata/excel", package="wateRuse")
+  path <- system.file("extdata/excel_test", package="wateRuse")
   awuds <- get_awuds_data(path)
   expect_equal(nrow(awuds),63)
   expect_equal(ncol(awuds),98)
@@ -33,9 +33,9 @@ test_that("Dump Data Gets Normalized", {
 })
 
 test_that("Excel Data Gets Normalized When Given List of Files", {
-  fileList <- c(system.file("extdata/excel/Export_2005_County.xlsx", package="wateRuse"),
-             system.file("extdata/excel/Export_2010_County.xlsx", package="wateRuse"),
-             system.file("extdata/excel/Export_2015_County.xlsx", package="wateRuse"))
+  fileList <- c(system.file("extdata/excel_test/Export_2005_County.xlsx", package="wateRuse"),
+             system.file("extdata/excel_test/Export_2010_County.xlsx", package="wateRuse"),
+             system.file("extdata/excel_test/Export_2015_County.xlsx", package="wateRuse"))
   awuds <- get_awuds_data(awuds.data.files=fileList)
   expect_equal(nrow(awuds),63)
   expect_equal(ncol(awuds),98)
