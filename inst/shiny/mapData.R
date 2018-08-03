@@ -15,11 +15,16 @@ mapData <- reactive({
     norm.element <- NA
   }
   
-  if((df[["area.column"]] %in% c("Area","STATECOUNTYCODE","HUCCODE","COUNTYNAME"))){
+  if((df[["area.column"]] %in% c("Area", "Area.Name", "STATECOUNTYCODE", "HUCCODE", "COUNTYNAME"))){
     
-    if((df[["area.column"]] %in% c("Area"))){
+    if((df[["area.column"]] %in% c("Area", "Area.Name"))){
       if(!(input$unitTypeHUC)){
-        w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])
+        if (df[["area.column"]] == c("Area.Name")){
+          w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[c("Area")]])  
+        }else{
+          w.use$STATECOUNTYCODE <- paste0(stateCd$STATE[which(stateCd$STATE_NAME == input$stateToMap)],w.use[[df[["area.column"]]]])  
+        }
+        
       } else {
         w.use$HUCCODE <- w.use[[df[["area.column"]]]]
       }
