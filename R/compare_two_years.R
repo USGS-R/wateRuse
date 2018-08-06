@@ -29,7 +29,7 @@
 compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, 
                               legend = FALSE,
                               c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){ 
-  
+
   data.elements <- data.elements[which(!is.na(data.elements))]
   
   w.use.sub <- subset_wuse(w.use, data.elements, area.column, areas)
@@ -38,24 +38,27 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
   
   x <- gather_(w.use.sub, "Key", "Value", data.elements)
   
+  x <- x[which(!is.na(x$Value)),]
+  
   for(i in data.elements){
     
-    df_x<-x[x$YEAR == year.x.y[1] & x$Key == i,][["Value"]]
-    df_y<-x[x$YEAR == year.x.y[2] & x$Key == i,][["Value"]]
-    df_site <- x[x$YEAR == year.x.y[2] & x$Key == i,][[area.column]]
+    df_site_x <- x[x$YEAR == year.x.y[1] & x$Key == i,][[area.column]]
+    df_site_y <- x[x$YEAR == year.x.y[2] & x$Key == i,][[area.column]]
+    df_site <- data.frame(unique(c(df_site_x, df_site_y)), stringsAsFactors = FALSE)
+    colnames(df_site) <- c(area.column)
     
-    if(!length(df_x)==length(df_y)) { # I found this issue with Alaska between 2005 and 2010.
-      stop('Different number of counties from one compilation year to the other not supported yet.')}
+    df_x <- x[x$YEAR == year.x.y[1] & x$Key == i,c(area.column, "Value")]
+    colnames(df_x) <- c(area.column, "x")
+    df_y <- x[x$YEAR == year.x.y[2] & x$Key == i,c(area.column, "Value")]
+    colnames(df_y) <- c(area.column, "y")
+
+    df <- left_join(df_site, df_x)
+    df <- left_join(df, df_y)
+    colnames(df) <- c("site", "x", "y")
     
-    if(all(is.na(df_x))) stop('No Data Available for First Year Selected')
+    if(all(is.na(df_x)) | nrow(df_x) == 0) stop('No Data Available for First Year Selected')
     
-    if(all(is.na(df_y))) stop('No Data Available for Second Year Selected')
-    
-    df <- data.frame(
-      x = df_x,
-      y = df_y,
-      site = df_site,
-      stringsAsFactors = FALSE)
+    if(all(is.na(df_y)) | nrow(df_y) == 0) stop('No Data Available for Second Year Selected')
     
     df$Key <- i
     
