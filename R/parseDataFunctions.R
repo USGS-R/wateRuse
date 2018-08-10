@@ -22,7 +22,10 @@
 #' exportData2010 <- parseExport(file.path(folderPath,"Import_2010_County-3_0805A.xlsx"),citation=TRUE)
 #' LI <- exportData2010[["LI"]]
 parseExport <- function(file_path, citations = FALSE){
- sheet_names <- excel_sheets(file_path)
+ 
+  sheet_names <- excel_sheets(file_path)
+  
+  sheet_names <- sheet_names[!(sheet_names %in% c("Methods Reference List", "Method Codes"))]
  
  #user-specified = don't parse the metadata sheet
  user <- "Dataset list" %in% sheet_names 
@@ -58,6 +61,7 @@ parseExport <- function(file_path, citations = FALSE){
    }
 
    df <- removeDuplicateColumns(df)
+   df <- removeMethodColumns(df)
    df <- removeAllNARows(df)
 
    return(df)
@@ -146,6 +150,14 @@ removeDuplicateColumns <- function(df){
   duplicate_columns <- which(duplicated(names(df)))
   if(length(duplicate_columns) > 0){
     df <- df[, -duplicate_columns]
+  }
+  return(df)
+}
+
+removeMethodColumns <- function(df){
+  Mcolumns <- which(grepl("-M", names(df)))
+  if(length(Mcolumns) > 0){
+    df <- df[, -Mcolumns]
   }
   return(df)
 }
