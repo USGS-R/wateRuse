@@ -39,6 +39,12 @@ shinyServer(function(input, output, session) {
       newPath <- gsub(", ","_",newPath)
       file.rename(from = path, to = newPath)
       w.use <- get_awuds_data(awuds.data.files = newPath)
+
+      # Create empty/dummy TP variable for AWUDS files that don't have that worksheet (e.g. aquifer files)
+      if (!("TP.TotPop" %in% colnames(w.use))){
+        w.use$TP.TotPop <- NA
+      }
+      
     } else {
       
       w.use <- w.use.start
