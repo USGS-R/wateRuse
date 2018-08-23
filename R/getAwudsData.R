@@ -55,7 +55,9 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
   }
   
   area.names <- c("STATECOUNTYCODE","COUNTYNAME",
-                  "HUCCODE","Area","USSTATEHUCCODE","HUCNAME")
+    "HUCCODE","Area","Area.Name","USSTATEHUCCODE","HUCNAME",
+    "AQUIFERCODE", "USSTATEAQUIFERCODE", "AQUIFERNAME",
+    "USSTATECOUNTYAQUIFERCODE", "COUNTYAQUIFERNAME")
   other.names <- c("STUDY","STATECODE","COUNTYCODE",
                    "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
   
@@ -102,6 +104,22 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
           next_awuds_data <- gather_(next_awuds_data, "data.element","value", names(next_awuds_data)[!(names(next_awuds_data) %in% c("YEAR","Area"))])
         }
         awuds_data <- bind_rows(awuds_data,next_awuds_data)
+      }
+      # Handle new county-aquifer export files by aggregating (sum) data by aquifer making awuds_data look like an aquifer export file
+      # This is a placeholder for now. Perhaps the ideal way to handle this in the future would be to load in as is and have some means of selecting aggregation options (county or aquifer)
+      if (grepl(pattern = "CountyAquifer", x = file_open)){
+        
+        aquiferCodes <- strsplit(awuds_data$Area, split = c("-"), fixed = TRUE)
+        awuds_data$Area <- unlist(lapply(aquiferCodes, "[", c(3)))
+        
+        aquiferNames <- strsplit(awuds_data$Area.Name, split = c("County-"), fixed = TRUE)
+        awuds_data$Area.Name <- unlist(lapply(aquiferNames, "[", c(2)))
+        
+        rm(aquiferCodes, aquiferNames)
+        
+        awuds_data <- aggregate(value ~ Area + Area.Name + data.element + YEAR, 
+          awuds_data, sum, na.action = na.pass)
+        
       }
     }
 
