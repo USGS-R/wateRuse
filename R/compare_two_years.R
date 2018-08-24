@@ -26,8 +26,9 @@
 #' compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 #' compare_two_years(w.use, data.elements, year.x.y, area.column)
 #' compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
+#' compare_two_years(w.use, "PS.TOPop", year.x.y, area.column, pctDiff = 50, valDiff = 100)
 compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas=NA, 
-                              legend = FALSE,
+                              legend = FALSE, pctDiff = 0, valDiff = 0, log.oper = "and",
                               c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){ 
 
   data.elements <- data.elements[which(!is.na(data.elements))]
@@ -59,7 +60,19 @@ compare_two_years <- function(w.use, data.elements, year.x.y, area.column, areas
     if(all(is.na(df_x)) | nrow(df_x) == 0) stop('No Data Available for First Year Selected')
     
     if(all(is.na(df_y)) | nrow(df_y) == 0) stop('No Data Available for Second Year Selected')
-    
+
+    # apply outlier crtieria
+    if (pctDiff != 0 | valDiff != 0){
+      df$pctDiff <- abs(round((df$y - df$x) / df$x * 100, 1))
+      df$valDiff <- abs(df$y - df$x)
+      if (log.oper == "and"){
+        df <- df[which(df$pctDiff >= pctDiff & df$valDiff >= valDiff),]
+      }else{
+        df <- df[which(df$pctDiff >= pctDiff | df$valDiff >= valDiff),]
+      }
+      df <- df[,c("site", "x", "y")]
+    }
+
     df$Key <- i
     
     if(i == data.elements[1]){
