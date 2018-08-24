@@ -18,10 +18,15 @@ plotTwo <- reactive({
   }
   legend <- input$legendOn
   
+  pctDiff <- input$pctDiff
+  valDiff <- input$valDiff
+  log.oper <- input$logOperSelect
+  
   area.column <- df[["area.column"]]
   year.x.y <- c(input$year_x,input$year_y)
 
-  plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column, areas = areas.p2, legend=legend)
+  plotTwo <- compare_two_years(w.use, data.elements, year.x.y, area.column,
+    areas = areas.p2, legend=legend, pctDiff = pctDiff, valDiff = valDiff, log.oper = log.oper)
   
   write.csv(x = plotTwo$data, file = "plotTwoYears.csv", row.names = FALSE)
   
@@ -61,7 +66,9 @@ output$plotTwoCode <- renderPrint({
   data.elements <- input$data.elements
   areas.ptC <- df[["area"]]
   legend <- input$legendOn
-  
+  pctDiff <- input$pctDiff
+  valDiff <- input$valDiff
+  log.oper <- input$logOperSelect
   areasOptions <- df[["areas"]]
   
   if(all(areasOptions %in% areas.ptC)){
@@ -79,7 +86,10 @@ output$plotTwoCode <- renderPrint({
     'area.column <- "', area.column, '"\n',
     "year.x.y <- c(",paste0(year.x.y,collapse = ","),")\n",
     "legend <- ", legend, "\n",
-    "compare_two_years(w.use, data.elements, year.x.y, area.column, areas, legend)"
+    "pctDiff <- ", pctDiff, "\n",
+    "valDiff <- ", valDiff, "\n",
+    "log.oper <- ", log.oper, "\n",
+    "compare_two_years(w.use, data.elements, year.x.y, area.column, areas, legend, pctDiff, valDiff, log.oper)"
     
   )
   
