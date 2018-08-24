@@ -4,9 +4,10 @@
 \alias{compare_two_years}
 \title{compare_two_years}
 \usage{
-compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA,
-  legend = FALSE, c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73",
-  "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+compare_two_years(w.use, data.elements, year.x.y, area.column,
+  areas = NA, legend = FALSE, pctDiff = 0, valDiff = 0,
+  log.oper = "and", c.palette = c("#999999", "#E69F00", "#56B4E9",
+  "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
@@ -20,6 +21,12 @@ compare_two_years(w.use, data.elements, year.x.y, area.column, areas = NA,
 \item{areas}{chr, codes indicating HUCs, counties, states, aquifers, etc.}
 
 \item{legend}{is a logical function to include list of counties in a legend if manageable, default is FALSE}
+
+\item{pctDiff}{is the percent difference outlier criterion , default is zero}
+
+\item{valDiff}{is the value difference outlier criterion, default is zero}
+
+\item{log.oper}{indictaes the logical operator between the two outlier criteria, default is "and"}
 
 \item{c.palette}{color palette to use for points}
 }
@@ -36,4 +43,7 @@ year.x.y <- c(2005,2010)
 compare_two_years(w.use, data.elements, year.x.y, area.column, areas)
 compare_two_years(w.use, data.elements, year.x.y, area.column)
 compare_two_years(w.use, "PS.TOPop", year.x.y, area.column)
+pctDiff <- 10
+valDiff <- 0
+compare_two_years(w.use, "PS.SWPop", year.x.y, area.column, pctDiff, valDiff)
 }
