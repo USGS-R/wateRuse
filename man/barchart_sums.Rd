@@ -6,7 +6,8 @@
 \usage{
 barchart_sums(w.use, data.elements, area.column, plot.stack = TRUE,
   years = NA, areas = NA, y.scale = NA, c.palette = c("#999999",
-  "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+  "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
+  "#CC79A7"))
 }
 \arguments{
 \item{w.use}{is a subset of the datafile wUseSample that includes all areas in all data elements for state}
