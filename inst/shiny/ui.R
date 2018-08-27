@@ -213,6 +213,14 @@ sidebar <- dashboardSidebar(
     checkboxInput("legendOn", label = "Include Legend", value = FALSE)
   ),
   conditionalPanel(
+    condition = "input.mainTabs == 'plotTwoTab' ",
+    menuItem("Identify Outliers", icon = icon("th"), tabName = "outlierTab",
+      numericInput("pctDiff", label = "Percent difference greater than or equal to (absolute value)", value =0, min = 0),
+      radioButtons("logOperSelect", label = "", choices = c("and","or"), selected = "and"),
+      numericInput("valDiff", label = "Value difference greater than or equal to (absolute value)", value = 0, min = 0))
+  ),
+  
+  conditionalPanel(
     condition = "input.mainTabs == 'multiElem' | input.mainTabs == 'boxPlotTab' | input.mainTabs == 'plotTimeTab' | input.mainTabs == 'rankData'",
     checkboxGroupInput("whatYears", label = "Years", choices = c("1990","2010"), selected = "2010")
   ),

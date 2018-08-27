@@ -4,9 +4,9 @@
 \alias{compare_two_elements}
 \title{compare_two_elements}
 \usage{
-compare_two_elements(w.use, data.elements.x.y, years, area.column, areas = NA,
-  legend = FALSE, c.palette = c("#999999", "#E69F00", "#56B4E9", "#009E73",
-  "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+compare_two_elements(w.use, data.elements.x.y, years, area.column,
+  areas = NA, legend = FALSE, c.palette = c("#999999", "#E69F00",
+  "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
 }
 \arguments{
 \item{w.use}{dataframe, the water use data}
