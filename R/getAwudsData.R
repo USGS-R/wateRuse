@@ -62,7 +62,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
                    "YEAR","USSTATEALPHACODE","DATASETNAME","BESTAVAILABLE")
   
   for ( check_file in files_to_scan ) {
-    if ( grepl('Export.*[1,2][0,9][0-9][0-5].*.xlsx', check_file) ) {
+    if ( grepl('Export.*[1,2][0,9][0-9][0-9].*.xlsx', check_file) ) {
       if ( !exists('files_to_open')) files_to_open <- c()
       files_to_open <- c(files_to_open, file.path(check_file))
     } else if ( grepl('.*.txt',check_file) ) {
@@ -86,7 +86,7 @@ get_awuds_data <- function(awuds.data.path = NA, awuds.data.files = NA) {
   if ( exists('files_to_open') ) {
     for ( file_open in files_to_open ) {
       new_awuds_data <- parseExport(file_open, citations = TRUE)
-      year<-regmatches(file_open,regexpr('[1,2][0,9][0-9][0-5]',file_open))
+      year<-regmatches(file_open,regexpr('[1,2][0,9][0-9][0-9]',file_open))
       if ( !exists('awuds_data') ) {
         awuds_data<-normalize_awuds_excel( new_awuds_data )
         awuds_data$YEAR <- year
